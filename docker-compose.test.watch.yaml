@@ -1,5 +1,5 @@
 services:
-  ffc-template-node:
+  ffc-pay-statement-constructor:
     command: >
       sh -c "npm run test:watch"
     volumes:
