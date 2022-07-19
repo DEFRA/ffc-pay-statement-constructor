@@ -36,6 +36,7 @@ const getInboundBlobClient = async (filename) => {
 }
 
 module.exports = {
+  initialiseContainers,
   blobServiceClient,
   getInboundBlobClient
 }
