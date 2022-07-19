@@ -1,0 +1,6 @@
+resources:
+  topics:
+    - name: processing
+    - name: submit
+    - name: return
+    - name: statement
