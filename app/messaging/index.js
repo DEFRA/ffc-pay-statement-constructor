@@ -25,6 +25,8 @@ const start = async () => {
 
 const stop = async () => {
   await processingReceiver.closeConnection()
+  await submitReceiver.closeConnection()
+  await returnReceiver.closeConnection()
 }
 
 module.exports = { start, stop }
