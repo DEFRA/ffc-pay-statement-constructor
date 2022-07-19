@@ -1,5 +1,6 @@
 jest.mock('../../app/messaging')
 const mockMessaging = require('../../app/messaging')
+jest.mock('../../app/storage')
 const mockStorage = require('../../app/storage')
 
 describe('app', () => {
