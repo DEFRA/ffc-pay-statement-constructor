@@ -4,7 +4,8 @@ namespace: ffc-pay
 workstream: ffc-pay
 image: ffc-pay-statement-constructor
 
-labels: {}
+labels:
+  component: service
 
 appInsights:
   key:
@@ -20,26 +21,42 @@ deployment:
   restartPolicy: Always
   priorityClassName: default
   replicas: 1
+  minReplicas: 1
+  maxReplicas: 1
+  cpuThreshold: 80
+  memoryThreshold: 80
   minReadySeconds: 0
 
 container:
-  imagePullPolicy: IfNotPresent
-  requestMemory: 10Mi
-  requestCpu: 10m
-  limitMemory: 40Mi
-  limitCpu: 40m
-  port: 3000
+  imagePullPolicy: Always
+  requestMemory: 150Mi
+  requestCpu: 120m
+  limitMemory: 150Mi
+  limitCpu: 180m
+  messageQueueHost: namespace.servicebus.windows.net
+  processingTopicAddress: ffc-pay-processing
+  processingSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  submitTopicAddress: ffc-pay-submit
+  submitSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  returnTopicAddress: ffc-pay-return
+  returnSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  statementTopicAddress: ffc-pay-statements
+  azureStorageAccountName: ffcpay
+  azureStorageConnectionString: dummy
+  azureStorageUseConnectionString: false
+  azureStorageCreateContainers: false
+  storageContainer: statements
+  storageFolder: inbound
 
-livenessProbe:
-  path: /healthz
-  port: 3000
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  failureThreshold: 3
+postgresService:
+  postgresDb: ffc_pay_statement_constructor
+  postgresqlHost: ffc-pay-statement-constructor-postgres
+  postgresPort: 5432
+  postgresSchema: public
+  postgresUser: postgres
 
-readinessProbe:
-  path: /healthy
-  port: 3000
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  failureThreshold: 3
+aadPodIdentity: true
+
+azureIdentity:
+  clientID: not-a-real-clientID
+  resourceID: not-a-real-resourceID
