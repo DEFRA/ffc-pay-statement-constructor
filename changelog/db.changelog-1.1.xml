@@ -4,6 +4,61 @@
     <tagDatabase tag="v1.0.0" />
   </changeSet>
   <changeSet author="Marc Templeton" id="3">
+    <createTable tableName="paymentRequests">
+      <column name="paymentRequestId" type="INTEGER" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="paymentRequestsId_pkey" />
+      </column>
+      <column name="agreementNumber" type="VARCHAR(20)" />
+      <column name="contractNumber" type="VARCHAR(10)" />
+      <column name="correlationId" type="VARCHAR(36)" /> <!-- interesting 1.23 rather tnan uuid -->
+      <column name="currency" type="VARCHAR(3)" />
+      <column name="deliveryBody" type="VARCHAR(4)" />
+      <column name="dueDate" type="VARCHAR(10)" />
+      <column name="invoiceNumber" type="VARCHAR(30)" />
+      <column name="marketingYear" type="INTEGER" />
+      <column name="referenceId" type="UUID" /> <!-- interesting 1.23 -->
+      <column name="schedule" type="VARCHAR(3)" />
+      <column name="sitiAgriInvoiceNumber" type="VARCHAR(20)" />
+      <column name="submitted" type="TIMESTAMP" />
+      <column name="value" type="INTEGER" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="4">
+    <createTable tableName="settlements">
+      <column name="settlementId" type="INTEGER" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="settlementsId_pkey" />
+      </column>
+      <column name="paymentRequestId" type="INTEGER" />
+      <column name="detail" type="VARCHAR(255)" />
+      <column name="invalid" type="BOOLEAN" defaultValue="false" />
+      <column name="generated" type="BOOLEAN" defaultValue="false" />
+      <column name="frn" type="BIGINT" />
+      <column name="invoiceNumber" type="VARCHAR(30)" />
+      <column name="ledger" type="VARCHAR(2)" />
+      <column name="reference" type="VARCHAR(9)" /> <!-- based on PY1234567 -->
+      <column name="settled" type="BOOLEAN" defaultValue="false" />
+      <column name="settlementDate" type="TIMESTAMP" /> <!-- interesting in pay-pr this (named settled) is used for above bool -->
+      <column name="sourceSystem" type="VARCHAR(50)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="5">
+    <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="settlements" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+  </changeSet>
+  <changeSet author="Marc Templeton" id="6">
+    <createTable tableName="schedules">
+      <column name="scheduleId" type="INTEGER" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schedulesId_pkey" />
+      </column>
+      <column name="settlementId" type="INTEGER" />
+      <column name="completed" type="TIMESTAMP" />
+      <column name="planned" type="TIMESTAMP" />
+      <column name="started" type="TIMESTAMP" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="7">
+    <addForeignKeyConstraint baseColumnNames="settlementId" baseTableName="schedules" constraintName="fk_settlements_settlementId" referencedColumnNames="settlementId" referencedTableName="settlements" />
+  </changeSet>
+  <changeSet author="Marc Templeton" id="8">
     <createTable tableName="organisations">
       <column name="sbi" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="organisationsId_pkey" />
@@ -12,6 +67,47 @@
       <column name="emailAddress" type="VARCHAR(127)" />
       <column name="frn" type="BIGINT" />
       <column name="name" type="VARCHAR(127)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="9">
+    <createTable tableName="claims">
+      <column name="calculationId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="claimsId_pkey" />
+      </column>
+      <column name="paymentRequestId" type="INTEGER" />
+      <column name="sbi" type="INTEGER" />
+      <column name="agreementNumber" type="VARCHAR(20)" /> <!-- diff to paymentRequests'? -->
+      <column name="calculationDate" type="TIMESTAMP" />
+      <column name="invoiceNumber" type="VARCHAR(20)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="10">
+    <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="claims" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+    <addForeignKeyConstraint baseColumnNames="sbi" baseTableName="claims" constraintName="fk_organisations_sbi" referencedColumnNames="sbi" referencedTableName="organisations" />
+  </changeSet>
+  <changeSet author="Marc Templeton" id="11">
+    <createTable tableName="schemes">
+      <column name="schemeCode" type="VARCHAR(10)">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schemesId_pkey" />
+      </column>
+      <column name="calculationId" type="INTEGER" />
+      <column name="areaClaimed" type="DECIMAL(11,5)" /> <!-- based on largest land ownership over ~500,000 arces: https://whoownsengland.org/2020/10/06/mapping-the-habitats-of-englands-ten-largest-institutional-landowners/ -->
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="12">
+    <addForeignKeyConstraint baseColumnNames="calculationId" baseTableName="schemes" constraintName="fk_claims_calculationId" referencedColumnNames="calculationId" referencedTableName="claims" />
+  </changeSet>
+  <changeSet author="Marc Templeton" id="13">
+    <createTable tableName="invoiceLines">
+      <column name="invoiceLineId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="invoiceLinesId_pkey" />
+      </column>
+      <column name="paymentRequestId" type="INTEGER" />
+      <column name="schemeCode" type="VARCHAR(10)" />
+      <column name="accountCode" type="VARCHAR(6)" />
+      <column name="description" type="VARCHAR(255)" />
+      <column name="fundCode" type="VARCHAR(6)" />
+      <column name="value" type="INTEGER" />
     </createTable>
   </changeSet>
 </databaseChangeLog>
