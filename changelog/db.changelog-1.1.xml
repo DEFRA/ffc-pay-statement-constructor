@@ -28,7 +28,9 @@
       <column name="settlementId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="settlementsId_pkey" />
       </column>
-      <column name="paymentRequestId" type="INTEGER" />
+      <column name="paymentRequestId" type="INTEGER" >
+        <constraints nullable="false" />
+      </column>
       <column name="detail" type="VARCHAR(255)" />
       <column name="invalid" type="BOOLEAN" defaultValue="false" />
       <column name="generated" type="BOOLEAN" defaultValue="false" />
@@ -49,7 +51,9 @@
       <column name="scheduleId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="schedulesId_pkey" />
       </column>
-      <column name="settlementId" type="INTEGER" />
+      <column name="settlementId" type="INTEGER" >
+        <constraints nullable="false" />
+      </column>
       <column name="completed" type="TIMESTAMP" />
       <column name="planned" type="TIMESTAMP" />
       <column name="started" type="TIMESTAMP" />
@@ -74,8 +78,12 @@
       <column name="calculationId" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="claimsId_pkey" />
       </column>
-      <column name="paymentRequestId" type="INTEGER" />
-      <column name="sbi" type="INTEGER" />
+      <column name="paymentRequestId" type="INTEGER" >
+        <constraints nullable="true" />
+      </column>
+      <column name="sbi" type="INTEGER" >
+        <constraints nullable="false" />
+      </column>
       <column name="agreementNumber" type="VARCHAR(20)" /> <!-- diff to paymentRequests'? -->
       <column name="calculationDate" type="TIMESTAMP" />
       <column name="invoiceNumber" type="VARCHAR(20)" />
@@ -90,7 +98,9 @@
       <column name="schemeCode" type="VARCHAR(10)">
         <constraints nullable="false" primaryKey="true" primaryKeyName="schemesId_pkey" />
       </column>
-      <column name="calculationId" type="INTEGER" />
+      <column name="calculationId" type="INTEGER" >
+        <constraints nullable="false" />
+      </column>
       <column name="areaClaimed" type="DECIMAL(11,5)" /> <!-- based on largest land ownership over ~500,000 arces: https://whoownsengland.org/2020/10/06/mapping-the-habitats-of-englands-ten-largest-institutional-landowners/ -->
     </createTable>
   </changeSet>
@@ -102,12 +112,20 @@
       <column name="invoiceLineId" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="invoiceLinesId_pkey" />
       </column>
-      <column name="paymentRequestId" type="INTEGER" />
-      <column name="schemeCode" type="VARCHAR(10)" />
+      <column name="paymentRequestId" type="INTEGER" >
+        <constraints nullable="false" />
+      </column>
+      <column name="schemeCode" type="VARCHAR(10)" >
+        <constraints nullable="false" />
+      </column>
       <column name="accountCode" type="VARCHAR(6)" />
       <column name="description" type="VARCHAR(255)" />
       <column name="fundCode" type="VARCHAR(6)" />
       <column name="value" type="INTEGER" />
     </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="14">
+    <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="invoiceLines" constraintName="fk_invoiceLines_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+    <addForeignKeyConstraint baseColumnNames="schemeCode" baseTableName="invoiceLines" constraintName="fk_invoiceLines_schemeCode" referencedColumnNames="schemeCode" referencedTableName="schemes" />
   </changeSet>
 </databaseChangeLog>
