@@ -85,7 +85,6 @@
         <constraints nullable="false" />
       </column>
       <column name="calculationDate" type="TIMESTAMP" />
-      <column name="invoiceNumber" type="VARCHAR(20)" />
     </createTable>
   </changeSet>
   <changeSet author="Marc Templeton" id="10">
