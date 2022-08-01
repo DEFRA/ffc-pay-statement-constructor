@@ -11,5 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
-  return organisation
+  organisation.associate = function (models) {
+    organisation.hasMany(models.claim, {
+      foreignKey: 'sbi',
+      as: 'claims'
+    })
+    return organisation
+  }
 }
