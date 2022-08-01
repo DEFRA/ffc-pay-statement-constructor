@@ -1,10 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
   const organisation = sequelize.define('organisation', {
     sbi: { type: DataTypes.INTEGER, primaryKey: true },
-    address: DataTypes.STRING,
+    addressLine1: DataTypes.STRING,
+    addressLine2: DataTypes.STRING,
+    city: DataTypes.STRING,
+    county: DataTypes.STRING,
     emailAddress: DataTypes.STRING,
     frn: DataTypes.BIGINT,
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    postCode: DataTypes.STRING
   },
   {
     tableName: 'organisations',
