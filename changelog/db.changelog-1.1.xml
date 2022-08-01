@@ -37,7 +37,7 @@
       <column name="frn" type="BIGINT" />
       <column name="invoiceNumber" type="VARCHAR(30)" />
       <column name="ledger" type="VARCHAR(2)" />
-      <column name="reference" type="VARCHAR(9)" /> <!-- based on PY1234567 -->
+      <column name="reference" type="VARCHAR(9)" />
       <column name="settled" type="BOOLEAN" defaultValue="false" />
       <column name="settlementDate" type="TIMESTAMP" /> <!-- interesting in pay-pr this (named settled) is used for above bool -->
       <column name="sourceSystem" type="VARCHAR(50)" />
