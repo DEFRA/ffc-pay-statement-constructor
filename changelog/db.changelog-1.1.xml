@@ -99,7 +99,7 @@
       <column name="calculationId" type="INTEGER" >
         <constraints nullable="false" />
       </column>
-      <column name="areaClaimed" type="DECIMAL(11,5)" /> <!-- based on largest land ownership over ~500,000 arces: https://whoownsengland.org/2020/10/06/mapping-the-habitats-of-englands-ten-largest-institutional-landowners/ -->
+      <column name="areaClaimed" type="DECIMAL(19,4)" />
     </createTable>
   </changeSet>
   <changeSet author="Marc Templeton" id="12">
