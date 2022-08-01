@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     calculationId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
     sbi: DataTypes.INTEGER,
-    agreementNumber: DataTypes.STRING,
     calculationDate: DataTypes.DATE,
     invoiceNumber: DataTypes.STRING
   },

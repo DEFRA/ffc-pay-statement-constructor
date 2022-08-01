@@ -84,7 +84,6 @@
       <column name="sbi" type="INTEGER" >
         <constraints nullable="false" />
       </column>
-      <column name="agreementNumber" type="VARCHAR(20)" /> <!-- diff to paymentRequests'? -->
       <column name="calculationDate" type="TIMESTAMP" />
       <column name="invoiceNumber" type="VARCHAR(20)" />
     </createTable>
