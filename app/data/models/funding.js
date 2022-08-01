@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const funding = sequelize.define('funding', {
-    fundingCode: { type: DataTypes.STRING, primaryKey: true, autoIncrement: true },
+    fundingCode: { type: DataTypes.STRING, primaryKey: true },
     calculationId: DataTypes.INTEGER,
     areaClaimed: DataTypes.DECIMAL
   },

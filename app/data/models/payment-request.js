@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'paymentRequestId',
       as: 'claims'
     })
+    paymentRequest.belongsTo(models.scheme, {
+      foreignKey: 'schemeId',
+      as: 'schemes'
+    })
     return paymentRequest
   }
 }

@@ -4,9 +4,20 @@
     <tagDatabase tag="v1.0.0" />
   </changeSet>
   <changeSet author="Marc Templeton" id="3">
+    <createTable tableName="schemes">
+      <column name="schemeId" type="INTEGER" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schemesId_pkey" />
+      </column>
+      <column name="name" type="VARCHAR(30)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="4">
     <createTable tableName="paymentRequests">
       <column name="paymentRequestId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="paymentRequestsId_pkey" />
+      </column>
+      <column name="schemeId" type="INTEGER" >
+        <constraints nullable="false" />
       </column>
       <column name="agreementNumber" type="VARCHAR(20)" />
       <column name="contractNumber" type="VARCHAR(10)" />
@@ -23,7 +34,10 @@
       <column name="value" type="INTEGER" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="4">
+  <changeSet author="Marc Templeton" id="5">
+    <addForeignKeyConstraint baseColumnNames="schemeId" baseTableName="paymentRequests" constraintName="fk_paymentRequests_schemeId" referencedColumnNames="schemeId" referencedTableName="schemes" />
+  </changeSet>
+  <changeSet author="Marc Templeton" id="6">
     <createTable tableName="settlements">
       <column name="settlementId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="settlementsId_pkey" />
@@ -43,10 +57,10 @@
       <column name="sourceSystem" type="VARCHAR(50)" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="5">
+  <changeSet author="Marc Templeton" id="7">
     <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="settlements" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
   </changeSet>
-  <changeSet author="Marc Templeton" id="6">
+  <changeSet author="Marc Templeton" id="8">
     <createTable tableName="schedules">
       <column name="scheduleId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="schedulesId_pkey" />
@@ -59,10 +73,10 @@
       <column name="started" type="TIMESTAMP" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="7">
+  <changeSet author="Marc Templeton" id="9">
     <addForeignKeyConstraint baseColumnNames="settlementId" baseTableName="schedules" constraintName="fk_settlements_settlementId" referencedColumnNames="settlementId" referencedTableName="settlements" />
   </changeSet>
-  <changeSet author="Marc Templeton" id="8">
+  <changeSet author="Marc Templeton" id="10">
     <createTable tableName="organisations">
       <column name="sbi" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="organisationsId_pkey" />
@@ -73,7 +87,7 @@
       <column name="name" type="VARCHAR(127)" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="9">
+  <changeSet author="Marc Templeton" id="11">
     <createTable tableName="claims">
       <column name="calculationId" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="claimsId_pkey" />
@@ -87,11 +101,11 @@
       <column name="calculationDate" type="TIMESTAMP" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="10">
+  <changeSet author="Marc Templeton" id="12">
     <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="claims" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
     <addForeignKeyConstraint baseColumnNames="sbi" baseTableName="claims" constraintName="fk_organisations_sbi" referencedColumnNames="sbi" referencedTableName="organisations" />
   </changeSet>
-  <changeSet author="Marc Templeton" id="11">
+  <changeSet author="Marc Templeton" id="13">
     <createTable tableName="fundings">
       <column name="fundingCode" type="VARCHAR(10)">
         <constraints nullable="false" primaryKey="true" primaryKeyName="fundingsId_pkey" />
@@ -102,10 +116,10 @@
       <column name="areaClaimed" type="DECIMAL(19,4)" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="12">
+  <changeSet author="Marc Templeton" id="14">
     <addForeignKeyConstraint baseColumnNames="calculationId" baseTableName="fundings" constraintName="fk_claims_calculationId" referencedColumnNames="calculationId" referencedTableName="claims" />
   </changeSet>
-  <changeSet author="Marc Templeton" id="13">
+  <changeSet author="Marc Templeton" id="15">
     <createTable tableName="invoiceLines">
       <column name="invoiceLineId" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="invoiceLinesId_pkey" />
@@ -122,7 +136,7 @@
       <column name="value" type="INTEGER" />
     </createTable>
   </changeSet>
-  <changeSet author="Marc Templeton" id="14">
+  <changeSet author="Marc Templeton" id="16">
     <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="invoiceLines" constraintName="fk_invoiceLines_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
     <addForeignKeyConstraint baseColumnNames="fundingCode" baseTableName="invoiceLines" constraintName="fk_invoiceLines_fundingCode" referencedColumnNames="fundingCode" referencedTableName="fundings" />
   </changeSet>
