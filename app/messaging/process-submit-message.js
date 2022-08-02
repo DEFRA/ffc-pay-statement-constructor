@@ -1,5 +1,5 @@
-const savePaymentRequest = require('../inbound')
 const util = require('util')
+const savePaymentRequest = require('../inbound')
 
 const processSubmitMessage = async (message, receiver) => {
   try {

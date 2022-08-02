@@ -1,5 +1,3 @@
-const savePaymentRequest = require('./save-payment-request')
+const processPaymentRequest = require('./process-payment-request')
 
-module.exports = {
-  savePaymentRequest
-}
+module.exports = processPaymentRequest
