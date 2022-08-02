@@ -117,8 +117,7 @@
   </changeSet>
   <changeSet author="Marc Templeton" id="10">
     <createTable tableName="fundings">
-    <createTable tableName="settlements">
-    <column name="fundingId" type="INTEGER" autoIncrement="true">
+      <column name="fundingId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="fundingsId_pkey" />
       </column>
       <column name="calculationId" type="INTEGER">
