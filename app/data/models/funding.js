@@ -1,7 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const funding = sequelize.define('funding', {
-    fundingCode: { type: DataTypes.STRING, primaryKey: true },
+    fundingId: { type: DataTypes.INTEGER, primaryKey: true },
     calculationId: DataTypes.INTEGER,
+    fundingCode: DataTypes.STRING,
     areaClaimed: DataTypes.DECIMAL
   },
   {
@@ -10,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
   funding.associate = function (models) {
-    funding.hasMany(models.invoiceLine, {
-      foreignKey: 'fundingCode',
-      as: 'invoiceLines'
-    })
-    funding.belongsTo(models.claim, {
+    funding.belongsTo(models.calculation, {
       foreignKey: 'calculationId',
-      as: 'claims'
+      as: 'calculations'
+    })
+    funding.belongsTo(models.fundingOption, {
+      foreignKey: 'fundingCode',
+      as: 'fundingOptions'
     })
   }
   return funding

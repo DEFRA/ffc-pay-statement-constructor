@@ -1,28 +1,28 @@
 module.exports = (sequelize, DataTypes) => {
-  const claim = sequelize.define('claim', {
+  const calculation = sequelize.define('calculation', {
     calculationId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
     sbi: DataTypes.INTEGER,
     calculationDate: DataTypes.DATE
   },
   {
-    tableName: 'claims',
+    tableName: 'calculations',
     freezeTableName: true,
     timestamps: false
   })
-  claim.associate = function (models) {
-    claim.hasMany(models.funding, {
+  calculation.associate = function (models) {
+    calculation.hasMany(models.funding, {
       foreignKey: 'calculationId',
-      as: 'schemes'
+      as: 'fundings'
     })
-    claim.belongsTo(models.paymentRequest, {
+    calculation.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
       as: 'paymentRequests'
     })
-    claim.belongsTo(models.organisation, {
+    calculation.belongsTo(models.organisation, {
       foreignKey: 'sbi',
       as: 'organisations'
     })
   }
-  return claim
+  return calculation
 }
