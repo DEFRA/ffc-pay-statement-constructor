@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-statement-constructor",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Data construction for statement generation",
   "homepage": "https://github.com/DEFRA/ffc-pay-statement-constructor",
   "main": "app/index.js",
@@ -20,10 +20,10 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@hapi/hapi": "20.2.2",
-    "applicationinsights": "2.3.3",
     "@azure/identity": "2.0.5",
     "@azure/storage-blob": "12.10.0",
+    "@hapi/hapi": "20.2.2",
+    "applicationinsights": "2.3.3",
     "ffc-messaging": "2.5.1",
     "joi": "17.6.0",
     "log-timestamp": "0.3.0",
