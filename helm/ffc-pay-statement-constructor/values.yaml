@@ -1,4 +1,5 @@
 environment: development
+environmentCode:
 name: ffc-pay-statement-constructor
 namespace: ffc-pay
 workstream: ffc-pay
