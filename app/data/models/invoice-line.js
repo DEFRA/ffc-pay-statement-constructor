@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const invoiceLine = sequelize.define('invoiceLine', {
     invoiceLineId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    fundingCode: DataTypes.STRING,
     paymentRequestId: DataTypes.INTEGER,
-    schemeCode: DataTypes.STRING,
     accountCode: DataTypes.STRING,
     description: DataTypes.STRING,
     fundCode: DataTypes.STRING,
@@ -18,9 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'paymentRequestId',
       as: 'paymentRequests'
     })
-    invoiceLine.belongsTo(models.scheme, {
-      foreignKey: 'schemeCode',
-      as: 'schemes'
+    invoiceLine.belongsTo(models.funding, {
+      foreignKey: 'fundingCode',
+      as: 'fundings'
     })
   }
   return invoiceLine

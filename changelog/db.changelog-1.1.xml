@@ -137,7 +137,7 @@
   </changeSet>
   <changeSet author="Marc Templeton" id="16">
     <createTable tableName="invoiceLines">
-      <column name="invoiceLineId" type="INTEGER">
+      <column name="invoiceLineId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="invoiceLinesId_pkey" />
       </column>
       <column name="paymentRequestId" type="INTEGER" >

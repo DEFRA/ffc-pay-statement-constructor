@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
   claim.associate = function (models) {
-    claim.hasMany(models.scheme, {
+    claim.hasMany(models.funding, {
       foreignKey: 'calculationId',
       as: 'schemes'
     })
