@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
   claim.associate = function (models) {
-    claim.hasMany(models.scheme, {
-      foreignKey: 'calculationId',
-      as: 'schemes'
+    claim.hasMany(models.funding, {
+      foreignKey: 'fundingCode',
+      as: 'fundings'
     })
     claim.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
@@ -23,6 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'sbi',
       as: 'organisations'
     })
-    return claim
   }
+  return claim
 }

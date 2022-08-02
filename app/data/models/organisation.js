@@ -21,6 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'sbi',
       as: 'claims'
     })
-    return organisation
   }
+  return organisation
 }

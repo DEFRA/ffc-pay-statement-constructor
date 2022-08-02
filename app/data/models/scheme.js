@@ -13,6 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeId',
       as: 'paymentRequests'
     })
-    return scheme
   }
+  return scheme
 }

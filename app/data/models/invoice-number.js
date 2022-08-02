@@ -13,6 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'invoiceNumber',
       as: 'invoiceNumbers'
     })
-    return invoiceNumber
   }
+  return invoiceNumber
 }
