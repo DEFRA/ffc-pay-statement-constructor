@@ -4,8 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     paymentRequestId: DataTypes.INTEGER,
     schemeCode: DataTypes.STRING,
     accountCode: DataTypes.STRING,
-    fundCode: DataTypes.STRING,
     description: DataTypes.STRING,
+    fundCode: DataTypes.STRING,
     value: DataTypes.INTEGER
   },
   {
@@ -16,8 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   invoiceLine.associate = function (models) {
     invoiceLine.belongsTo(models.paymentRequest, {
       foreignKey: 'paymentRequestId',
-      as: 'paymentRequest'
+      as: 'paymentRequests'
     })
+    invoiceLine.belongsTo(models.scheme, {
+      foreignKey: 'schemeCode',
+      as: 'schemes'
+    })
+    return invoiceLine
   }
-  return invoiceLine
 }
