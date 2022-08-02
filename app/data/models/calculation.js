@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   })
   calculation.associate = function (models) {
     calculation.hasMany(models.funding, {
-      foreignKey: 'fundingCode',
+      foreignKey: 'calculationId',
       as: 'fundings'
     })
     calculation.belongsTo(models.paymentRequest, {
