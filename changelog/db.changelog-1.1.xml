@@ -104,9 +104,9 @@
     </createTable>
   </changeSet>
   <changeSet author="Marc Templeton" id="12">
-    <createTable tableName="claims">
+    <createTable tableName="calculations">
       <column name="calculationId" type="INTEGER">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="claimsId_pkey" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="calculationsId_pkey" />
       </column>
       <column name="paymentRequestId" type="INTEGER" >
         <constraints nullable="true" />
@@ -118,8 +118,8 @@
     </createTable>
   </changeSet>
   <changeSet author="Marc Templeton" id="13">
-    <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="claims" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
-    <addForeignKeyConstraint baseColumnNames="sbi" baseTableName="claims" constraintName="fk_organisations_sbi" referencedColumnNames="sbi" referencedTableName="organisations" />
+    <addForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="calculations" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
+    <addForeignKeyConstraint baseColumnNames="sbi" baseTableName="calculations" constraintName="fk_organisations_sbi" referencedColumnNames="sbi" referencedTableName="organisations" />
   </changeSet>
   <changeSet author="Marc Templeton" id="14">
     <createTable tableName="fundings">
@@ -133,7 +133,7 @@
     </createTable>
   </changeSet>
   <changeSet author="Marc Templeton" id="15">
-    <addForeignKeyConstraint baseColumnNames="calculationId" baseTableName="fundings" constraintName="fk_claims_calculationId" referencedColumnNames="calculationId" referencedTableName="claims" />
+    <addForeignKeyConstraint baseColumnNames="calculationId" baseTableName="fundings" constraintName="fk_calculations_calculationId" referencedColumnNames="calculationId" referencedTableName="calculations" />
   </changeSet>
   <changeSet author="Marc Templeton" id="16">
     <createTable tableName="invoiceLines">

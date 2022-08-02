@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'fundingCode',
       as: 'invoiceLines'
     })
-    funding.belongsTo(models.claim, {
+    funding.belongsTo(models.calculation, {
       foreignKey: 'calculationId',
-      as: 'claims'
+      as: 'calculations'
     })
   }
   return funding
