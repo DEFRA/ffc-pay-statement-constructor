@@ -41,6 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'invoiceNumber',
       as: 'invoiceNumbers'
     })
-    return paymentRequest
   }
+  return paymentRequest
 }

@@ -16,6 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'settlementId',
       as: 'settlements'
     })
-    return schedule
   }
+  return schedule
 }

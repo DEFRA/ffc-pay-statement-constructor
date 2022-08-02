@@ -23,6 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'sbi',
       as: 'organisations'
     })
-    return claim
   }
+  return claim
 }

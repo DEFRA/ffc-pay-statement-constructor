@@ -22,6 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'schemeCode',
       as: 'schemes'
     })
-    return invoiceLine
   }
+  return invoiceLine
 }

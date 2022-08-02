@@ -18,6 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'calculationId',
       as: 'claims'
     })
-    return funding
   }
+  return funding
 }
