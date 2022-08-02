@@ -94,6 +94,7 @@
       </column>
       <column name="addressLine1" type="VARCHAR(127)" />
       <column name="addressLine2" type="VARCHAR(127)" />
+      <column name="addressLine3" type="VARCHAR(127)" />
       <column name="city" type="VARCHAR(127)" />
       <column name="county" type="VARCHAR(127)" />
       <column name="emailAddress" type="VARCHAR(127)" />

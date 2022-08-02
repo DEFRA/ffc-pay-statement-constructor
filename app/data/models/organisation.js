@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     sbi: { type: DataTypes.INTEGER, primaryKey: true },
     addressLine1: DataTypes.STRING,
     addressLine2: DataTypes.STRING,
+    addressLine3: DataTypes.STRING,
     city: DataTypes.STRING,
     county: DataTypes.STRING,
     emailAddress: DataTypes.STRING,
