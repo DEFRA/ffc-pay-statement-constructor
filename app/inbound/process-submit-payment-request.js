@@ -5,7 +5,7 @@ const saveInvoiceNumber = require('./save-invoice-number')
 const savePaymentRequest = require('./save-payment-request')
 const saveInvoiceLines = require('./save-invoice-lines')
 
-const processPaymentRequest = async (paymentRequest) => {
+const processSubmitPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
   try {
     const existingPaymentRequest = await getPaymentRequestByInvoiceNumber(paymentRequest.invoiceNumber, transaction)
@@ -25,4 +25,4 @@ const processPaymentRequest = async (paymentRequest) => {
   }
 }
 
-module.exports = processPaymentRequest
+module.exports = processSubmitPaymentRequest
