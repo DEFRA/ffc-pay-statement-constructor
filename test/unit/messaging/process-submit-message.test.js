@@ -66,6 +66,16 @@ describe('process submit message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
+  test('should not throw when processPaymentRequest throws', async () => {
+    processPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
+
+    const wrapper = async () => {
+      await processSubmitMessage(message, receiver)
+    }
+
+    expect(wrapper).not.toThrow()
+  })
+
   test('should not throw when receiver.completeMessage throws', async () => {
     receiver.completeMessage.mockRejectedValue(new Error('Azure difficulties'))
 
