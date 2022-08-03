@@ -17,10 +17,10 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   })
   organisation.associate = function (models) {
-    organisation.hasMany(models.claim, {
+    organisation.hasMany(models.calculation, {
       foreignKey: 'sbi',
-      as: 'claims'
+      as: 'calculations'
     })
-    return organisation
   }
+  return organisation
 }
