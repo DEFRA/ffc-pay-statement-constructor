@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'paymentRequestId',
       as: 'settlements'
     })
-    paymentRequest.hasOne(models.claim, {
+    paymentRequest.hasOne(models.calculation, {
       foreignKey: 'paymentRequestId',
-      as: 'claims'
+      as: 'calculations'
     })
     paymentRequest.belongsTo(models.scheme, {
       foreignKey: 'schemeId',
@@ -41,6 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'invoiceNumber',
       as: 'invoiceNumbers'
     })
-    return paymentRequest
   }
+  return paymentRequest
 }
