@@ -9,7 +9,6 @@
       <modifyDataType tableName="fundings" columnName="areaClaimed" newDataType="DECIMAL(19,4)" />
     </rollback>
   </changeSet>
-  </changeSet>
   <changeSet author="Marc Templeton" id="3">
     <insert tableName="schemes">
       <column name="schemeId" value="1" />
