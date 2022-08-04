@@ -13,7 +13,7 @@ describe('process submit message', () => {
   beforeEach(() => {
     processPaymentRequest.mockReturnValue(undefined)
 
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mockPaymentRequest').submitPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
 
     receiver = {
       completeMessage: jest.fn()

@@ -4,7 +4,7 @@ let paymentRequest
 
 describe('reverse engineer original invoice number from processed invoice number', () => {
   beforeEach(() => {
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mockPaymentRequest').paymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').paymentRequest))
   })
 
   afterEach(() => {

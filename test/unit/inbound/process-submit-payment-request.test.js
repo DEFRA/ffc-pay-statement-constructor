@@ -34,7 +34,7 @@ let paymentRequest
 
 describe('process submit payment request', () => {
   beforeEach(() => {
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mockPaymentRequest').submitPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
 
     getPaymentRequestByInvoiceNumber.mockReset()
     getPaymentRequestByInvoiceNumber
