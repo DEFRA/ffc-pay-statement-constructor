@@ -46,9 +46,12 @@ const paymentRequest = {
   value: FIVE_HUNDRED_POUNDS
 }
 
+const processingPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID }
+
 const submitPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID }
 
 module.exports = {
   paymentRequest,
+  processingPaymentRequest,
   submitPaymentRequest
 }

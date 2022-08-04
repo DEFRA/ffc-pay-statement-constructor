@@ -1,13 +1,13 @@
 jest.mock('../../../app/inbound/process-payment-request')
 const processPaymentRequest = require('../../../app/inbound/process-payment-request')
 
-const { processSubmitPaymentRequest } = require('../../../app/inbound')
+const { processProcessingPaymentRequest } = require('../../../app/inbound')
 
 let paymentRequest
 
-describe('process submitted payment request', () => {
+describe('process processing payment request', () => {
   beforeEach(() => {
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').processingPaymentRequest))
   })
 
   afterEach(() => {
@@ -15,17 +15,17 @@ describe('process submitted payment request', () => {
   })
 
   test('should call processPaymentRequest when a valid paymentRequest is given', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
+    await processProcessingPaymentRequest(paymentRequest)
     expect(processPaymentRequest).toHaveBeenCalled()
   })
 
   test('should call processPaymentRequest once when a valid paymentRequest is given', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
+    await processProcessingPaymentRequest(paymentRequest)
     expect(processPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
   test('should call processPaymentRequest with paymentRequest when a valid paymentRequest is given', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
+    await processProcessingPaymentRequest(paymentRequest)
     expect(processPaymentRequest).toHaveBeenCalledWith(paymentRequest)
   })
 
@@ -33,7 +33,7 @@ describe('process submitted payment request', () => {
     processPaymentRequest.mockRejectedValue(new Error('Payment request processing issue'))
 
     const wrapper = async () => {
-      await processSubmitPaymentRequest(paymentRequest)
+      await processProcessingPaymentRequest(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -43,7 +43,7 @@ describe('process submitted payment request', () => {
     processPaymentRequest.mockRejectedValue(new Error('Payment request processing issue'))
 
     const wrapper = async () => {
-      await processSubmitPaymentRequest(paymentRequest)
+      await processProcessingPaymentRequest(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -53,7 +53,7 @@ describe('process submitted payment request', () => {
     processPaymentRequest.mockRejectedValue(new Error('Payment request processing issue'))
 
     const wrapper = async () => {
-      await processSubmitPaymentRequest(paymentRequest)
+      await processProcessingPaymentRequest(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(/^Payment request processing issue$/)

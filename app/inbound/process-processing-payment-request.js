@@ -1,7 +1,7 @@
 const processPaymentRequest = require('./process-payment-request')
 
-const processSubmitPaymentRequest = async (paymentRequest) => {
+const processProcessingPaymentRequest = async (paymentRequest) => {
   await processPaymentRequest(paymentRequest)
 }
 
-module.exports = processSubmitPaymentRequest
+module.exports = processProcessingPaymentRequest
