@@ -48,7 +48,6 @@ describe('process submit payment request', () => {
 
   afterEach(() => {
     jest.clearAllMocks()
-    // jest.resetAllMocks()
   })
 
   test('should call getPaymentRequestByInvoiceNumber when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
