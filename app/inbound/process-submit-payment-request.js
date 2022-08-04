@@ -1,6 +1,6 @@
 const db = require('../data')
 
-const getPaymentRequestByInvoiceNumber = require('./get-payment-request-by-invoice-number')
+const getPaymentRequestByReferenceId = require('./get-payment-request-by-reference-id')
 const saveInvoiceNumber = require('./save-invoice-number')
 const { saveAndReturnPaymentRequest } = require('./save-payment-request')
 const saveInvoiceLines = require('./save-invoice-lines')
@@ -8,9 +8,9 @@ const saveInvoiceLines = require('./save-invoice-lines')
 const processSubmitPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
   try {
-    const existingPaymentRequest = await getPaymentRequestByInvoiceNumber(paymentRequest.invoiceNumber, transaction)
+    const existingPaymentRequest = await getPaymentRequestByReferenceId(paymentRequest.referenceId, transaction)
     if (existingPaymentRequest) {
-      console.info(`Duplicate payment request received, skipping ${existingPaymentRequest.invoiceNumber}`)
+      console.info(`Duplicate payment request received, skipping ${existingPaymentRequest.referenceId}`)
       await transaction.rollback()
     } else {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
