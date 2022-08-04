@@ -21,4 +21,9 @@
       <column name="name" value="Arable soil: Introductory" />
     </insert>
   </changeSet>
+  <changeSet author="Marc Templeton" id="5">
+    <addColumn tableName="paymentRequests">
+      <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

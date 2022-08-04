@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     dueDate: DataTypes.STRING,
     invoiceNumber: DataTypes.STRING,
     marketingYear: DataTypes.INTEGER,
+    received: DataTypes.DATE,
     referenceId: DataTypes.UUID,
     schedule: DataTypes.STRING,
     sitiAgriInvoiceNumber: DataTypes.STRING,
