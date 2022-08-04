@@ -2,7 +2,7 @@ const db = require('../data')
 
 const getPaymentRequestByInvoiceNumber = require('./get-payment-request-by-invoice-number')
 const saveInvoiceNumber = require('./save-invoice-number')
-const savePaymentRequest = require('./save-payment-request')
+const { saveAndReturnPaymentRequest } = require('./save-payment-request')
 const saveInvoiceLines = require('./save-invoice-lines')
 
 const processSubmitPaymentRequest = async (paymentRequest) => {
@@ -14,8 +14,7 @@ const processSubmitPaymentRequest = async (paymentRequest) => {
       await transaction.rollback()
     } else {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
-      await savePaymentRequest(paymentRequest, transaction)
-      const savedPaymentRequest = await getPaymentRequestByInvoiceNumber(paymentRequest.invoiceNumber, transaction)
+      const savedPaymentRequest = await saveAndReturnPaymentRequest(paymentRequest, transaction)
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
       await transaction.commit()
     }

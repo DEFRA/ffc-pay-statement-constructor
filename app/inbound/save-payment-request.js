@@ -6,4 +6,8 @@ const savePaymentRequest = async (paymentRequest, transaction) => {
   await db.paymentRequest.create({ ...paymentRequest, referenceId: uuidv4() }, { transaction })
 }
 
-module.exports = savePaymentRequest
+const saveAndReturnPaymentRequest = async (paymentRequest, transaction) => {
+  return savePaymentRequest(paymentRequest, transaction)
+}
+
+module.exports = { saveAndReturnPaymentRequest, savePaymentRequest }
