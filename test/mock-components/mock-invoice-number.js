@@ -1,0 +1,3 @@
+module.exports = {
+  SFI_FIRST_PAYMENT: 'S0000001SFIP000001V001'
+}

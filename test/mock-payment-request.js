@@ -1,31 +1,52 @@
+const { SFI_ARABLE_SOIL_INTRODUCTORY_AP } = require('../app/constants/account-codes')
+const { GBP } = require('../app/constants/currencies')
+const { RP00 } = require('../app/constants/delivery-bodies')
+const { GROSS } = require('../app/constants/descriptions')
+const { DRD10 } = require('../app/constants/fund-codes')
+const { ARABLE_SOIL_INTRODUCTORY } = require('../app/constants/funding-codes')
+const { AP } = require('../app/constants/ledgers')
+const { FIRST_PAYMENT: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER } = require('../app/constants/payment-request-numbers')
+const { QUARTERLY } = require('../app/constants/schedules')
+const { SFI: SFI_SCHEME_ID } = require('../app/constants/scheme-ids')
+const { SFI: SFI_SOURCE_SYSTEM } = require('../app/constants/source-systems')
+
+const { SFI: AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
+const { SFI: CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')
+const DUE_DATE = require('./mock-components/mock-due-date')
+const FRN = require('./mock-components/mock-frn')
+const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('./mock-components/mock-invoice-number')
+const _2022 = require('./mock-components/mock-marketing-year')
+const { CORRELATION_ID, REFERENCE_ID } = require('./mock-components/mock-uuidv4')
+const { FIVE_HUNDRED_POUNDS } = require('./mock-components/mock-value')
+
 const paymentRequest = {
-  agreementNumber: 'SIP000000000001',
-  contractNumber: 'SFIP000001',
-  correlationId: '9b232ff2-d0bc-4f0a-993b-3754d66b61b1',
-  currency: 'GBP',
-  deliveryBody: 'RP00',
-  dueDate: '01/12/2022',
-  frn: '1000000001',
+  agreementNumber: AGREEMENT_NUMBER,
+  contractNumber: CONTRACT_NUMBER,
+  correlationId: CORRELATION_ID,
+  currency: GBP,
+  deliveryBody: RP00,
+  dueDate: DUE_DATE,
+  frn: FRN,
   invoiceLines: [
     {
-      accountCode: 'SOS273',
-      description: 'G00 - Gross value of claim',
-      fundCode: 'DRD10',
-      schemeCode: '80001',
-      value: 50000
+      accountCode: SFI_ARABLE_SOIL_INTRODUCTORY_AP,
+      description: GROSS,
+      fundCode: DRD10,
+      schemeCode: ARABLE_SOIL_INTRODUCTORY,
+      value: FIVE_HUNDRED_POUNDS
     }
   ],
-  invoiceNumber: 'S0000001SFIP000001V001',
-  ledger: 'AP',
-  marketingYear: 2022,
-  paymentRequestNumber: 1,
-  schedule: 'Q4',
-  schemeId: 1,
-  sourceSystem: 'SFI',
-  value: 50000
+  invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER,
+  ledger: AP,
+  marketingYear: _2022,
+  paymentRequestNumber: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER,
+  schedule: QUARTERLY,
+  schemeId: SFI_SCHEME_ID,
+  sourceSystem: SFI_SOURCE_SYSTEM,
+  value: FIVE_HUNDRED_POUNDS
 }
 
-const submitPaymentRequest = { ...paymentRequest }
+const submitPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID }
 
 module.exports = {
   paymentRequest,
