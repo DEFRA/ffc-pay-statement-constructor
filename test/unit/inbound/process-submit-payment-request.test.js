@@ -324,25 +324,69 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
   })
 
-  // test('should call mockTransaction.rollback when getPaymentRequestByInvoiceNumber throws', async () => {
-  //   getPaymentRequestByInvoiceNumber.mockReset()
-  //   getPaymentRequestByInvoiceNumber.mockRejectedValue(new Error('Sequelize transaction issue'))
+  test('should call mockTransaction.rollback when getPaymentRequestByInvoiceNumber throws', async () => {
+    getPaymentRequestByInvoiceNumber.mockReset()
+    getPaymentRequestByInvoiceNumber.mockRejectedValue(new Error('Database retrieval issue'))
 
-  //   const _ = async () => {
-  //     await processSubmitPaymentRequest(paymentRequest)
-  //   }
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
 
-  //   expect(mockTransaction.rollback).toHaveBeenCalled()
-  // })
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
 
-  // test('should call mockTransaction.rollback once when getPaymentRequestByInvoiceNumber throws', async () => {
-  //   getPaymentRequestByInvoiceNumber.mockReset()
-  //   getPaymentRequestByInvoiceNumber.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should call mockTransaction.rollback once when getPaymentRequestByInvoiceNumber throws', async () => {
+    getPaymentRequestByInvoiceNumber.mockReset()
+    getPaymentRequestByInvoiceNumber.mockRejectedValue(new Error('Database retrieval issue'))
 
-  //   const _ = async () => {
-  //     await processSubmitPaymentRequest(paymentRequest)
-  //   }
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
 
-  //   expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  // })
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call mockTransaction.rollback when saveInvoiceNumber throws', async () => {
+    saveInvoiceNumber.mockRejectedValue(new Error('Database save down issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
+
+  test('should call mockTransaction.rollback once when saveInvoiceNumber throws', async () => {
+    saveInvoiceNumber.mockRejectedValue(new Error('Database save down issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call mockTransaction.rollback when savePaymentRequest throws', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
+
+  test('should call mockTransaction.rollback once when savePaymentRequest throws', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call mockTransaction.rollback when saveInvoiceLines throws', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
+
+  test('should call mockTransaction.rollback once when saveInvoiceLines throws', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call mockTransaction.rollback when mockTransaction.commit throws', async () => {
+    mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
+
+  test('should call mockTransaction.rollback once when mockTransaction.commit throws', async () => {
+    mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
+    try { await processSubmitPaymentRequest(paymentRequest) } catch { }
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
 })
