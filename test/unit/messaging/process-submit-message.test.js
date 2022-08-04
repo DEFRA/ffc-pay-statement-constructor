@@ -66,6 +66,12 @@ describe('process submit message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
+  test('should not call receiver.completeMessage when processPaymentRequest throws', async () => {
+    processPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
+    try { await processSubmitMessage(message, receiver) } catch {}
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
+  })
+
   test('should not throw when processPaymentRequest throws', async () => {
     processPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
 
