@@ -9,6 +9,7 @@ const { FIRST_PAYMENT: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER } = require('../app/
 const { QUARTERLY } = require('../app/constants/schedules')
 const { SFI: SFI_SCHEME_ID } = require('../app/constants/scheme-ids')
 const { SFI: SFI_SOURCE_SYSTEM } = require('../app/constants/source-systems')
+const { IN_PROGRESS, COMPLETED } = require('../app/constants/statuses')
 
 const { SFI: AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
 const { SFI: CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')
@@ -43,12 +44,13 @@ const paymentRequest = {
   schedule: QUARTERLY,
   schemeId: SFI_SCHEME_ID,
   sourceSystem: SFI_SOURCE_SYSTEM,
+  status: IN_PROGRESS,
   value: FIVE_HUNDRED_POUNDS
 }
 
 const processingPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID }
 
-const submitPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID }
+const submitPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID, status: COMPLETED }
 
 module.exports = {
   paymentRequest,

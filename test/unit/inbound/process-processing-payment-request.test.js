@@ -34,7 +34,7 @@ let paymentRequest
 
 describe('process payment request', () => {
   beforeEach(() => {
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').processingPaymentRequest))
 
     getPaymentRequestByReferenceId.mockResolvedValue(null)
     saveInvoiceNumber.mockResolvedValue(undefined)
@@ -71,7 +71,7 @@ describe('process payment request', () => {
     expect(saveInvoiceNumber).toHaveBeenCalledTimes(1)
   })
 
-  test('should call saveInvoiceNumber with paymentRequest.invoiceNumber and mockTransaction when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
+  test('should call saveInvoiceNumber with paymentRequest.invoiceNumber and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processProcessingPaymentRequest(paymentRequest)
     expect(saveInvoiceNumber).toHaveBeenCalledWith(paymentRequest.invoiceNumber, mockTransaction)
   })
@@ -86,7 +86,7 @@ describe('process payment request', () => {
     expect(saveAndReturnPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call saveAndReturnPaymentRequest with paymentRequest and mockTransaction when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
+  test('should call saveAndReturnPaymentRequest with paymentRequest and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processProcessingPaymentRequest(paymentRequest)
     expect(saveAndReturnPaymentRequest).toHaveBeenCalledWith(paymentRequest, mockTransaction)
   })
@@ -101,7 +101,7 @@ describe('process payment request', () => {
     expect(saveInvoiceLines).toHaveBeenCalledTimes(1)
   })
 
-  test('should call saveInvoiceLines with paymentRequest.invoiceLines, paymentRequest.paymentRequestId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
+  test('should call saveInvoiceLines with paymentRequest.invoiceLines, paymentRequest.paymentRequestId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processProcessingPaymentRequest(paymentRequest)
     expect(saveInvoiceLines).toHaveBeenCalledWith(paymentRequest.invoiceLines, paymentRequest.paymentRequestId, mockTransaction)
   })
