@@ -1,3 +1,3 @@
 module.exports = {
-  SFI_ARABLE_SOIL_INTRODUCTORY_AP: 'SOS273'
+  SFI_GROSS_VALUE_AP: 'SOS273'
 }

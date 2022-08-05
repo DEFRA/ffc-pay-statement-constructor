@@ -1,3 +1,3 @@
 module.exports = {
-  GROSS: 'G00 - Gross value of claim'
+  GROSS_VALUE: 'G00 - Gross value of claim'
 }

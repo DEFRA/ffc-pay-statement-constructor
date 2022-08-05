@@ -1,7 +1,7 @@
-const { SFI_ARABLE_SOIL_INTRODUCTORY_AP } = require('../app/constants/account-codes')
+const { SFI_GROSS_VALUE_AP } = require('../app/constants/account-codes')
 const { GBP } = require('../app/constants/currencies')
 const { RP00 } = require('../app/constants/delivery-bodies')
-const { GROSS } = require('../app/constants/descriptions')
+const { GROSS_VALUE } = require('../app/constants/descriptions')
 const { DRD10 } = require('../app/constants/fund-codes')
 const { ARABLE_SOIL_INTRODUCTORY } = require('../app/constants/funding-codes')
 const { AP } = require('../app/constants/ledgers')
@@ -29,8 +29,8 @@ const paymentRequest = {
   frn: FRN,
   invoiceLines: [
     {
-      accountCode: SFI_ARABLE_SOIL_INTRODUCTORY_AP,
-      description: GROSS,
+      accountCode: SFI_GROSS_VALUE_AP,
+      description: GROSS_VALUE,
       fundCode: DRD10,
       schemeCode: ARABLE_SOIL_INTRODUCTORY,
       value: FIVE_HUNDRED_POUNDS
