@@ -11,7 +11,3 @@ const saveSettlement = async (settlement, transaction) => {
 }
 
 module.exports = saveSettlement
-
-// set the missing fields
-// hard code first
-// then use the invoice number to find them from other tables
