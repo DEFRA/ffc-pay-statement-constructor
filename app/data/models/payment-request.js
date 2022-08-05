@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     received: DataTypes.DATE,
     referenceId: DataTypes.UUID,
     schedule: DataTypes.STRING,
-    sitiAgriInvoiceNumber: DataTypes.STRING,
+    status: DataTypes.STRING,
     submitted: DataTypes.DATE,
     value: DataTypes.INTEGER
   },
