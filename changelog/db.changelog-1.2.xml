@@ -8,11 +8,9 @@
      referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
   </changeSet>
   <changeSet author="Simon Dunn" id="3">
-    <update tableName="settlements">
-      <column name="paymentRequestId" type="INTEGER" >
-        <constraints nullable="true" />
-      </column>
-    </update>
+    <dropNotNullConstraint 
+      tableName="settlements" columnName="paymentRequestId" columnDataType="INTEGER"
+    />
   </changeSet>
   
 </databaseChangeLog>
