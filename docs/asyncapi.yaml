@@ -1,0 +1,182 @@
+asyncapi: 2.4.0
+info:
+  title: FFC Payment Statement Constructor
+  version: '1.0.0'
+  description: Construct payment statements
+channels:
+  payment/request:
+    subscribe:
+      message:
+        $ref: '#/components/messages/PaymentStatement'
+
+components:
+  messages:
+    PaymentRequest:
+      name: Payment statement
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/PaymentStatement'
+  schemas:
+    PaymentStatement:
+      type: object
+      required:
+      - agreementNumber
+      - contractNumber
+      - correlationId
+      - currency
+      - deliveryBody
+      - dueDate
+      - frn
+      - invoiceLines
+      - ledger
+      - marketingYear
+      - paymentRequestNumber
+      - schedule
+      - schemeId
+      - value
+      properties:
+        agreementNumber:
+          $ref: '#/components/schemas/AgreementNumber'
+        contractNumber:
+          $ref: '#/components/schemas/ContractNumber'
+        correlationId:
+          $ref: '#/components/schemas/CorrelationId'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        deliveryBody:
+          $ref: '#/components/schemas/DeliveryBody'
+        dueDate:
+          $ref: '#/components/schemas/DueDate'
+        frn:
+          $ref: '#/components/schemas/FRN'
+        invoiceLines:
+          type: array
+          description: List of invoice lines that make up request
+          items:
+            type: object
+            required:
+            - accountCode
+            - description
+            - fundCode
+            - schemeCode
+            - value
+            properties:
+              accountCode:
+                $ref: '#/components/schemas/AccountCode'
+              description:
+                $ref: '#/components/schemas/Description'
+              fundCode:
+                $ref: '#/components/schemas/FundCode'
+              schemeCode:
+                $ref: '#/components/schemas/SchemeCode'
+              value:
+                $ref: '#/components/schemas/ValueInteger'
+        ledger:
+          $ref: '#/components/schemas/Ledger'
+        marketingYear:
+          $ref: '#/components/schemas/MarketingYear'
+        paymentRequestNumber:
+          $ref: '#/components/schemas/PaymentRequestNumber'
+        schedule:
+          $ref: '#/components/schemas/Schedule'
+        schemeId:
+          $ref: '#/components/schemas/SchemeId'
+        value:
+          $ref: '#/components/schemas/ValueInteger'
+    AccountCode:
+      type: string
+      description: Unique account code for budgeting
+      example: SOS123
+    AgreementNumber:
+      type: string
+      description: The payment request agreement number
+      example: 'SIP000000000001'
+    ContractNumber:
+      type: string
+      description:
+      example: 'SFIP000001'
+    CorrelationId:
+      type: string
+      format: uuid
+      description: GUID for event correlation, optional
+      example: ce6ec916-bebe-4bc0-bad1-255298c82845
+    Currency:
+      type: string
+      description: Currency of values in request
+      example: GBP
+      enum:
+      - GBP
+      - EUR
+    DeliveryBody:
+      type: string
+      description: Delivery body responsible for payment
+      example: RP00
+    Description:
+      type: string
+      description: Description of what line relates to, eg gross or penalty
+      example: G00 - Gross value of claim
+    DueDate:
+      type: string
+      format: DD/MM/YYYY, YYYY/MM/DD, DD-MM-YYYY or YYYY-MM-DD
+      description: Date request should be issued from.  If not supplied will default to current date.
+      example: 09/11/2022
+      default: Current date
+    FRN:
+      type: number
+      description: Firm Reference Number
+      minimum: 1000000000
+      maximum: 9999999999
+      example: 1234567890
+    FundCode:
+      type: string
+      description: Unique fund code to pay from
+      example: DRD10
+    InvoiceNumber:
+      type: string
+      description: Unique identifier for payment request
+      example: A12345678S1234567V001
+    Ledger:
+      type: string
+      description: Target ledger for settlement, AP for Accounts Payable and AR for Accounts Receivable
+      example: AP
+      enum:
+      - AP
+      - AR
+    MarketingYear:
+      type: number
+      description: Scheme year for request
+      minimum: 2021
+      maximum: 2099
+      example: 2022
+    PaymentRequestNumber:
+      type: number
+      description: Version of payment request starting with 1, anything greater than 1 is an adjustment
+      minimum: 1
+      maximum: 99
+    Schedule:
+      type: string
+      description: Payment frequency instruction for DAX, eg Q4 for quarterly payments, optional
+      enum:
+      - Q4
+      - M12
+      - T4
+    SchemeCode:
+      type: string
+      description: Unique funding option code
+      example: A1234
+    SchemeId:
+      type: number
+      format: integer
+      description: Unique ID for scheme used internal to payment services
+      example: 1
+    SourceSystem:
+      type: string
+      description: System identifier request originates from
+      example: AHWR
+    ValueInteger:
+      type: number
+      format: integer
+      description: Value of request or invoice line after enrichment with main and fractional currency combined
+      minimum: 0
+      maximum: 999999999999
+      example: 50000
