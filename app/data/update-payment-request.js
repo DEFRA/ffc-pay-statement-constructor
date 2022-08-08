@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('.')
 
 const updatePaymentRequest = async (paymentRequestId, paymentRequest, transaction) => {
   await db.paymentRequest.update({

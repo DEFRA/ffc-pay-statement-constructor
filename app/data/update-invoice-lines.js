@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('.')
 
 const updateInvoiceLines = async (invoiceLines, paymentRequestId, transaction) => {
   for (const invoiceLine of invoiceLines) {
