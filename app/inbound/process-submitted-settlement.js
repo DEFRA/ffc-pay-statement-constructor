@@ -7,8 +7,7 @@ const processSubmittedSettlement = async (settlement) => {
   const transaction = await db.sequelize.transaction()
 
   try {
-    const invoiceNumber = settlement.invoiceNumber
-    const existingSettlement = await getExistingSettlement(invoiceNumber, transaction)
+    const existingSettlement = await getExistingSettlement(settlement, transaction)
     if (existingSettlement) {
       console.info(`Duplicate settlement received, skipping ${existingSettlement.reference}`)
       await transaction.rollback()
