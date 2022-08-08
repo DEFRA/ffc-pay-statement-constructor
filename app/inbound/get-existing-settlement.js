@@ -6,10 +6,7 @@ const getExistingSettlement = async (settlement, transaction) => {
     lock: true,
     where: {
       invoiceNumber: settlement.invoiceNumber,
-      [db.Sequelize.Op.and]:
-        {
-          value: { [db.Sequelize.Op.eq]: settlement.value }
-        }
+      value: settlement.value
     }
   })
 }
