@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     reference: DataTypes.INTEGER,
     settled: DataTypes.BOOLEAN,
     settlementDate: DataTypes.DATE,
-    sourceSystem: DataTypes.STRING
+    sourceSystem: DataTypes.STRING,
+    value: DataTypes.INTEGER
   },
   {
     tableName: 'settlements',
