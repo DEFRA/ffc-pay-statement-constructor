@@ -2,7 +2,7 @@ const db = require('../data')
 
 const getPaymentRequestByReferenceId = require('./get-payment-request-by-reference-id')
 const saveInvoiceNumber = require('./save-invoice-number')
-const { saveAndReturnPaymentRequest } = require('./save-payment-request')
+const saveAndReturnPaymentRequest = require('./save-payment-request')
 const saveInvoiceLines = require('./save-invoice-lines')
 
 const processSubmitPaymentRequest = async (paymentRequest) => {
