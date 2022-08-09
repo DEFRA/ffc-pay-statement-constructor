@@ -3,7 +3,6 @@ const saveSettlement = require('./save-settlement')
 const getExistingSettlement = require('./get-existing-settlement')
 
 const processSubmittedSettlement = async (settlement) => {
-  console.log(settlement)
   const transaction = await db.sequelize.transaction()
 
   try {
