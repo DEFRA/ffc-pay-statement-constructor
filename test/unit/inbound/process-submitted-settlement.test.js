@@ -16,17 +16,16 @@ jest.mock('../../../app/data', () => {
   }
 })
 
+jest.mock('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
+const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
+
+jest.mock('../../../app/inbound/save-settlement')
+const saveSettlement = require('../../../app/inbound/save-settlement')
+
+const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
+let settlement
+
 describe('process submitted settlement request', () => {
-  jest.mock('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
-  const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
-
-  jest.mock('../../../app/inbound/save-settlement')
-  const saveSettlement = require('../../../app/inbound/save-settlement')
-
-  const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
-
-  let settlement
-
   beforeEach(() => {
     settlement = {
       sourceSystem: 'SITIAgri',
