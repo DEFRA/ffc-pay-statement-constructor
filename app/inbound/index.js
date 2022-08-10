@@ -1,5 +1,5 @@
-const processSubmittedSettlement = require('./process-submitted-settlement')
+const processReturnSettlement = require('./process-return-settlement')
 
 module.exports = {
-  processSubmittedSettlement
+  processReturnSettlement
 }

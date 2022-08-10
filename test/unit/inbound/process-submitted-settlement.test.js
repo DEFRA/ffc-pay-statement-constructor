@@ -23,7 +23,7 @@ describe('process submitted settlement request', () => {
   jest.mock('../../../app/inbound/save-settlement')
   const saveSettlement = require('../../../app/inbound/save-settlement')
 
-  const processSubmittedSettlement = require('../../../app/inbound/process-submitted-settlement')
+  const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
 
   let settlement
 
@@ -48,17 +48,17 @@ describe('process submitted settlement request', () => {
   })
 
   test('should call getExistingSettlement when a valid settlement is given ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(getExistingSettlement).toBeCalled()
   })
 
   test('should call getExistingSettlement once when a valid settlement is given ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(getExistingSettlement).toBeCalledTimes(1)
   })
 
   test('should call getExistingSettlement with "settlement" and "mockTransaction" when valid settlement is given ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(getExistingSettlement).toHaveBeenCalledWith(settlement, mockTransaction)
   })
 
@@ -67,7 +67,7 @@ describe('process submitted settlement request', () => {
     const duplicateSettlement = settlement
     getExistingSettlement.mockResolvedValue(duplicateSettlement)
 
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
 
     expect(consoleSpy).toHaveBeenCalledWith(`Duplicate settlement received, skipping ${duplicateSettlement.reference}`)
   })
@@ -75,7 +75,7 @@ describe('process submitted settlement request', () => {
   test('should throw when duplicate settlement found ', async () => {
     getExistingSettlement.mockRejectedValue(new Error('Duplicate settlement recieved'))
     const wrapper = async () => {
-      await processSubmittedSettlement(settlement)
+      await processReturnSettlement(settlement)
     }
     expect(wrapper).rejects.toThrow()
   })
@@ -83,7 +83,7 @@ describe('process submitted settlement request', () => {
   test('should throw an error when duplicate settlement found ', async () => {
     getExistingSettlement.mockRejectedValue(new Error('Duplicate settlement recieved'))
     const wrapper = async () => {
-      await processSubmittedSettlement(settlement)
+      await processReturnSettlement(settlement)
     }
     expect(wrapper).rejects.toThrow(Error)
   })
@@ -91,46 +91,46 @@ describe('process submitted settlement request', () => {
   test('should callmockTransaction.rollback when a duplicate settlement is found ', async () => {
     const duplicateSettlement = settlement
     getExistingSettlement.mockResolvedValue(duplicateSettlement)
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should callmockTransaction.rollback once when a duplicate settlement is found ', async () => {
     const duplicateSettlement = settlement
     getExistingSettlement.mockResolvedValue(duplicateSettlement)
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should callmockTransaction.commit when no existing settlement is found ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(mockTransaction.commit).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.commit once when no existing settlement is found ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
   })
 
   test('should call saveSettlement when a valid settlement is given ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(saveSettlement).toHaveBeenCalled()
   })
 
   test('should call saveSettlement once when a valid settlement is given ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(saveSettlement).toHaveBeenCalledTimes(1)
   })
 
   test('should call saveSettlement with settlement and mocktransaction ', async () => {
-    await processSubmittedSettlement(settlement)
+    await processReturnSettlement(settlement)
     expect(saveSettlement).toHaveBeenCalledWith(settlement, mockTransaction)
   })
 
   test('should throw when saveSettlement is called with invalid settlement ', async () => {
     saveSettlement.mockRejectedValue(new Error('Invalid settlement'))
     const wrapper = async () => {
-      await processSubmittedSettlement(settlement)
+      await processReturnSettlement(settlement)
     }
     expect(wrapper).rejects.toThrow()
   })

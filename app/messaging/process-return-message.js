@@ -1,9 +1,11 @@
-const { processSubmittedSettlement } = require('../inbound')
+const util = require('util')
+const { processReturnSettlement } = require('../inbound')
 const processReturnMessage = async (message, receiver) => {
   try {
-    await receiver.completeMessage(message)
     const settlement = message.body
-    await processSubmittedSettlement(settlement)
+    console.log('Return settlement processed:', util.inspect(settlement, false, null, true))
+    await processReturnSettlement(settlement)
+    await receiver.completeMessage(message)
   } catch (err) {
     console.error('Unable to process return message:', err)
   }

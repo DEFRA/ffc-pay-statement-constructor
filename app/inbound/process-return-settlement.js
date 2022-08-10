@@ -2,7 +2,7 @@ const db = require('../data')
 const saveSettlement = require('./save-settlement')
 const getExistingSettlement = require('./get-existing-settlement')
 
-const processSubmittedSettlement = async (settlement) => {
+const processReturnSettlement = async (settlement) => {
   const transaction = await db.sequelize.transaction()
 
   try {
@@ -20,4 +20,4 @@ const processSubmittedSettlement = async (settlement) => {
   }
 }
 
-module.exports = processSubmittedSettlement
+module.exports = processReturnSettlement
