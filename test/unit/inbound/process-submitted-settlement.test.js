@@ -25,7 +25,7 @@ const saveSettlement = require('../../../app/inbound/save-settlement')
 const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
 const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
 
-describe('process submitted settlement request', () => {
+describe('process return settlement request', () => {
   beforeEach(() => {
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(null)
     saveSettlement.mockResolvedValue(null)
@@ -50,16 +50,6 @@ describe('process submitted settlement request', () => {
     expect(getSettlementByInvoiceNumberAndValue).toHaveBeenCalledWith(settlement.invoiceNumber, settlement.value, mockTransaction)
   })
 
-  test('should log "Duplicate settlement received, skipping {duplicateSettlement.reference}" when getSettlementByInvoiceNumberAndValue returns a settlement', async () => {
-    const consoleSpy = jest.spyOn(console, 'info')
-    const duplicateSettlement = settlement
-    getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
-
-    await processReturnSettlement(settlement)
-
-    expect(consoleSpy).toHaveBeenCalledWith(`Duplicate settlement received, skipping ${duplicateSettlement.reference}`)
-  })
-
   test('should throw when duplicate settlement found', async () => {
     getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Duplicate settlement recieved'))
     const wrapper = async () => {
@@ -68,7 +58,7 @@ describe('process submitted settlement request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw an error when duplicate settlement found ', async () => {
+  test('should throw an error when duplicate settlement found', async () => {
     getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Duplicate settlement recieved'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
@@ -110,7 +100,7 @@ describe('process submitted settlement request', () => {
     expect(saveSettlement).toHaveBeenCalledTimes(1)
   })
 
-  test('should call saveSettlement with settlement and mocktransaction', async () => {
+  test('should call saveSettlement with "settlement" and "mocktransaction"', async () => {
     await processReturnSettlement(settlement)
     expect(saveSettlement).toHaveBeenCalledWith(settlement, mockTransaction)
   })
