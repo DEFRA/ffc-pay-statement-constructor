@@ -43,6 +43,7 @@
     <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(60)" />
     <rollback>
       <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(30)" />
+    </rollback>
   </changeSet>
   <changeSet author="Marc Templeton" id="9">
     <insert tableName="fundingOptions">
@@ -54,5 +55,10 @@
     <addColumn tableName="paymentRequests">
       <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
     </addColumn>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="11">
+    <dropColumn tableName="paymentRequests">
+      <column name="sitiAgriInvoiceNumber" />
+    </dropColumn>
   </changeSet>
 </databaseChangeLog>
