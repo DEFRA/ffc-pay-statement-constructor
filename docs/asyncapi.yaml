@@ -7,17 +7,16 @@ channels:
   payment/request:
     subscribe:
       message:
-        $ref: '#/components/messages/PaymentStatement'
-
+        $ref: '#/components/messages/PaymentRequest'
 components:
   messages:
     PaymentRequest:
       name: Payment statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/PaymentStatement'
+        $ref: '#/components/schemas/PaymentRequest'
   schemas:
-    PaymentStatement:
+    PaymentRequest:
       type: object
       required:
       - agreementNumber
@@ -90,11 +89,11 @@ components:
     AgreementNumber:
       type: string
       description: The payment request agreement number
-      example: 'SIP000000000001'
+      example: SIP000000000001
     ContractNumber:
       type: string
       description:
-      example: 'SFIP000001'
+      example: SFIP000001
     CorrelationId:
       type: string
       format: uuid
@@ -163,12 +162,20 @@ components:
     SchemeCode:
       type: string
       description: Unique funding option code
-      example: A1234
+      example: 80001
+      enum:
+      - 80001 (Arable and horticultural soils Introductory)
     SchemeId:
       type: number
       format: integer
       description: Unique ID for scheme used internal to payment services
       example: 1
+      enum:
+      - 1 (SFI)
+      - 2 (SFI Pilot)
+      - 3 (Lump Sums)
+      - 4 (LNR)
+      - 5 (Vet Visits)
     SourceSystem:
       type: string
       description: System identifier request originates from
