@@ -1,5 +1,6 @@
 jest.mock('ffc-messaging')
 const processReturnMessage = require('../../../app/messaging/process-return-message')
+const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
 let receiver
 
 describe('process return message', () => {
@@ -15,16 +16,7 @@ describe('process return message', () => {
 
   test('completes message', async () => {
     const message = {
-      body: {
-        sourceSystem: 'SITIAgri',
-        invoiceNumber: 'S123456789A123456V003',
-        frn: 1234567890,
-        currency: 'GBP',
-        value: 30000,
-        settlementDate: 'Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)',
-        reference: 'PY1234567',
-        settled: true
-      }
+      body: { ...settlement }
     }
     await processReturnMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)

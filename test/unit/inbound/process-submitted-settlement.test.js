@@ -23,21 +23,10 @@ jest.mock('../../../app/inbound/save-settlement')
 const saveSettlement = require('../../../app/inbound/save-settlement')
 
 const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
-let settlement
+const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
 
 describe('process submitted settlement request', () => {
   beforeEach(() => {
-    settlement = {
-      sourceSystem: 'SITIAgri',
-      invoiceNumber: 'S123456789A123456V003',
-      frn: 1234567890,
-      currency: 'GBP',
-      value: 30000,
-      settlementDate: 'Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)',
-      reference: 'PY1234567',
-      settled: true
-    }
-
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(null)
     saveSettlement.mockResolvedValue(null)
   })
