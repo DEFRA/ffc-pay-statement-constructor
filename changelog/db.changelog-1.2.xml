@@ -16,12 +16,40 @@
     </insert>
   </changeSet>
   <changeSet author="Marc Templeton" id="4">
-    <insert tableName="fundingOptions">
-      <column name="fundingCode" value="80001" />
-      <column name="name" value="Arable soil: Introductory" />
+    <insert tableName="schemes">
+      <column name="schemeId" value="2" />
+      <column name="name" value="SFI Pilot" />
     </insert>
   </changeSet>
   <changeSet author="Marc Templeton" id="5">
+    <insert tableName="schemes">
+      <column name="schemeId" value="3" />
+      <column name="name" value="Lump Sums" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="6">
+    <insert tableName="schemes">
+      <column name="schemeId" value="4" />
+      <column name="name" value="LNR" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="7">
+    <insert tableName="schemes">
+      <column name="schemeId" value="5" />
+      <column name="name" value="Vet Visits" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="8">
+    <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(60)" />
+    <rollback>
+      <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(30)" />
+  <changeSet author="Marc Templeton" id="9">
+    <insert tableName="fundingOptions">
+      <column name="fundingCode" value="80001" />
+      <column name="name" value="Arable and horticultural soils: Introductory" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="10">
     <addColumn tableName="paymentRequests">
       <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
     </addColumn>
