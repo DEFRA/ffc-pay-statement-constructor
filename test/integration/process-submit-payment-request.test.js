@@ -1,7 +1,7 @@
 const db = require('../../app/data')
 
-const { ARABLE_SOIL_INTRODUCTORY } = require('../../app/constants/funding-codes')
-const { SFI: SFI_SCHEME_ID } = require('../../app/constants/scheme-ids')
+const schemes = require('../../app/constants/schemes')
+const fundingOptions = require('../../app/constants/funding-options')
 
 const reverseEngineerInvoiceNumber = require('../../app/processing/reverse-engineer-invoice-number')
 const processSubmitPaymentRequest = require('../../app/inbound/process-submit-payment-request.js')
@@ -12,18 +12,8 @@ describe('process submit payment request', () => {
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
-    const scheme = {
-      schemeId: SFI_SCHEME_ID,
-      name: 'SFI'
-    }
-
-    const fundingOption = {
-      fundingCode: ARABLE_SOIL_INTRODUCTORY,
-      name: 'Arable and horticultural soils: Introductory'
-    }
-
-    await db.scheme.create(scheme)
-    await db.fundingOption.create(fundingOption)
+    await db.scheme.bulkCreate(schemes)
+    await db.fundingOption.bulkCreate(fundingOptions)
 
     paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').submitPaymentRequest))
   })
