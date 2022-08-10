@@ -17,8 +17,8 @@ jest.mock('../../../app/data', () => {
 })
 
 describe('process submitted settlement request', () => {
-  jest.mock('../../../app/inbound/get-existing-settlement')
-  const getExistingSettlement = require('../../../app/inbound/get-existing-settlement')
+  jest.mock('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
+  const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
 
   jest.mock('../../../app/inbound/save-settlement')
   const saveSettlement = require('../../../app/inbound/save-settlement')
@@ -39,7 +39,7 @@ describe('process submitted settlement request', () => {
       settled: true
     }
 
-    getExistingSettlement.mockResolvedValue(null)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(null)
     saveSettlement.mockResolvedValue(null)
   })
 
@@ -47,25 +47,25 @@ describe('process submitted settlement request', () => {
     jest.clearAllMocks()
   })
 
-  test('should call getExistingSettlement when a valid settlement is given ', async () => {
+  test('should call getSettlementByInvoiceNumberAndValue when a valid settlement is given ', async () => {
     await processReturnSettlement(settlement)
-    expect(getExistingSettlement).toBeCalled()
+    expect(getSettlementByInvoiceNumberAndValue).toBeCalled()
   })
 
-  test('should call getExistingSettlement once when a valid settlement is given ', async () => {
+  test('should call getSettlementByInvoiceNumberAndValue once when a valid settlement is given ', async () => {
     await processReturnSettlement(settlement)
-    expect(getExistingSettlement).toBeCalledTimes(1)
+    expect(getSettlementByInvoiceNumberAndValue).toBeCalledTimes(1)
   })
 
-  test('should call getExistingSettlement with "settlement" and "mockTransaction" when valid settlement is given ', async () => {
+  test('should call getSettlementByInvoiceNumberAndValue with "settlement" and "mockTransaction" when valid settlement is given ', async () => {
     await processReturnSettlement(settlement)
-    expect(getExistingSettlement).toHaveBeenCalledWith(settlement, mockTransaction)
+    expect(getSettlementByInvoiceNumberAndValue).toHaveBeenCalledWith(settlement.invoiceNumber, settlement.value, mockTransaction)
   })
 
-  test('should log "Duplicate settlement received, skipping {duplicateSettlement.reference}" when getExistingSettlement returns a settlement ', async () => {
+  test('should log "Duplicate settlement received, skipping {duplicateSettlement.reference}" when getSettlementByInvoiceNumberAndValue returns a settlement ', async () => {
     const consoleSpy = jest.spyOn(console, 'info')
     const duplicateSettlement = settlement
-    getExistingSettlement.mockResolvedValue(duplicateSettlement)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
 
     await processReturnSettlement(settlement)
 
@@ -73,7 +73,7 @@ describe('process submitted settlement request', () => {
   })
 
   test('should throw when duplicate settlement found ', async () => {
-    getExistingSettlement.mockRejectedValue(new Error('Duplicate settlement recieved'))
+    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Duplicate settlement recieved'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
     }
@@ -81,7 +81,7 @@ describe('process submitted settlement request', () => {
   })
 
   test('should throw an error when duplicate settlement found ', async () => {
-    getExistingSettlement.mockRejectedValue(new Error('Duplicate settlement recieved'))
+    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Duplicate settlement recieved'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
     }
@@ -90,14 +90,14 @@ describe('process submitted settlement request', () => {
 
   test('should callmockTransaction.rollback when a duplicate settlement is found ', async () => {
     const duplicateSettlement = settlement
-    getExistingSettlement.mockResolvedValue(duplicateSettlement)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
     await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should callmockTransaction.rollback once when a duplicate settlement is found ', async () => {
     const duplicateSettlement = settlement
-    getExistingSettlement.mockResolvedValue(duplicateSettlement)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
     await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
