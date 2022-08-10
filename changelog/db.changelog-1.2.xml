@@ -43,6 +43,7 @@
     <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(60)" />
     <rollback>
       <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(30)" />
+  </changeSet>
   <changeSet author="Marc Templeton" id="9">
     <insert tableName="fundingOptions">
       <column name="fundingCode" value="80001" />
