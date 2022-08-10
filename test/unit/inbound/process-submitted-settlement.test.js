@@ -50,37 +50,37 @@ describe('process return settlement request', () => {
     expect(getSettlementByInvoiceNumberAndValue).toHaveBeenCalledWith(settlement.invoiceNumber, settlement.value, mockTransaction)
   })
 
-  test('should throw when duplicate settlement found', async () => {
-    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Duplicate settlement recieved'))
+  test('should throw when getSettlementByInvoiceNumberAndValue throws', async () => {
+    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Database retrieval issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
     }
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw an error when duplicate settlement found', async () => {
-    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Duplicate settlement recieved'))
+  test('should throw an error of "Database retrieval issue" when getSettlementByInvoiceNumberAndValue throws', async () => {
+    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Database retrieval issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
     }
-    expect(wrapper).rejects.toThrow(Error)
+    expect(wrapper).rejects.toThrow(Error('Database retrieval issue'))
   })
 
-  test('should callmockTransaction.rollback when a duplicate settlement is found', async () => {
+  test('should call mockTransaction.rollback when a duplicate settlement is found', async () => {
     const duplicateSettlement = settlement
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
     await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should callmockTransaction.rollback once when a duplicate settlement is found', async () => {
+  test('should call mockTransaction.rollback once when a duplicate settlement is found', async () => {
     const duplicateSettlement = settlement
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
     await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should callmockTransaction.commit when no existing settlement is found', async () => {
+  test('should call mockTransaction.commit when no existing settlement is found', async () => {
     await processReturnSettlement(settlement)
     expect(mockTransaction.commit).toHaveBeenCalled()
   })
