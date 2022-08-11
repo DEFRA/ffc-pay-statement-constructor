@@ -1,0 +1,80 @@
+asyncapi: 2.4.0
+info:
+  title: FFC Payment Statement Constructor
+  version: '1.0.0'
+  description: Construct data for Payment Statements
+channels:
+  reurn/message:
+    subscribe:
+      message:
+        $ref: 
+components:
+  messages:
+    ReturnMessage:
+      name: Return Message
+      contentType: application/json
+      payload:
+        $ref: 
+  schemas:
+    ReturnMessage:
+      type: object
+      required:
+      - sourceSystem
+      - invoiceNumber
+      - frn
+      - currency
+      - value
+      - settlementDate
+      - reference 
+      - settled
+      properties:
+        sourceSystem:
+          $ref:/
+        invoiceNumber:
+          $ref:/
+        frn:
+          $ref: /
+        currency:
+          $ref:/
+        value:
+          $ref:/
+        settlementDate:
+          $ref:/
+        reference:
+            $ref:/
+        settled:
+            $ref:/
+    SourceSystem:
+      type: string
+      description: /
+      example: 'SITIAgri'
+    InvoiceNumber:
+      type: string
+      description: Invoice number 
+      example: S123456789A123456V005
+    FRN:
+      type: number
+      description: Firm Reference Number
+      minimum: 1000000000
+      maximum: 9999999999
+      example: 1234567890
+    Currency:
+      type: string
+      description: The currency of the value
+      example: GBP
+    Value:
+      type: integer
+      description: The value in pence
+      example: 10000
+    SettlementDate:
+      type: string
+      description: Date of settlement
+      example: Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)
+    Reference:
+      type: string
+      description: 
+      example: PY1234567
+    Settled:
+      type: boolean
+      description: 
+    
