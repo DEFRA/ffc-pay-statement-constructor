@@ -105,11 +105,27 @@ describe('process return settlement request', () => {
     expect(saveSettlement).toHaveBeenCalledWith(settlement, mockTransaction)
   })
 
-  test('should throw when saveSettlement is called with invalid settlement', async () => {
-    saveSettlement.mockRejectedValue(new Error('Invalid settlement'))
+  test('should throw when saveSettlement throws', async () => {
+    saveSettlement.mockRejectedValue(new Error('Database save down issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
     }
     expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw error when saveSettlement throws', async () => {
+    saveSettlement.mockRejectedValue(new Error('Database save down issue'))
+    const wrapper = async () => {
+      await processReturnSettlement(settlement)
+    }
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw error "Database save down issue" when saveSettlement throws error with "Database save down issue"', async () => {
+    saveSettlement.mockRejectedValue(new Error('Database save down issue'))
+    const wrapper = async () => {
+      await processReturnSettlement(settlement)
+    }
+    expect(wrapper).rejects.toThrow(Error('Database save down issue'))
   })
 })
