@@ -9,6 +9,7 @@ const {
   LUMP_SUMS: LUMP_SUMS_SCHEME_ID,
   VET_VISITS: VET_VISITS_SCHEME_ID
 } = require('../../app/constants/scheme-ids')
+const { COMPLETED } = require('../../app/constants/statuses')
 
 const reverseEngineerInvoiceNumber = require('../../app/processing/reverse-engineer-invoice-number')
 const processSubmitPaymentRequest = require('../../app/inbound/process-submit-payment-request.js')
@@ -334,6 +335,13 @@ describe('process submit payment request', () => {
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
     expect(result.received).toStrictEqual(new Date())
+  })
+
+  test('should save entry into paymentRequest with value as COMPLETED where paymentRequest.referenceId', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.status).toBe(COMPLETED)
   })
 
   test('should not save paymentRequest.invoiceLines into entry where paymentRequest.referenceId', async () => {

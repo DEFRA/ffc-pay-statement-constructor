@@ -16,8 +16,8 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/inbound/get-payment-request-by-reference-id')
-const getPaymentRequestByReferenceId = require('../../../app/inbound/get-payment-request-by-reference-id')
+jest.mock('../../../app/inbound/get-completed-payment-request-by-reference-id')
+const getCompletedPaymentRequestByReferenceId = require('../../../app/inbound/get-completed-payment-request-by-reference-id')
 
 jest.mock('../../../app/inbound/save-invoice-number')
 const saveInvoiceNumber = require('../../../app/inbound/save-invoice-number')
@@ -36,7 +36,7 @@ describe('process submit payment request', () => {
   beforeEach(() => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
 
-    getPaymentRequestByReferenceId.mockResolvedValue(null)
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(null)
     saveInvoiceNumber.mockResolvedValue(undefined)
     savePaymentRequest.mockResolvedValue(paymentRequest)
     saveInvoiceLines.mockResolvedValue(undefined)
@@ -46,19 +46,19 @@ describe('process submit payment request', () => {
     jest.clearAllMocks()
   })
 
-  test('should call getPaymentRequestByReferenceId when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call getCompletedPaymentRequestByReferenceId when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(getPaymentRequestByReferenceId).toHaveBeenCalled()
+    expect(getCompletedPaymentRequestByReferenceId).toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequestByReferenceId once when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call getCompletedPaymentRequestByReferenceId once when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(getPaymentRequestByReferenceId).toHaveBeenCalledTimes(1)
+    expect(getCompletedPaymentRequestByReferenceId).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getPaymentRequestByReferenceId with paymentRequest.referenceId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call getCompletedPaymentRequestByReferenceId with paymentRequest.referenceId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(getPaymentRequestByReferenceId).toHaveBeenCalledWith(paymentRequest.referenceId, mockTransaction)
+    expect(getCompletedPaymentRequestByReferenceId).toHaveBeenCalledWith(paymentRequest.referenceId, mockTransaction)
   })
 
   test('should call saveInvoiceNumber when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
@@ -121,38 +121,38 @@ describe('process submit payment request', () => {
     expect(mockTransaction.rollback).not.toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequestByReferenceId when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
-    getPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
+  test('should call getCompletedPaymentRequestByReferenceId when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
     await processSubmitPaymentRequest(paymentRequest)
-    expect(getPaymentRequestByReferenceId).toHaveBeenCalled()
+    expect(getCompletedPaymentRequestByReferenceId).toHaveBeenCalled()
   })
 
-  test('should call getPaymentRequestByReferenceId once when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
-    getPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
+  test('should call getCompletedPaymentRequestByReferenceId once when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
     await processSubmitPaymentRequest(paymentRequest)
-    expect(getPaymentRequestByReferenceId).toHaveBeenCalledTimes(1)
+    expect(getCompletedPaymentRequestByReferenceId).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getPaymentRequestByReferenceId with paymentRequest.referenceId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
-    getPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
+  test('should call getCompletedPaymentRequestByReferenceId with paymentRequest.referenceId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
     await processSubmitPaymentRequest(paymentRequest)
-    expect(getPaymentRequestByReferenceId).toHaveBeenCalledWith(paymentRequest.referenceId, mockTransaction)
+    expect(getCompletedPaymentRequestByReferenceId).toHaveBeenCalledWith(paymentRequest.referenceId, mockTransaction)
   })
 
   test('should call mockTransaction.rollback when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
-    getPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
     await processSubmitPaymentRequest(paymentRequest)
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when a valid paymentRequest is given and a previous paymentRequest exist', async () => {
-    getPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
     await processSubmitPaymentRequest(paymentRequest)
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should throw when getPaymentRequestByReferenceId throws', async () => {
-    getPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should throw when getCompletedPaymentRequestByReferenceId throws', async () => {
+    getCompletedPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -161,8 +161,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw Error when getPaymentRequestByReferenceId throws Error', async () => {
-    getPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should throw Error when getCompletedPaymentRequestByReferenceId throws Error', async () => {
+    getCompletedPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -171,8 +171,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with "Database retrieval issue" when getPaymentRequestByReferenceId throws error with "Database retrieval issue"', async () => {
-    getPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should throw error with "Database retrieval issue" when getCompletedPaymentRequestByReferenceId throws error with "Database retrieval issue"', async () => {
+    getCompletedPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -301,14 +301,14 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
   })
 
-  test('should call mockTransaction.rollback when getPaymentRequestByReferenceId throws', async () => {
-    getPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should call mockTransaction.rollback when getCompletedPaymentRequestByReferenceId throws', async () => {
+    getCompletedPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
     try { await processSubmitPaymentRequest(paymentRequest) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should call mockTransaction.rollback once when getPaymentRequestByReferenceId throws', async () => {
-    getPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should call mockTransaction.rollback once when getCompletedPaymentRequestByReferenceId throws', async () => {
+    getCompletedPaymentRequestByReferenceId.mockRejectedValue(new Error('Database retrieval issue'))
     try { await processSubmitPaymentRequest(paymentRequest) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
