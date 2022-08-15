@@ -10,18 +10,11 @@
     </rollback>
   </changeSet>
   <changeSet author="Marc Templeton" id="3">
-    <insert tableName="schemes">
-      <column name="schemeId" value="1" />
-      <column name="name" value="SFI" />
-    </insert>
+    <addColumn tableName="fundings">
+      <column afterColumn="areaClaimed" name="rate" type="DECIMAL(7,2)" />
+    </addColumn>
   </changeSet>
   <changeSet author="Marc Templeton" id="4">
-    <insert tableName="fundingOptions">
-      <column name="fundingCode" value="80001" />
-      <column name="name" value="Arable soil: Introductory" />
-    </insert>
-  </changeSet>
-  <changeSet author="Marc Templeton" id="5">
     <addColumn tableName="paymentRequests">
       <column afterColumn="dueDate" name="frn" type="BIGINT" />
       <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
@@ -29,7 +22,7 @@
       <column afterColumn="schedule" name="status" type="VARCHAR(20)" />
     </addColumn>
   </changeSet>
-  <changeSet author="Marc Templeton" id="6">
+  <changeSet author="Marc Templeton" id="5">
     <dropColumn tableName="settlements">
       <column name="sourceSystem" />
     </dropColumn>
