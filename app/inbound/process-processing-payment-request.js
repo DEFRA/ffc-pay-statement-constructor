@@ -4,7 +4,7 @@ const { IN_PROGRESS } = require('../constants/statuses')
 
 const getPaymentRequestByReferenceId = require('../data/get-payment-request-by-reference-id')
 const saveInvoiceNumber = require('../data/save-invoice-number')
-const { saveAndReturnPaymentRequest } = require('../data/save-payment-request')
+const savePaymentRequest = require('../data/save-payment-request')
 const saveInvoiceLines = require('../data/save-invoice-lines')
 
 const processProcessingPaymentRequest = async (paymentRequest) => {
@@ -16,7 +16,7 @@ const processProcessingPaymentRequest = async (paymentRequest) => {
       await transaction.rollback()
     } else {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
-      const savedPaymentRequest = await saveAndReturnPaymentRequest({ ...paymentRequest, status: IN_PROGRESS }, transaction)
+      const savedPaymentRequest = await savePaymentRequest({ ...paymentRequest, status: IN_PROGRESS }, transaction)
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
       await transaction.commit()
     }

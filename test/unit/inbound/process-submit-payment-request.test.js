@@ -22,11 +22,11 @@ const getPaymentRequestByReferenceId = require('../../../app/data/get-payment-re
 jest.mock('../../../app/data/save-invoice-number')
 const saveInvoiceNumber = require('../../../app/data/save-invoice-number')
 
-jest.mock('../../../app/data/update-payment-request')
-const { updateAndReturnPaymentRequest } = require('../../../app/data/update-payment-request')
+jest.mock('../../../app/data/save-payment-request')
+const savePaymentRequest = require('../../../app/data/save-payment-request')
 
-jest.mock('../../../app/data/update-invoice-lines')
-const updateInvoiceLines = require('../../../app/data/update-invoice-lines')
+jest.mock('../../../app/data/save-invoice-lines')
+const saveInvoiceLines = require('../../../app/data/save-invoice-lines')
 
 const { processSubmitPaymentRequest } = require('../../../app/inbound')
 
@@ -38,8 +38,8 @@ describe('process submit payment request', () => {
 
     getPaymentRequestByReferenceId.mockResolvedValue(null)
     saveInvoiceNumber.mockResolvedValue(undefined)
-    updateAndReturnPaymentRequest.mockResolvedValue(paymentRequest)
-    updateInvoiceLines.mockResolvedValue(undefined)
+    savePaymentRequest.mockResolvedValue(paymentRequest)
+    saveInvoiceLines.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -76,34 +76,34 @@ describe('process submit payment request', () => {
     expect(saveInvoiceNumber).toHaveBeenCalledWith(paymentRequest.invoiceNumber, mockTransaction)
   })
 
-  test('should call updateAndReturnPaymentRequest when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call savePaymentRequest when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(updateAndReturnPaymentRequest).toHaveBeenCalled()
+    expect(savePaymentRequest).toHaveBeenCalled()
   })
 
-  test('should call updateAndReturnPaymentRequest once when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call savePaymentRequest once when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(updateAndReturnPaymentRequest).toHaveBeenCalledTimes(1)
+    expect(savePaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call updateAndReturnPaymentRequest with paymentRequest.paymentRequestId, paymentRequest and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call savePaymentRequest with paymentRequest and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(updateAndReturnPaymentRequest).toHaveBeenCalledWith(paymentRequest.paymentRequestId, paymentRequest, mockTransaction)
+    expect(savePaymentRequest).toHaveBeenCalledWith(paymentRequest, mockTransaction)
   })
 
-  test('should call updateInvoiceLines when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call saveInvoiceLines when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(updateInvoiceLines).toHaveBeenCalled()
+    expect(saveInvoiceLines).toHaveBeenCalled()
   })
 
-  test('should call updateInvoiceLines once when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call saveInvoiceLines once when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(updateInvoiceLines).toHaveBeenCalledTimes(1)
+    expect(saveInvoiceLines).toHaveBeenCalledTimes(1)
   })
 
-  test('should call updateInvoiceLines with paymentRequest.invoiceLines, paymentRequest.paymentRequestId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call saveInvoiceLines with paymentRequest.invoiceLines, paymentRequest.paymentRequestId and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(updateInvoiceLines).toHaveBeenCalledWith(paymentRequest.invoiceLines, paymentRequest.paymentRequestId, mockTransaction)
+    expect(saveInvoiceLines).toHaveBeenCalledWith(paymentRequest.invoiceLines, paymentRequest.paymentRequestId, mockTransaction)
   })
 
   test('should call mockTransaction.commit when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
@@ -211,8 +211,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(/^Database save down issue$/)
   })
 
-  test('should throw when updateAndReturnPaymentRequest throws', async () => {
-    updateAndReturnPaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw when savePaymentRequest throws', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -221,8 +221,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw Error when updateAndReturnPaymentRequest throws Error', async () => {
-    updateAndReturnPaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw Error when savePaymentRequest throws Error', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -231,8 +231,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with "Database save down issue" when updateAndReturnPaymentRequest throws error with "Database save down issue"', async () => {
-    updateAndReturnPaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw error with "Database save down issue" when savePaymentRequest throws error with "Database save down issue"', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -241,8 +241,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(/^Database save down issue$/)
   })
 
-  test('should throw when updateInvoiceLines throws', async () => {
-    updateInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw when saveInvoiceLines throws', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -251,8 +251,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw Error when updateInvoiceLines throws Error', async () => {
-    updateInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw Error when saveInvoiceLines throws Error', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -261,8 +261,8 @@ describe('process submit payment request', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with "Database save down issue" when updateInvoiceLines throws error with "Database save down issue"', async () => {
-    updateInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw error with "Database save down issue" when saveInvoiceLines throws error with "Database save down issue"', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processSubmitPaymentRequest(paymentRequest)
@@ -325,26 +325,26 @@ describe('process submit payment request', () => {
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should call mockTransaction.rollback when updateAndReturnPaymentRequest throws', async () => {
-    updateAndReturnPaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+  test('should call mockTransaction.rollback when savePaymentRequest throws', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
     try { await processSubmitPaymentRequest(paymentRequest) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should call mockTransaction.rollback once when updateAndReturnPaymentRequest throws', async () => {
-    updateAndReturnPaymentRequest.mockRejectedValue(new Error('Database save down issue'))
+  test('should call mockTransaction.rollback once when savePaymentRequest throws', async () => {
+    savePaymentRequest.mockRejectedValue(new Error('Database save down issue'))
     try { await processSubmitPaymentRequest(paymentRequest) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should call mockTransaction.rollback when updateInvoiceLines throws', async () => {
-    updateInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+  test('should call mockTransaction.rollback when saveInvoiceLines throws', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
     try { await processSubmitPaymentRequest(paymentRequest) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should call mockTransaction.rollback once when updateInvoiceLines throws', async () => {
-    updateInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
+  test('should call mockTransaction.rollback once when saveInvoiceLines throws', async () => {
+    saveInvoiceLines.mockRejectedValue(new Error('Database save down issue'))
     try { await processSubmitPaymentRequest(paymentRequest) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })

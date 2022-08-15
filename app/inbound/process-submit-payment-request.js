@@ -4,8 +4,8 @@ const { COMPLETED } = require('../constants/statuses')
 
 const getPaymentRequestByReferenceId = require('../data/get-payment-request-by-reference-id')
 const saveInvoiceNumber = require('../data/save-invoice-number')
-const { updateAndReturnPaymentRequest } = require('../data/update-payment-request')
-const updateInvoiceLines = require('../data/update-invoice-lines')
+const savePaymentRequest = require('../data/save-payment-request')
+const saveInvoiceLines = require('../data/save-invoice-lines')
 
 const processSubmitPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
@@ -16,8 +16,8 @@ const processSubmitPaymentRequest = async (paymentRequest) => {
       await transaction.rollback()
     } else {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
-      const updatedPaymentRequest = await updateAndReturnPaymentRequest(paymentRequest.paymentRequestId, { ...paymentRequest, status: COMPLETED }, transaction)
-      await updateInvoiceLines(paymentRequest.invoiceLines, updatedPaymentRequest.paymentRequestId, transaction)
+      const savedPaymentRequest = await savePaymentRequest({ ...paymentRequest, status: COMPLETED }, transaction)
+      await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
       await transaction.commit()
     }
   } catch (error) {
