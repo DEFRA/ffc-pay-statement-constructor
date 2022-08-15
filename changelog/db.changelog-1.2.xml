@@ -23,8 +23,15 @@
   </changeSet>
   <changeSet author="Marc Templeton" id="5">
     <addColumn tableName="paymentRequests">
+      <column afterColumn="dueDate" name="frn" type="BIGINT" />
       <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
+      <column afterColumn="schedule" name="sourceSystem" type="VARCHAR(20)" />
       <column afterColumn="schedule" name="status" type="VARCHAR(20)" />
     </addColumn>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="6">
+    <dropColumn tableName="settlements">
+      <column name="sourceSystem" />
+    </dropColumn>
   </changeSet>
 </databaseChangeLog>
