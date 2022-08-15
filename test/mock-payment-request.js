@@ -41,19 +41,18 @@ const paymentRequest = {
   ledger: AP,
   marketingYear: _2022,
   paymentRequestNumber: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER,
+  referenceId: REFERENCE_ID,
   schedule: QUARTERLY,
   schemeId: SFI_SCHEME_ID,
   sourceSystem: SFI_SOURCE_SYSTEM,
-  status: IN_PROGRESS,
   value: FIVE_HUNDRED_POUNDS
 }
 
-const processingPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID }
+const processingPaymentRequest = { ...paymentRequest, status: IN_PROGRESS }
 
-const submitPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID, status: COMPLETED }
+const submitPaymentRequest = { ...paymentRequest, status: COMPLETED }
 
 module.exports = {
-  paymentRequest,
   processingPaymentRequest,
   submitPaymentRequest
 }
