@@ -5,6 +5,8 @@ const mockTransaction = {
   rollback: mockRollback
 }
 
+const { COMPLETED } = require('../../../app/constants/statuses')
+
 jest.mock('../../../app/data', () => {
   return {
     sequelize:
@@ -86,9 +88,9 @@ describe('process submit payment request', () => {
     expect(savePaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call savePaymentRequest with paymentRequest and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
+  test('should call savePaymentRequest with paymentRequest with status: COMPLETED and mockTransaction when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
-    expect(savePaymentRequest).toHaveBeenCalledWith(paymentRequest, mockTransaction)
+    expect(savePaymentRequest).toHaveBeenCalledWith({ ...paymentRequest, status: COMPLETED }, mockTransaction)
   })
 
   test('should call saveInvoiceLines when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {

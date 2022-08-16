@@ -9,7 +9,6 @@ const { FIRST_PAYMENT: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER } = require('../app/
 const { QUARTERLY } = require('../app/constants/schedules')
 const { SFI: SFI_SCHEME_ID } = require('../app/constants/scheme-ids')
 const { SFI: SFI_SOURCE_SYSTEM } = require('../app/constants/source-systems')
-const { IN_PROGRESS, COMPLETED } = require('../app/constants/statuses')
 
 const { SFI: AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
 const { SFI: CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')
@@ -41,16 +40,26 @@ const paymentRequest = {
   ledger: AP,
   marketingYear: _2022,
   paymentRequestNumber: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER,
-  referenceId: REFERENCE_ID,
   schedule: QUARTERLY,
   schemeId: SFI_SCHEME_ID,
   sourceSystem: SFI_SOURCE_SYSTEM,
   value: FIVE_HUNDRED_POUNDS
 }
 
-const processingPaymentRequest = { ...paymentRequest, status: IN_PROGRESS }
+const processingPaymentRequest = { ...paymentRequest }
 
-const submitPaymentRequest = { ...paymentRequest, status: COMPLETED }
+const submitPaymentRequest = {
+  ...processingPaymentRequest,
+  completedPaymentRequestId: 1,
+  invalid: false,
+  invoiceLines: [{
+    ...processingPaymentRequest.invoiceLines[0],
+    completedInvoiceLineId: 1,
+    completedPaymentRequestId: 1
+  }],
+  paymentRequestId: 1,
+  referenceId: REFERENCE_ID
+}
 
 module.exports = {
   processingPaymentRequest,
