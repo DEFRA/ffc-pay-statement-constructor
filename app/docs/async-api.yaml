@@ -27,6 +27,7 @@ components:
       - settlementDate
       - reference 
       - settled
+      - detail
       properties:
         sourceSystem:
           $ref: '#/components/schemas/SourceSystem'
@@ -44,6 +45,8 @@ components:
           $ref: '#/components/schemas/Reference'
         settled:
           $ref: '#/components/schemas/Settled'
+        detail:
+          $ref: '#/components/schemas/Detail'  
     SourceSystem:
       type: string
       description: System identifier request originates from
@@ -77,4 +80,8 @@ components:
     Settled:
       type: boolean
       description: Whether the return file has been settled or not
+    Detail:
+      type: string
+      description: Details tbc
+      example: tbc
     
