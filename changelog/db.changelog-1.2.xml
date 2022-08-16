@@ -10,8 +10,8 @@
     </rollback>
   </changeSet>
   <changeSet author="Marc Templeton" id="3">
-    <addColumn tableName="fundings">
-      <column afterColumn="areaClaimed" name="rate" type="DECIMAL(7,2)" />
+    <addColumn tableName="fundingOptions">
+      <column afterColumn="name" name="rate" type="DECIMAL(7,2)" />
     </addColumn>
   </changeSet>
   <changeSet author="Marc Templeton" id="4">

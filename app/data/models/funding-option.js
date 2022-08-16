@@ -1,7 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const fundingOption = sequelize.define('fundingOption', {
     fundingCode: { type: DataTypes.STRING, primaryKey: true, autoIncrement: true },
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    rate: DataTypes.DECIMAL
   },
   {
     tableName: 'fundingOptions',
