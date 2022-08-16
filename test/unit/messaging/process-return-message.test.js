@@ -1,10 +1,11 @@
 jest.mock('ffc-messaging')
 const processReturnMessage = require('../../../app/messaging/process-return-message')
-const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
 let receiver
+let settlement
 
 describe('process return message', () => {
   beforeEach(() => {
+    settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
     receiver = {
       completeMessage: jest.fn()
     }

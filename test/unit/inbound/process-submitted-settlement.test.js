@@ -27,8 +27,8 @@ const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
 
 describe('process return settlement request', () => {
   beforeEach(() => {
-    getSettlementByInvoiceNumberAndValue.mockResolvedValue(null)
-    saveSettlement.mockResolvedValue(null)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
+    saveSettlement.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -58,7 +58,15 @@ describe('process return settlement request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw an error of "Database retrieval issue" when getSettlementByInvoiceNumberAndValue throws', async () => {
+  test('should throw error when getSettlementByInvoiceNumberAndValue throws', async () => {
+    getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Database retrieval issue'))
+    const wrapper = async () => {
+      await processReturnSettlement(settlement)
+    }
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('getSettlementByInvoiceNumberAndValue throws "Database retrieval issue" error', async () => {
     getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Database retrieval issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
@@ -67,15 +75,13 @@ describe('process return settlement request', () => {
   })
 
   test('should call mockTransaction.rollback when a duplicate settlement is found', async () => {
-    const duplicateSettlement = settlement
-    getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(settlement)
     await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when a duplicate settlement is found', async () => {
-    const duplicateSettlement = settlement
-    getSettlementByInvoiceNumberAndValue.mockResolvedValue(duplicateSettlement)
+    getSettlementByInvoiceNumberAndValue.mockResolvedValue(settlement)
     await processReturnSettlement(settlement)
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
