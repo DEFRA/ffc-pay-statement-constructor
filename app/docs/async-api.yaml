@@ -65,6 +65,10 @@ components:
       type: string
       description: The currency of the value
       example: GBP
+       enum:
+      - GBP
+      - EUR
+      default: GBP
     Value:
       type: integer
       description: The value in pence
