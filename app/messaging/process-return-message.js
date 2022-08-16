@@ -8,7 +8,7 @@ const processReturnMessage = async (message, receiver) => {
     await processReturnSettlement(settlement)
     await receiver.completeMessage(message)
   } catch (err) {
-    console.error('Unable to process return message:', err)
+    console.error('Unable to process return settlement:', err)
   }
 }
 
