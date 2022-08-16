@@ -4,17 +4,17 @@ info:
   version: '1.0.0'
   description: Construct data for Payment Statements
 channels:
-  reurn/message:
+  return/message:
     subscribe:
       message:
-        $ref: 
+        $ref: '#/components/messages/ReturnMessage'
 components:
   messages:
     ReturnMessage:
       name: Return Message
       contentType: application/json
       payload:
-        $ref: 
+        $ref: '#/components/schemas/ReturnMessage'
   schemas:
     ReturnMessage:
       type: object
@@ -29,25 +29,25 @@ components:
       - settled
       properties:
         sourceSystem:
-          $ref:/
+          $ref: '#/components/schemas/SourceSystem'
         invoiceNumber:
-          $ref:/
+          $ref: '#/components/schemas/InvoiceNumber'
         frn:
-          $ref: /
+          $ref: '#/components/schemas/FRN'
         currency:
-          $ref:/
+          $ref: '#/components/schemas/Currency'
         value:
-          $ref:/
+          $ref:'#/components/schemas/Value'
         settlementDate:
-          $ref:/
+          $ref: '#/components/schemas/SettlmentDate'
         reference:
-            $ref:/
+            $ref: '#/components/schemas/Reference'
         settled:
-            $ref:/
+            $ref: '#/components/schemas/Settled'
     SourceSystem:
       type: string
-      description: /
-      example: 'SITIAgri'
+      description: System identifier request originates from
+      example: SITIAgri
     InvoiceNumber:
       type: string
       description: Invoice number 
@@ -76,5 +76,5 @@ components:
       example: PY1234567
     Settled:
       type: boolean
-      description: 
+      description: Whether the return file has been settled or not
     
