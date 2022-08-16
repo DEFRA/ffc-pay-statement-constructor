@@ -37,13 +37,13 @@ components:
         currency:
           $ref: '#/components/schemas/Currency'
         value:
-          $ref:'#/components/schemas/Value'
+          $ref: '#/components/schemas/Value'
         settlementDate:
-          $ref: '#/components/schemas/SettlmentDate'
+          $ref: '#/components/schemas/SettlementDate'
         reference:
-            $ref: '#/components/schemas/Reference'
+          $ref: '#/components/schemas/Reference'
         settled:
-            $ref: '#/components/schemas/Settled'
+          $ref: '#/components/schemas/Settled'
     SourceSystem:
       type: string
       description: System identifier request originates from
