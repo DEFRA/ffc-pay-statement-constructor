@@ -1,25 +1,91 @@
 jest.mock('ffc-messaging')
+
 const processReturnMessage = require('../../../app/messaging/process-return-message')
+
+jest.mock('../../../app/inbound/process-return-settlement')
+const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
+
 let receiver
 let settlement
+let message
 
 describe('process return message', () => {
   beforeEach(() => {
+    processReturnSettlement.mockReturnValue(undefined)
     settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
     receiver = {
       completeMessage: jest.fn()
     }
+    message = { body: { settlement } }
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('completes message', async () => {
-    const message = {
-      body: { ...settlement }
+  test('should call processReturnMessage when nothing throws', async () => {
+    await processReturnMessage(message, receiver)
+    expect(processReturnSettlement).toHaveBeenCalled()
+  })
+
+  test('should call processReturnSettlement once when nothing throws', async () => {
+    await processReturnMessage(message, receiver)
+    expect(processReturnSettlement).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call processReturnSettlement with settlement when nothing throws', async () => {
+    await processReturnMessage(message, receiver)
+    expect(processReturnSettlement).toHaveBeenCalledWith({ settlement })
+  })
+
+  test('should not throw when processReturnMessage throws', async () => {
+    processReturnSettlement.mockRejectedValue(new Error('Database save issue'))
+
+    const wrapper = async () => {
+      await processReturnMessage(message, receiver)
     }
+
+    expect(wrapper).not.toThrow()
+  })
+
+  test('should call receiver.completeMessage when nothing throws', async () => {
+    await processReturnMessage(message, receiver)
+    expect(receiver.completeMessage).toHaveBeenCalled()
+  })
+
+  test('should call receiver.completeMessage once when nothing throws', async () => {
+    await processReturnMessage(message, receiver)
+    expect(receiver.completeMessage).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call receiver.completeMessage with message when nothing throws', async () => {
     await processReturnMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('should not call receiver.completeMessage when processReturnSettlement throws', async () => {
+    processReturnSettlement.mockRejectedValue(new Error('Transaction failed'))
+    try { await processReturnMessage(message, receiver) } catch {}
+    expect(receiver.completeMessage).not.toHaveBeenCalled()
+  })
+
+  test('should not throw when pprocessReturnSettlement throws', async () => {
+    processReturnSettlement.mockRejectedValue(new Error('Transaction failed'))
+
+    const wrapper = async () => {
+      await processReturnMessage(message, receiver)
+    }
+
+    expect(wrapper).not.toThrow()
+  })
+
+  test('should not throw when receiver.completeMessage throws', async () => {
+    receiver.completeMessage.mockRejectedValue(new Error('Azure difficulties'))
+
+    const wrapper = async () => {
+      await processReturnMessage(message, receiver)
+    }
+
+    expect(wrapper).not.toThrow()
   })
 })

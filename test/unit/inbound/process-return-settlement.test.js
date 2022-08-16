@@ -23,10 +23,11 @@ jest.mock('../../../app/inbound/save-settlement')
 const saveSettlement = require('../../../app/inbound/save-settlement')
 
 const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
-const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+let settlement
 
 describe('process return settlement request', () => {
   beforeEach(() => {
+    settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
     saveSettlement.mockResolvedValue(undefined)
   })
@@ -58,7 +59,7 @@ describe('process return settlement request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw error when getSettlementByInvoiceNumberAndValue throws', async () => {
+  test('should throw Error when getSettlementByInvoiceNumberAndValue throws', async () => {
     getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Database retrieval issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
@@ -66,7 +67,7 @@ describe('process return settlement request', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('getSettlementByInvoiceNumberAndValue throws "Database retrieval issue" error', async () => {
+  test('should throw error "Database retrieval issue" when getSettlementByInvoiceNumberAndValue throws "Database retrieval issue" error', async () => {
     getSettlementByInvoiceNumberAndValue.mockRejectedValue(new Error('Database retrieval issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
@@ -119,7 +120,7 @@ describe('process return settlement request', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw error when saveSettlement throws', async () => {
+  test('should throw Error when saveSettlement throws', async () => {
     saveSettlement.mockRejectedValue(new Error('Database save down issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
