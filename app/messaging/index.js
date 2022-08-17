@@ -2,10 +2,12 @@ const config = require('../config')
 const processProcessingMessage = require('./process-processing-message')
 const processSubmitMessage = require('./process-submit-message')
 const processReturnMessage = require('./process-return-message')
+const processStatementMessage = require('./process-statement-message')
 const { MessageReceiver } = require('ffc-messaging')
 let processingReceiver
 let submitReceiver
 let returnReceiver
+let statementReceiver
 
 const start = async () => {
   const processingAction = message => processProcessingMessage(message, processingReceiver)
@@ -20,6 +22,10 @@ const start = async () => {
   returnReceiver = new MessageReceiver(config.returnSubscription, returnAction)
   await returnReceiver.subscribe()
 
+  const statementAction = message => processStatementMessage(message, statementReceiver)
+  statementReceiver = new MessageReceiver(config.statementSubscription, statementAction)
+  await statementReceiver.subscribe()
+
   console.info('Ready to receive payment updates')
 }
 
@@ -27,6 +33,7 @@ const stop = async () => {
   await processingReceiver.closeConnection()
   await submitReceiver.closeConnection()
   await returnReceiver.closeConnection()
+  await statementReceiver.closeConnection()
 }
 
 module.exports = { start, stop }

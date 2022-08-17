@@ -33,7 +33,7 @@ value.isProd = value.env === 'production'
 value.processingSubscription = mqConfig.processingSubscription
 value.submitSubscription = mqConfig.submitSubscription
 value.returnSubscription = mqConfig.returnSubscription
-value.statementTopic = mqConfig.statementTopic
+value.statementSubscription = mqConfig.statementSubscription
 value.dbConfig = dbConfig
 value.storageConfig = storageConfig
 
