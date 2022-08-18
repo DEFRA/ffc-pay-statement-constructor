@@ -358,13 +358,6 @@ describe('process submit payment request', () => {
     expect(result.invoiceLines).toBeUndefined()
   })
 
-  test('should not save paymentRequest.sourceSystem into entry where paymentRequest.referenceId', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
-
-    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.sourceSystem).toBeUndefined()
-  })
-
   test('should save entry into invoiceLine where paymentRequestId is 1', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
