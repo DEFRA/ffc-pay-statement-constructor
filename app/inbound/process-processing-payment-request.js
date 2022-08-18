@@ -12,7 +12,6 @@ const processProcessingPaymentRequest = async (paymentRequest) => {
 
   try {
     const existingPaymentRequest = await getInProgressPaymentRequestByReferenceId(paymentRequest.referenceId, transaction)
-
     if (existingPaymentRequest) {
       console.info(`Duplicate processing payment request received, skipping ${existingPaymentRequest.referenceId}`)
       await transaction.rollback()

@@ -19,7 +19,7 @@ describe('process processing message', () => {
       completeMessage: jest.fn()
     }
 
-    message = { body: { paymentRequest } }
+    message = { body: paymentRequest }
   })
 
   afterEach(() => {
@@ -38,7 +38,7 @@ describe('process processing message', () => {
 
   test('should call processProcessingPaymentRequest with paymentRequest when nothing throws', async () => {
     await processProcessingMessage(message, receiver)
-    expect(processProcessingPaymentRequest).toHaveBeenCalledWith({ paymentRequest })
+    expect(processProcessingPaymentRequest).toHaveBeenCalledWith(paymentRequest)
   })
 
   test('should not throw when processProcessingPaymentRequest throws', async () => {

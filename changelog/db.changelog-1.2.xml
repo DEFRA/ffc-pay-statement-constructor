@@ -10,23 +10,6 @@
     </rollback>
   </changeSet>
   <changeSet author="Marc Templeton" id="3">
-<<<<<<< HEAD
-    <addColumn tableName="fundingOptions">
-      <column afterColumn="name" name="rate" type="DECIMAL(7,2)" />
-    </addColumn>
-  </changeSet>
-  <changeSet author="Marc Templeton" id="4">
-    <addColumn tableName="paymentRequests">
-      <column afterColumn="dueDate" name="frn" type="BIGINT" />
-      <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
-      <column afterColumn="schedule" name="sourceSystem" type="VARCHAR(20)" />
-      <column afterColumn="schedule" name="status" type="VARCHAR(20)" />
-    </addColumn>
-  </changeSet>
-  <changeSet author="Marc Templeton" id="5">
-    <dropColumn tableName="settlements">
-      <column name="sourceSystem" />
-=======
     <insert tableName="schemes">
       <column name="schemeId" value="1" />
       <column name="name" value="SFI" />
@@ -77,7 +60,6 @@
   <changeSet author="Marc Templeton" id="11">
     <dropColumn tableName="paymentRequests">
       <column name="sitiAgriInvoiceNumber" />
->>>>>>> SFI-2199-subscribe-to-submitted-payment-requests
     </dropColumn>
   </changeSet>
 </databaseChangeLog>

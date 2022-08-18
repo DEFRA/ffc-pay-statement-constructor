@@ -9,7 +9,6 @@ const { FIRST_PAYMENT: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER } = require('../app/
 const { QUARTERLY } = require('../app/constants/schedules')
 const { SFI: SFI_SCHEME_ID } = require('../app/constants/scheme-ids')
 const { SFI: SFI_SOURCE_SYSTEM } = require('../app/constants/source-systems')
-const { COMPLETED } = require('../app/constants/statuses')
 
 const { SFI: AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
 const { SFI: CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')

@@ -18,8 +18,8 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/inbound/get-completed-payment-request-by-reference-id')
-const getCompletedPaymentRequestByReferenceId = require('../../../app/inbound/get-completed-payment-request-by-reference-id')
+jest.mock('../../../app/data/get-completed-payment-request-by-reference-id')
+const getCompletedPaymentRequestByReferenceId = require('../../../app/data/get-completed-payment-request-by-reference-id')
 
 jest.mock('../../../app/data/save-invoice-number')
 const saveInvoiceNumber = require('../../../app/data/save-invoice-number')

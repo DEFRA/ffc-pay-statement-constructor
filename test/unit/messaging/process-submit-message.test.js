@@ -19,7 +19,7 @@ describe('process submit message', () => {
       completeMessage: jest.fn()
     }
 
-    message = { body: { paymentRequest } }
+    message = { body: paymentRequest }
   })
 
   afterEach(() => {
@@ -38,7 +38,7 @@ describe('process submit message', () => {
 
   test('should call processSubmitPaymentRequest with paymentRequest when nothing throws', async () => {
     await processSubmitMessage(message, receiver)
-    expect(processSubmitPaymentRequest).toHaveBeenCalledWith({ paymentRequest })
+    expect(processSubmitPaymentRequest).toHaveBeenCalledWith(paymentRequest)
   })
 
   test('should not throw when processSubmitPaymentRequest throws', async () => {

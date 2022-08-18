@@ -18,7 +18,7 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/data/get-payment-request-by-reference-id')
+jest.mock('../../../app/data/get-in-progress-payment-request-by-reference-id')
 const getPaymentRequestByReferenceId = require('../../../app/data/get-in-progress-payment-request-by-reference-id')
 
 jest.mock('../../../app/data/save-invoice-number')
