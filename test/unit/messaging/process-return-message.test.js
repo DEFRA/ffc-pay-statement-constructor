@@ -16,7 +16,7 @@ describe('process return message', () => {
     receiver = {
       completeMessage: jest.fn()
     }
-    message = { body: { settlement } }
+    message = { body: settlement }
   })
 
   afterEach(() => {
@@ -35,7 +35,7 @@ describe('process return message', () => {
 
   test('should call processReturnSettlement with settlement when nothing throws', async () => {
     await processReturnMessage(message, receiver)
-    expect(processReturnSettlement).toHaveBeenCalledWith({ settlement })
+    expect(processReturnSettlement).toHaveBeenCalledWith(settlement)
   })
 
   test('should not throw when processReturnMessage throws', async () => {
