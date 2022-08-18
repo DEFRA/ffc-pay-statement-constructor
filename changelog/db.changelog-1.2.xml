@@ -10,6 +10,7 @@
     </rollback>
   </changeSet>
   <changeSet author="Marc Templeton" id="3">
+<<<<<<< HEAD
     <addColumn tableName="fundingOptions">
       <column afterColumn="name" name="rate" type="DECIMAL(7,2)" />
     </addColumn>
@@ -25,6 +26,58 @@
   <changeSet author="Marc Templeton" id="5">
     <dropColumn tableName="settlements">
       <column name="sourceSystem" />
+=======
+    <insert tableName="schemes">
+      <column name="schemeId" value="1" />
+      <column name="name" value="SFI" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="4">
+    <insert tableName="schemes">
+      <column name="schemeId" value="2" />
+      <column name="name" value="SFI Pilot" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="5">
+    <insert tableName="schemes">
+      <column name="schemeId" value="3" />
+      <column name="name" value="Lump Sums" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="6">
+    <insert tableName="schemes">
+      <column name="schemeId" value="4" />
+      <column name="name" value="LNR" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="7">
+    <insert tableName="schemes">
+      <column name="schemeId" value="5" />
+      <column name="name" value="Vet Visits" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="8">
+    <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(60)" />
+    <rollback>
+      <modifyDataType tableName="fundingOptions" columnName="name" newDataType="VARCHAR(30)" />
+    </rollback>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="9">
+    <insert tableName="fundingOptions">
+      <column name="fundingCode" value="80001" />
+      <column name="name" value="Arable and horticultural soils: Introductory" />
+    </insert>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="10">
+    <addColumn tableName="paymentRequests">
+      <column afterColumn="marketingYear" name="received" type="TIMESTAMP" />
+      <column afterColumn="schedule" name="status" type="VARCHAR(20)" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="Marc Templeton" id="11">
+    <dropColumn tableName="paymentRequests">
+      <column name="sitiAgriInvoiceNumber" />
+>>>>>>> SFI-2199-subscribe-to-submitted-payment-requests
     </dropColumn>
   </changeSet>
 </databaseChangeLog>
