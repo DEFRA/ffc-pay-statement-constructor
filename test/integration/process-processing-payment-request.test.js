@@ -309,6 +309,13 @@ describe('process processing payment request', () => {
     expect(result.schedule).toBe(paymentRequest.schedule)
   })
 
+  test('should save entry into paymentRequest with sourceSystem as paymentRequest.sourceSystem where paymentRequest.invoiceNumber', async () => {
+    await processProcessingPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(result.sourceSystem).toBe(paymentRequest.sourceSystem)
+  })
+
   test('should save entry into paymentRequest with schemeId as paymentRequest.schemeId where paymentRequest.invoiceNumber', async () => {
     await processProcessingPaymentRequest(paymentRequest)
 
@@ -356,13 +363,6 @@ describe('process processing payment request', () => {
 
     const result = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
     expect(result.paymentRequestNumber).toBeUndefined()
-  })
-
-  test('should not save paymentRequest.sourceSystem into entry where paymentRequest.invoiceNumber', async () => {
-    await processProcessingPaymentRequest(paymentRequest)
-
-    const result = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
-    expect(result.sourceSystem).toBeUndefined()
   })
 
   test('should save entry into invoiceLine where paymentRequestId is 1', async () => {

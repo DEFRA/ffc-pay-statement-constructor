@@ -13,9 +13,4 @@
       <column afterColumn="schedule" name="sourceSystem" type="VARCHAR(20)" />
     </addColumn>
   </changeSet>
-  <changeSet author="Marc Templeton" id="4">
-    <dropColumn tableName="settlements">
-      <column name="sourceSystem" />
-    </dropColumn>
-  </changeSet>
 </databaseChangeLog>
