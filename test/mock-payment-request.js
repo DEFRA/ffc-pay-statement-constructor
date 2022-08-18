@@ -47,7 +47,6 @@ const paymentRequest = {
   value: FIVE_HUNDRED_POUNDS
 }
 
-<<<<<<< HEAD
 const processingPaymentRequest = { ...paymentRequest }
 
 const submitPaymentRequest = {
@@ -62,9 +61,6 @@ const submitPaymentRequest = {
   paymentRequestId: 1,
   referenceId: REFERENCE_ID
 }
-=======
-const submitPaymentRequest = { ...paymentRequest, referenceId: REFERENCE_ID, status: COMPLETED }
->>>>>>> SFI-2199-subscribe-to-submitted-payment-requests
 
 module.exports = {
   processingPaymentRequest,
