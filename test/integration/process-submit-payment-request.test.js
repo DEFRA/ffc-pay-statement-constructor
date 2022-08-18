@@ -330,13 +330,6 @@ describe('process submit payment request', () => {
     expect(result.submitted).toBeNull()
   })
 
-  test('should save entry into paymentRequest with value as paymentRequest.value where paymentRequest.referenceId', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
-
-    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.value).toBe(paymentRequest.value)
-  })
-
   test('should save entry into paymentRequest with received given by Date where paymentRequest.referenceId', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
@@ -344,11 +337,18 @@ describe('process submit payment request', () => {
     expect(result.received).toStrictEqual(new Date())
   })
 
-  test('should save entry into paymentRequest with value as COMPLETED where paymentRequest.referenceId', async () => {
+  test('should save entry into paymentRequest with status as COMPLETED where paymentRequest.referenceId', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
     expect(result.status).toBe(COMPLETED)
+  })
+
+  test('should save entry into paymentRequest with value as paymentRequest.value where paymentRequest.referenceId', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.value).toBe(paymentRequest.value)
   })
 
   test('should not save paymentRequest.invoiceLines into entry where paymentRequest.referenceId', async () => {
@@ -356,6 +356,13 @@ describe('process submit payment request', () => {
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
     expect(result.invoiceLines).toBeUndefined()
+  })
+
+  test('should not save paymentRequest.paymentRequestNumber into entry where paymentRequest.referenceId', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.paymentRequestNumber).toBeUndefined()
   })
 
   test('should save entry into invoiceLine where paymentRequestId is 1', async () => {

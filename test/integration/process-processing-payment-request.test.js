@@ -330,13 +330,6 @@ describe('process processing payment request', () => {
     expect(result.submitted).toBeNull()
   })
 
-  test('should save entry into paymentRequest with value as paymentRequest.value where paymentRequest.invoiceNumber', async () => {
-    await processProcessingPaymentRequest(paymentRequest)
-
-    const result = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
-    expect(result.value).toBe(paymentRequest.value)
-  })
-
   test('should save entry into paymentRequest with received given by Date where paymentRequest.invoiceNumber', async () => {
     await processProcessingPaymentRequest(paymentRequest)
 
@@ -344,11 +337,18 @@ describe('process processing payment request', () => {
     expect(result.received).toStrictEqual(new Date())
   })
 
-  test('should save entry into paymentRequest with value as IN_PROGRESS where paymentRequest.invoiceNumber', async () => {
+  test('should save entry into paymentRequest with status as IN_PROGRESS where paymentRequest.invoiceNumber', async () => {
     await processProcessingPaymentRequest(paymentRequest)
 
     const result = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
     expect(result.status).toBe(IN_PROGRESS)
+  })
+
+  test('should save entry into paymentRequest with value as paymentRequest.value where paymentRequest.invoiceNumber', async () => {
+    await processProcessingPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { invoiceNumber: paymentRequest.invoiceNumber } })
+    expect(result.value).toBe(paymentRequest.value)
   })
 
   test('should not save paymentRequest.invoiceLines into entry where paymentRequest.invoiceNumber', async () => {
