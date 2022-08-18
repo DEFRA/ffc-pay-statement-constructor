@@ -36,13 +36,14 @@ container:
   limitCpu: 180m
   messageQueueHost: namespace.servicebus.windows.net
   processingTopicAddress: ffc-pay-processing
-  processingSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  processingSubscriptionAddress: ffc-pay-statement-constructor
   submitTopicAddress: ffc-pay-submit
-  submitSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  submitSubscriptionAddress: ffc-pay-statement-constructor
   returnTopicAddress: ffc-pay-return
-  returnSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  returnSubscriptionAddress: ffc-pay-statement-constructor
   statementTopicAddress: ffc-pay-statements
-  statementSubscriptionAddress: ffc-pay-ffc-pay-statement-constructor
+  dataTopicAddress: ffc-pay-statement-data
+  dataSubscriptionAddress: ffc-pay-statement-constructor
   azureStorageAccountName: ffcpay
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
