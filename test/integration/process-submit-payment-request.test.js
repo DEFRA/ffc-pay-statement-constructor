@@ -316,6 +316,13 @@ describe('process submit payment request', () => {
     expect(result.schemeId).toBe(paymentRequest.schemeId)
   })
 
+  test('should save entry into paymentRequest with sourceSystem as paymentRequest.sourceSystem where paymentRequest.referenceId', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.sourceSystem).toBe(paymentRequest.sourceSystem)
+  })
+
   test('should save entry into paymentRequest with submitted as null where paymentRequest.referenceId', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
@@ -349,13 +356,6 @@ describe('process submit payment request', () => {
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
     expect(result.invoiceLines).toBeUndefined()
-  })
-
-  test('should not save paymentRequest.paymentRequestNumber into entry where paymentRequest.referenceId', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
-
-    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.paymentRequestNumber).toBeUndefined()
   })
 
   test('should not save paymentRequest.sourceSystem into entry where paymentRequest.referenceId', async () => {

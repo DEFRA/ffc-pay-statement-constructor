@@ -10,8 +10,8 @@ const { QUARTERLY } = require('../app/constants/schedules')
 const { SFI: SFI_SCHEME_ID } = require('../app/constants/scheme-ids')
 const { SFI: SFI_SOURCE_SYSTEM } = require('../app/constants/source-systems')
 
-const { SFI: AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
-const { SFI: CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')
+const { SFI: SFI_AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
+const { SFI: SFI_CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')
 const DUE_DATE = require('./mock-components/mock-due-date')
 const FRN = require('./mock-components/mock-frn')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('./mock-components/mock-invoice-number')
@@ -20,8 +20,8 @@ const { CORRELATION_ID, REFERENCE_ID } = require('./mock-components/mock-uuidv4'
 const { FIVE_HUNDRED_POUNDS } = require('./mock-components/mock-value')
 
 const paymentRequest = {
-  agreementNumber: AGREEMENT_NUMBER,
-  contractNumber: CONTRACT_NUMBER,
+  agreementNumber: SFI_AGREEMENT_NUMBER,
+  contractNumber: SFI_CONTRACT_NUMBER,
   correlationId: CORRELATION_ID,
   currency: GBP,
   deliveryBody: RP00,

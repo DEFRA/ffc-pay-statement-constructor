@@ -8,7 +8,7 @@ const processSubmitMessage = async (message, receiver) => {
     await processSubmitPaymentRequest(paymentRequest)
     await receiver.completeMessage(message)
   } catch (err) {
-    console.error('Unable to process submit payment request:', err)
+    console.error('Unable to process submit message:', err)
   }
 }
 
