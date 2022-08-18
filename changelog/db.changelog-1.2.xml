@@ -4,15 +4,8 @@
     <tagDatabase tag="v1.1.0" />
   </changeSet>
   <changeSet author="Simon Dunn" id="2">
-    <dropForeignKeyConstraint baseColumnNames="paymentRequestId" baseTableName="settlements" constraintName="fk_paymentRequests_paymentRequestId" referencedColumnNames="paymentRequestId" referencedTableName="paymentRequests" />
-  </changeSet>
-  <changeSet author="Simon Dunn" id="3">
-    <dropNotNullConstraint tableName="settlements" columnName="paymentRequestId" columnDataType="INTEGER"/>
-  </changeSet>
-  <changeSet author="Simon Dunn" id="4">
     <addColumn tableName="settlements">
       <column name="value" afterColumn="sourceSystem" type="INTEGER" />
     </addColumn>
   </changeSet>
-  
 </databaseChangeLog>
