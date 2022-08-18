@@ -1,15 +1,15 @@
 const db = require('.')
 const { IN_PROGRESS } = require('../constants/statuses')
 
-const getInProgressPaymentRequestByReferenceId = async (referenceId, transaction) => {
+const getInProgressPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) => {
   return db.paymentRequest.findOne({
     transaction,
     lock: true,
     where: {
-      referenceId,
+      invoiceNumber,
       status: IN_PROGRESS
     }
   })
 }
 
-module.exports = getInProgressPaymentRequestByReferenceId
+module.exports = getInProgressPaymentRequestByInvoiceNumber
