@@ -78,7 +78,7 @@ components:
       - referenceId
       properties:
         invoiceLines:
-            $ref: '#/components/schemas/InvoiceLinesSubmit'
+          $ref: '#/components/schemas/InvoiceLinesSubmit'
         paymentRequest:
           $ref: '#/components/schemas/PaymentRequestProcessing'
         paymentRequestId:
