@@ -1,4 +1,4 @@
-const db = require('.')
+const db = require('../data')
 const reverseEngineerInvoiceNumber = require('../processing/reverse-engineer-invoice-number')
 
 const saveInvoiceNumber = async (invoiceNumber, transaction) => {

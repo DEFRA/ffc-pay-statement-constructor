@@ -1,11 +1,11 @@
-const db = require('../data')
+const db = require('../../data')
 
-const { COMPLETED } = require('../constants/statuses')
+const { COMPLETED } = require('../../constants/statuses')
 
-const getCompletedPaymentRequestByReferenceId = require('../data/get-completed-payment-request-by-reference-id')
-const saveInvoiceNumber = require('../data/save-invoice-number')
-const savePaymentRequest = require('../data/save-payment-request')
-const saveInvoiceLines = require('../data/save-invoice-lines')
+const getCompletedPaymentRequestByReferenceId = require('./get-completed-payment-request-by-reference-id')
+const saveInvoiceNumber = require('../save-invoice-number')
+const savePaymentRequest = require('../save-payment-request')
+const saveInvoiceLines = require('../save-invoice-lines')
 
 const processSubmitPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()

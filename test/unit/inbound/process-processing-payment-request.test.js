@@ -18,17 +18,17 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/data/get-in-progress-payment-request-by-invoice-number')
-const getInProgressPaymentRequestByInvoiceNumber = require('../../../app/data/get-in-progress-payment-request-by-invoice-number')
+jest.mock('../../../app/inbound/processing/get-in-progress-payment-request-by-invoice-number')
+const getInProgressPaymentRequestByInvoiceNumber = require('../../../app/inbound/processing/get-in-progress-payment-request-by-invoice-number')
 
-jest.mock('../../../app/data/save-invoice-number')
-const saveInvoiceNumber = require('../../../app/data/save-invoice-number')
+jest.mock('../../../app/inbound/save-invoice-number')
+const saveInvoiceNumber = require('../../../app/inbound/save-invoice-number')
 
-jest.mock('../../../app/data/save-payment-request')
-const savePaymentRequest = require('../../../app/data/save-payment-request')
+jest.mock('../../../app/inbound/save-payment-request')
+const savePaymentRequest = require('../../../app/inbound/save-payment-request')
 
-jest.mock('../../../app/data/save-invoice-lines')
-const saveInvoiceLines = require('../../../app/data/save-invoice-lines')
+jest.mock('../../../app/inbound/save-invoice-lines')
+const saveInvoiceLines = require('../../../app/inbound/save-invoice-lines')
 
 const { processProcessingPaymentRequest } = require('../../../app/inbound')
 

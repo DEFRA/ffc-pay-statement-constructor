@@ -1,5 +1,5 @@
-const db = require('.')
-const { IN_PROGRESS } = require('../constants/statuses')
+const db = require('../../data')
+const { IN_PROGRESS } = require('../../constants/statuses')
 
 const getInProgressPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) => {
   return db.paymentRequest.findOne({

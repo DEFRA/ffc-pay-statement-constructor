@@ -1,4 +1,4 @@
-const db = require('.')
+const db = require('../data')
 
 const savePaymentRequest = async (paymentRequest, transaction) => {
   delete paymentRequest.paymentRequestId

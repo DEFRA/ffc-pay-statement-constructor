@@ -12,7 +12,7 @@ const {
 const { IN_PROGRESS } = require('../../app/constants/statuses')
 
 const reverseEngineerInvoiceNumber = require('../../app/processing/reverse-engineer-invoice-number')
-const processProcessingPaymentRequest = require('../../app/inbound/process-processing-payment-request.js')
+const processProcessingPaymentRequest = require('../../app/inbound/processing/process-processing-payment-request.js')
 
 let paymentRequest
 

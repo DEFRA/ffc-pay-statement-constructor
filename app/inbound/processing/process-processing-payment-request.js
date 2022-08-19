@@ -1,11 +1,11 @@
-const db = require('../data')
+const db = require('../../data')
 
-const { IN_PROGRESS } = require('../constants/statuses')
+const { IN_PROGRESS } = require('../../constants/statuses')
 
-const getInProgressPaymentRequestByInvoiceNumber = require('../data/get-in-progress-payment-request-by-invoice-number')
-const saveInvoiceNumber = require('../data/save-invoice-number')
-const savePaymentRequest = require('../data/save-payment-request')
-const saveInvoiceLines = require('../data/save-invoice-lines')
+const getInProgressPaymentRequestByInvoiceNumber = require('./get-in-progress-payment-request-by-invoice-number')
+const saveInvoiceNumber = require('../save-invoice-number')
+const savePaymentRequest = require('../save-payment-request')
+const saveInvoiceLines = require('../save-invoice-lines')
 
 const processProcessingPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
