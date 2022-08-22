@@ -1,7 +1,7 @@
 jest.mock('ffc-messaging')
 
-jest.mock('../../../app/inbound')
-const processPaymentRequest = require('../../../app/inbound')
+jest.mock('../../../app/inbound/process-submit-payment-request')
+const processPaymentRequest = require('../../../app/inbound/process-submit-payment-request')
 
 const processSubmitMessage = require('../../../app/messaging/process-submit-message')
 
