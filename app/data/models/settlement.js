@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     reference: DataTypes.STRING,
     settled: DataTypes.BOOLEAN,
     settlementDate: DataTypes.DATE,
-    sourceSystem: DataTypes.STRING,
     value: DataTypes.INTEGER
   },
   {

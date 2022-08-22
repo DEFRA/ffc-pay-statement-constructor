@@ -5,7 +5,11 @@
   </changeSet>
   <changeSet author="Simon Dunn" id="2">
     <addColumn tableName="settlements">
-      <column name="value" afterColumn="sourceSystem" type="INTEGER" />
+      <column name="value" afterColumn="settlementDate" type="INTEGER" />
     </addColumn>
   </changeSet>
+  <changeSet author="Simon Dunn" id="3">  
+    <dropColumn tableName="settlements" columnName="sourceSystem" >  
+    </dropColumn>
+  </changeSet>    
 </databaseChangeLog>
