@@ -1,3 +1,7 @@
-const processSubmitPaymentRequest = require('./process-submit-payment-request')
+const processProcessingPaymentRequest = require('./processing/process-processing-payment-request')
+const processSubmitPaymentRequest = require('./submit/process-submit-payment-request')
 
-module.exports = processSubmitPaymentRequest
+module.exports = {
+  processProcessingPaymentRequest,
+  processSubmitPaymentRequest
+}
