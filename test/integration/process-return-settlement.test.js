@@ -49,68 +49,39 @@ describe('process submit payment request', () => {
     expect(result).toBe(1)
   })
 
-  test('should save one entry into settlement table with frn of settlement.frn', async () => {
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.count({ where: { frn: settlement.frn } })
-    expect(result).toBe(1)
-  })
-
   test('should save entry into settlement table with frn of settlement.frn', async () => {
     await processReturnSettlement(settlement)
 
-    const result = await db.settlement.findOne({ where: { frn: settlement.frn } })
-    expect(result).not.toBeNull()
-  })
-
-  test('should save one entry into settlement table with value of settlement.value', async () => {
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.count({ where: { value: settlement.value } })
-    expect(result).toBe(1)
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.frn).toBe(String(settlement.frn))
   })
 
   test('should save entry into settlement table with value of settlement.value', async () => {
     await processReturnSettlement(settlement)
 
-    const result = await db.settlement.findOne({ where: { value: settlement.value } })
-    expect(result).not.toBeNull()
-  })
-
-  test('should save one entry into settlement table with reference of settlement.reference', async () => {
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.count({ where: { reference: settlement.reference } })
-    expect(result).toBe(1)
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.value).toBe(settlement.value)
   })
 
   test('should save entry into settlement table with reference of settlement.reference', async () => {
     await processReturnSettlement(settlement)
 
-    const result = await db.settlement.findOne({ where: { reference: settlement.reference } })
-    expect(result).not.toBeNull()
-  })
-
-  test('should save one entry into settlement table with settlementDate of settlement.settlementDate', async () => {
-    settlement.settlementDate = new Date()
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.count({ where: { settlementDate: settlement.settlementDate } })
-    expect(result).toBe(1)
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.reference).toBe(settlement.reference)
   })
 
   test('should save entry into settlement table with settlementDate of settlement.settlementDate', async () => {
     settlement.settlementDate = new Date()
     await processReturnSettlement(settlement)
 
-    const result = await db.settlement.findOne({ where: { settlementDate: settlement.settlementDate } })
-    expect(result).not.toBeNull()
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.settlementDate).toStrictEqual(settlement.settlementDate)
   })
 
   test('should not save sourceSystem in the table when valid settlement received ', async () => {
     await processReturnSettlement(settlement)
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.dataValues.sourceSystem).toBe(undefined)
+    expect(result.sourceSystem).toBe(undefined)
   })
 })

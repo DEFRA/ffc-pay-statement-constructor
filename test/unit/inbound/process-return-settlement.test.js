@@ -16,8 +16,8 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
-const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/get-settlement-by-invoicenumber-and-value')
+jest.mock('../../../app/inbound/get-settlement-by-invoice-number-and-value')
+const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/get-settlement-by-invoice-number-and-value')
 
 jest.mock('../../../app/inbound/save-settlement')
 const saveSettlement = require('../../../app/inbound/save-settlement')

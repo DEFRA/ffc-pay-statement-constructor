@@ -1,6 +1,6 @@
 const db = require('../data')
 const saveSettlement = require('./save-settlement')
-const getSettlementByInvoiceNumberAndValue = require('./get-settlement-by-invoicenumber-and-value')
+const getSettlementByInvoiceNumberAndValue = require('./get-settlement-by-invoice-number-and-value')
 
 const processReturnSettlement = async (settlement) => {
   const transaction = await db.sequelize.transaction()

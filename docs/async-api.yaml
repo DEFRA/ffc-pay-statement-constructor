@@ -86,6 +86,6 @@ components:
       description: Whether the return file has been settled or not
     Detail:
       type: string
-      description: Details tbc
-      example: tbc
+      description: Additional settlement information from DAX
+      example: "BAC Rejection"
     
