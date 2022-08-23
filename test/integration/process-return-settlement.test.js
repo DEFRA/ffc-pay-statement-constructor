@@ -17,7 +17,7 @@ describe('process submit payment request', () => {
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
     settlement = JSON.parse(JSON.stringify(require('../mock-settlement')))
-    paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').paymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber: paymentRequest.invoiceNumber, originalInvoiceNumber: 'abcdef' })
