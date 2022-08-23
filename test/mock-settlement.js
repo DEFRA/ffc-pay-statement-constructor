@@ -1,6 +1,8 @@
+const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('./mock-components/mock-invoice-number')
+
 module.exports = {
   sourceSystem: 'SITIAgri',
-  invoiceNumber: 'S123456789A123456V003',
+  invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER,
   frn: 1234567890,
   currency: 'GBP',
   value: 30000,
