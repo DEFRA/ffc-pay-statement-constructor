@@ -1,7 +1,7 @@
 jest.mock('ffc-messaging')
 
 jest.mock('../../../app/inbound')
-const processPaymentRequest = require('../../../app/inbound')
+const { processSubmitPaymentRequest } = require('../../../app/inbound')
 
 const processSubmitMessage = require('../../../app/messaging/process-submit-message')
 
@@ -11,7 +11,7 @@ let message
 
 describe('process submit message', () => {
   beforeEach(() => {
-    processPaymentRequest.mockReturnValue(undefined)
+    processSubmitPaymentRequest.mockReturnValue(undefined)
 
     paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
 
@@ -19,30 +19,30 @@ describe('process submit message', () => {
       completeMessage: jest.fn()
     }
 
-    message = { body: { paymentRequest } }
+    message = { body: paymentRequest }
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('should call processPaymentRequest when nothing throws', async () => {
+  test('should call processSubmitPaymentRequest when nothing throws', async () => {
     await processSubmitMessage(message, receiver)
-    expect(processPaymentRequest).toHaveBeenCalled()
+    expect(processSubmitPaymentRequest).toHaveBeenCalled()
   })
 
-  test('should call processPaymentRequest once when nothing throws', async () => {
+  test('should call processSubmitPaymentRequest once when nothing throws', async () => {
     await processSubmitMessage(message, receiver)
-    expect(processPaymentRequest).toHaveBeenCalledTimes(1)
+    expect(processSubmitPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call processPaymentRequest with paymentRequest when nothing throws', async () => {
+  test('should call processSubmitPaymentRequest with paymentRequest when nothing throws', async () => {
     await processSubmitMessage(message, receiver)
-    expect(processPaymentRequest).toHaveBeenCalledWith({ paymentRequest })
+    expect(processSubmitPaymentRequest).toHaveBeenCalledWith(paymentRequest)
   })
 
-  test('should not throw when processPaymentRequest throws', async () => {
-    processPaymentRequest.mockRejectedValue(new Error('Database save issue'))
+  test('should not throw when processSubmitPaymentRequest throws', async () => {
+    processSubmitPaymentRequest.mockRejectedValue(new Error('Database save issue'))
 
     const wrapper = async () => {
       await processSubmitMessage(message, receiver)
@@ -66,14 +66,14 @@ describe('process submit message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should not call receiver.completeMessage when processPaymentRequest throws', async () => {
-    processPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
+  test('should not call receiver.completeMessage when processSubmitPaymentRequest throws', async () => {
+    processSubmitPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
     try { await processSubmitMessage(message, receiver) } catch {}
     expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 
-  test('should not throw when processPaymentRequest throws', async () => {
-    processPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
+  test('should not throw when processSubmitPaymentRequest throws', async () => {
+    processSubmitPaymentRequest.mockRejectedValue(new Error('Transaction failed'))
 
     const wrapper = async () => {
       await processSubmitMessage(message, receiver)
