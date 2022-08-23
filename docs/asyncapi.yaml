@@ -4,19 +4,28 @@ info:
   version: '1.0.0'
   description: Construct payment statements
 channels:
-  payment/request:
+  payment/processing:
     subscribe:
       message:
-        $ref: '#/components/messages/PaymentRequest'
+        $ref: '#/components/messages/PaymentRequestProcessing'
+  payment/submit:
+    subscribe:
+      message:
+        $ref: '#/components/messages/PaymentRequestSubmit'
 components:
   messages:
-    PaymentRequest:
-      name: Payment statement
+    PaymentRequestProcessing:
+      name: Payment statement before PPA
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/PaymentRequest'
+        $ref: '#/components/schemas/PaymentRequestProcessing'
+    PaymentRequestSubmit:
+      name: Payment statement after PPA
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/PaymentRequestSubmit'
   schemas:
-    PaymentRequest:
+    PaymentRequestProcessing:
       type: object
       required:
       - agreementNumber
@@ -49,27 +58,7 @@ components:
         frn:
           $ref: '#/components/schemas/FRN'
         invoiceLines:
-          type: array
-          description: List of invoice lines that make up request
-          items:
-            type: object
-            required:
-            - accountCode
-            - description
-            - fundCode
-            - schemeCode
-            - value
-            properties:
-              accountCode:
-                $ref: '#/components/schemas/AccountCode'
-              description:
-                $ref: '#/components/schemas/Description'
-              fundCode:
-                $ref: '#/components/schemas/FundCode'
-              schemeCode:
-                $ref: '#/components/schemas/SchemeCode'
-              value:
-                $ref: '#/components/schemas/ValueInteger'
+          $ref: '#/components/schemas/InvoiceLinesProcessing'
         ledger:
           $ref: '#/components/schemas/Ledger'
         marketingYear:
@@ -82,6 +71,20 @@ components:
           $ref: '#/components/schemas/SchemeId'
         value:
           $ref: '#/components/schemas/ValueInteger'
+    PaymentRequestSubmit:
+      type: object
+      required:
+      - paymentRequest
+      - referenceId
+      properties:
+        invoiceLines:
+          $ref: '#/components/schemas/InvoiceLinesSubmit'
+        paymentRequest:
+          $ref: '#/components/schemas/PaymentRequestProcessing'
+        paymentRequestId:
+          $ref: '#/components/schemas/PaymentRequestId'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -90,14 +93,22 @@ components:
       type: string
       description: The payment request agreement number
       example: SIP000000000001
+    CompletedInvoiceLineId:
+      type: number
+      description: Unique id given by a microservice for an invoice number after PPA
+      minimum: 1
+    CompletedPaymentRequestId:
+      type: number
+      description: Unique id given by a microservice for a payment request after PPA
+      minimum: 1
     ContractNumber:
       type: string
-      description:
+      description: Contract number
       example: SFIP000001
     CorrelationId:
       type: string
       format: uuid
-      description: GUID for event correlation, optional
+      description: GUID for event correlation
       example: ce6ec916-bebe-4bc0-bad1-255298c82845
     Currency:
       type: string
@@ -130,6 +141,42 @@ components:
       type: string
       description: Unique fund code to pay from
       example: DRD10
+    InvoiceLinesProcessing:
+      type: array
+      description: List of invoice lines that make up payment request before PPA
+      items:
+        type: object
+        required:
+        - accountCode
+        - description
+        - fundCode
+        - schemeCode
+        - value
+        properties:
+          accountCode:
+            $ref: '#/components/schemas/AccountCode'
+          description:
+            $ref: '#/components/schemas/Description'
+          fundCode:
+            $ref: '#/components/schemas/FundCode'
+          schemeCode:
+            $ref: '#/components/schemas/SchemeCode'
+          value:
+            $ref: '#/components/schemas/ValueInteger'
+    InvoiceLinesSubmit:
+      type: array
+      description: List of invoice lines that make up payment request after PPA
+      items:
+        type: object
+        required:
+        - invoiceLine
+        properties:
+          invoiceLine:
+            $ref: '#/components/schemas/InvoiceLinesProcessing'
+          completedInvoiceLineId:
+            $ref: '#/components/schemas/CompletedInvoiceLineId'
+          completedPaymentRequestId:
+            $ref: '#/components/schemas/CompletedPaymentRequestId'
     InvoiceNumber:
       type: string
       description: Unique identifier for payment request
@@ -147,11 +194,20 @@ components:
       minimum: 2021
       maximum: 2099
       example: 2022
+    PaymentRequestId:
+      type: number
+      description: Unique id given by a microservice for a payment request before PPA
+      minimum: 1
     PaymentRequestNumber:
       type: number
       description: Version of payment request starting with 1, anything greater than 1 is an adjustment
       minimum: 1
       maximum: 99
+    ReferenceId:
+      type: string
+      format: uuid
+      description: GUID for a specific event reference
+      example: ce6ec916-bebe-4bc0-bad1-255298c82845
     Schedule:
       type: string
       description: Payment frequency instruction for DAX, eg Q4 for quarterly payments, optional
