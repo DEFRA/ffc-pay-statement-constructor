@@ -2,7 +2,7 @@ const db = require('../data')
 const getPayementRequestbyInvoiceNumber = require('./get-payment-request-by-invoice-number')
 
 const saveSettlement = async (settlement, transaction) => {
-  const matchedPaymentRequest = await getPayementRequestbyInvoiceNumber(settlement)
+  const matchedPaymentRequest = await getPayementRequestbyInvoiceNumber(settlement, transaction)
   if (matchedPaymentRequest) {
     settlement.paymentRequestId = matchedPaymentRequest.paymentRequestId
     await db.settlement.create(settlement, { transaction })

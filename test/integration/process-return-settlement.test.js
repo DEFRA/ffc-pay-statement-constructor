@@ -7,12 +7,12 @@ let settlement
 let paymentRequest
 
 describe('process submit payment request', () => {
-  // beforeAll(async () => {
-  //   await db.sequelize.truncate({
-  //     cascade: true,
-  //     restartIdentity: true
-  //   })
-  // })
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
 
   beforeEach(async () => {
     settlement = JSON.parse(JSON.stringify(require('../mock-settlement')))
