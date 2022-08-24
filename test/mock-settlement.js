@@ -1,12 +1,19 @@
+const FRN = require('./mock-components/mock-frn')
+const { FIVE_HUNDRED_POUNDS } = require('./mock-components/mock-value')
+const { GBP } = require('../app/constants/currencies')
+const SETTLEMENT_DATE = require('./mock-components/mock-settlement-date')
+const { SETTLEMENT_REFERENCE } = require('./mock-components/mock-settlement-reference')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('./mock-components/mock-invoice-number')
+const { SOURCE_SYSTEM: SFI_SOURCE_SYSTEM } = require('./mock-components/mock-source-system')
+const TRUE = require('./mock-components/mock-settlement-status')
 
 module.exports = {
-  sourceSystem: 'SITIAgri',
+  sourceSystem: SFI_SOURCE_SYSTEM,
   invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER,
-  frn: 1234567890,
-  currency: 'GBP',
-  value: 30000,
-  settlementDate: 'Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)',
-  reference: 'PY1234567',
-  settled: true
+  frn: FRN,
+  currency: GBP,
+  value: FIVE_HUNDRED_POUNDS,
+  settlementDate: SETTLEMENT_DATE,
+  reference: SETTLEMENT_REFERENCE,
+  settled: TRUE
 }

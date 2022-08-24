@@ -6,7 +6,7 @@ const processReturnSettlement = require('../../app/inbound/process-return-settle
 let settlement
 let paymentRequest
 
-describe('process submit payment request', () => {
+describe('process submit return settlement', () => {
   beforeAll(async () => {
     await db.sequelize.truncate({
       cascade: true,
@@ -15,7 +15,6 @@ describe('process submit payment request', () => {
   })
 
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
     settlement = JSON.parse(JSON.stringify(require('../mock-settlement')))
     paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
 
@@ -82,6 +81,6 @@ describe('process submit payment request', () => {
     await processReturnSettlement(settlement)
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.sourceSystem).toBe(undefined)
+    expect(result.sourceSystem).toBeUndefined()
   })
 })
