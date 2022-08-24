@@ -71,7 +71,6 @@ describe('process return settlement', () => {
   })
 
   test('should save entry into settlement table with settlementDate of settlement.settlementDate', async () => {
-    settlement.settlementDate = new Date()
     await processReturnSettlement(settlement)
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
