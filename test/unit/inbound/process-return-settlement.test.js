@@ -46,7 +46,7 @@ describe('process return settlement request', () => {
     expect(getSettlementByInvoiceNumberAndValue).toBeCalledTimes(1)
   })
 
-  test('should call getSettlementByInvoiceNumberAndValue with "settlement" and "mockTransaction" when valid settlement is given', async () => {
+  test('should call getSettlementByInvoiceNumberAndValue with "settlement.invoiceNumber" and "mockTransaction" when valid settlement is given', async () => {
     await processReturnSettlement(settlement)
     expect(getSettlementByInvoiceNumberAndValue).toHaveBeenCalledWith(settlement.invoiceNumber, settlement.value, mockTransaction)
   })

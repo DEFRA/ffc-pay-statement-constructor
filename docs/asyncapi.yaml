@@ -168,7 +168,7 @@ components:
     Detail:
       type: string
       description: Additional settlement information from DAX
-      example: "BAC Rejection"  
+      example: BAC Rejection  
     DueDate:
       type: string
       format: DD/MM/YYYY, YYYY/MM/DD, DD-MM-YYYY or YYYY-MM-DD

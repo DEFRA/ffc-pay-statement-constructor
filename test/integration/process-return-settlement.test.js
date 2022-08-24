@@ -1,12 +1,13 @@
 const db = require('../../app/data')
 const schemes = require('../../app/constants/schemes')
-const { SFI_FIRST_PAYMENT: originalInvoiceNumber } = require('../mock-components/mock-original-invoice-number')
+const { SFI_FIRST_PAYMENT: invoiceNumber } = require('../mock-components/mock-invoice-number')
+const { SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber } = require('../mock-components/mock-invoice-number')
 const processReturnSettlement = require('../../app/inbound/process-return-settlement')
 
 let settlement
 let paymentRequest
 
-describe('process submit return settlement', () => {
+describe('process return settlement', () => {
   beforeAll(async () => {
     await db.sequelize.truncate({
       cascade: true,
@@ -19,7 +20,7 @@ describe('process submit return settlement', () => {
     paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
-    await db.invoiceNumber.create({ invoiceNumber: paymentRequest.invoiceNumber, originalInvoiceNumber })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(paymentRequest)
   })
 
