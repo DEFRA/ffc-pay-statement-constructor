@@ -1,10 +1,9 @@
 jest.mock('ffc-messaging')
 
-const processReturnMessage = require('../../../app/messaging/process-return-message')
-
 jest.mock('../../../app/inbound/process-return-settlement')
 const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
 
+const processReturnMessage = require('../../../app/messaging/process-return-message')
 let receiver
 let settlement
 let message
@@ -23,7 +22,7 @@ describe('process return message', () => {
     jest.clearAllMocks()
   })
 
-  test('should call processReturnMessage when nothing throws', async () => {
+  test('should call processReturnSettlement when nothing throws', async () => {
     await processReturnMessage(message, receiver)
     expect(processReturnSettlement).toHaveBeenCalled()
   })
@@ -38,8 +37,8 @@ describe('process return message', () => {
     expect(processReturnSettlement).toHaveBeenCalledWith(settlement)
   })
 
-  test('should not throw when processReturnMessage throws', async () => {
-    processReturnSettlement.mockRejectedValue(new Error('Database save issue'))
+  test('should not throw when processReturnSettlement throws', async () => {
+    processReturnSettlement.mockRejectedValue(new Error('Transaction failed'))
 
     const wrapper = async () => {
       await processReturnMessage(message, receiver)
@@ -69,7 +68,7 @@ describe('process return message', () => {
     expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 
-  test('should not throw when pprocessReturnSettlement throws', async () => {
+  test('should not throw when processReturnSettlement throws', async () => {
     processReturnSettlement.mockRejectedValue(new Error('Transaction failed'))
 
     const wrapper = async () => {
