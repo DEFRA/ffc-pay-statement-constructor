@@ -74,7 +74,7 @@ describe('process return settlement', () => {
     await processReturnSettlement(settlement)
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.settlementDate).toStrictEqual(settlement.settlementDate)
+    expect(result.settlementDate).toStrictEqual(new Date(settlement.settlementDate))
   })
 
   test('should not save sourceSystem in the table when valid settlement received ', async () => {
