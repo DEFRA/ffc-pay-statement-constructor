@@ -1,3 +1,5 @@
+const { ORGANISATION: ORGANISATION_TYPE } = require('../app/constants/types')
+
 const BUSINESS_NAME = require('./mock-components/mock-organisation-name')
 const EMAIL_ADDRESS = require('./mock-components/mock-email-address')
 const FRN = require('./mock-components/mock-frn')
@@ -23,5 +25,6 @@ module.exports = {
   name: BUSINESS_NAME,
   sbi: SBI,
   postcode: POSTCODE,
+  type: ORGANISATION_TYPE,
   updated: UPDATED_TIMESTAMP
 }

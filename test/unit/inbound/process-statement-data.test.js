@@ -1,25 +1,76 @@
-jest.mock('../../../app/inbound/organisation/process-organisation')
-const processOrganisation = require('../../../app/inbound/organisation/process-organisation')
 
 jest.mock('../../../app/inbound/calculation/process-calculation')
 const processCalculation = require('../../../app/inbound/calculation/process-calculation')
 
+jest.mock('../../../app/inbound/organisation/process-organisation')
+const processOrganisation = require('../../../app/inbound/organisation/process-organisation')
+
 const { processStatementData } = require('../../../app/inbound')
 
-let organisationData
 let calculationData
+let organisationData
 
 describe('process statement data', () => {
   beforeEach(() => {
-    organisationData = JSON.parse(JSON.stringify(require('../../mock-organisation')))
     calculationData = JSON.parse(JSON.stringify(require('../../mock-calculation')))
+    organisationData = JSON.parse(JSON.stringify(require('../../mock-organisation')))
 
-    processOrganisation.mockResolvedValue(undefined)
     processCalculation.mockResolvedValue(undefined)
+    processOrganisation.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
+  })
+
+  test('should call processCalculation when calculationData is given', async () => {
+    await processStatementData(calculationData)
+    expect(processCalculation).toHaveBeenCalled()
+  })
+
+  test('should call processCalculation once when calculationData is given', async () => {
+    await processStatementData(calculationData)
+    expect(processCalculation).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call processCalculation with statementData when calculationData is given', async () => {
+    await processStatementData(calculationData)
+    expect(processCalculation).toHaveBeenCalledWith(calculationData)
+  })
+
+  test('should not call processOrganisation when calculationData is given', async () => {
+    await processStatementData(calculationData)
+    expect(processOrganisation).not.toHaveBeenCalled()
+  })
+
+  test('should throw when processCalculation throws', async () => {
+    processCalculation.mockRejectedValue(new Error('Processing calculation issue'))
+
+    const wrapper = async () => {
+      await processCalculation(calculationData)
+    }
+
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw Error when processCalculation throws Error', async () => {
+    processCalculation.mockRejectedValue(new Error('Processing calculation issue'))
+
+    const wrapper = async () => {
+      await processCalculation(calculationData)
+    }
+
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw error with "Processing calculation issue" when processCalculation throws error with "Processing organisation issue"', async () => {
+    processCalculation.mockRejectedValue(new Error('Processing calculation issue'))
+
+    const wrapper = async () => {
+      await processCalculation(calculationData)
+    }
+
+    expect(wrapper).rejects.toThrow(/^Processing calculation issue$/)
   })
 
   test('should call processOrganisation when organisationData is given', async () => {
@@ -35,6 +86,11 @@ describe('process statement data', () => {
   test('should call processOrganisation with organisationData when organisationData is given', async () => {
     await processStatementData(organisationData)
     expect(processOrganisation).toHaveBeenCalledWith(organisationData)
+  })
+
+  test('should not call processCalculation when organisationData is given', async () => {
+    await processStatementData(organisationData)
+    expect(processCalculation).not.toHaveBeenCalled()
   })
 
   test('should throw when processOrganisation throws', async () => {
@@ -67,48 +123,45 @@ describe('process statement data', () => {
     expect(wrapper).rejects.toThrow(/^Processing organisation issue$/)
   })
 
-  test('should call processCalculation when calculationData is given', async () => {
-    await processStatementData(calculationData)
-    expect(processCalculation).toHaveBeenCalled()
-  })
-
-  test('should call processCalculation once when calculationData is given', async () => {
-    await processStatementData(calculationData)
-    expect(processCalculation).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call processCalculation with statementData when calculationData is given', async () => {
-    await processStatementData(calculationData)
-    expect(processCalculation).toHaveBeenCalledWith(calculationData)
-  })
-
-  test('should throw when processCalculation throws', async () => {
-    processCalculation.mockRejectedValue(new Error('Processing calculation issue'))
+  test('should throw when statementData.type is not recognised', async () => {
+    calculationData.type = 'Not a real type'
 
     const wrapper = async () => {
-      await processCalculation(calculationData)
+      await processStatementData(calculationData)
     }
 
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw Error when processCalculation throws Error', async () => {
-    processCalculation.mockRejectedValue(new Error('Processing calculation issue'))
+  test('should throw Error when statementData.type is not recognised', async () => {
+    calculationData.type = 'Not a real type'
 
     const wrapper = async () => {
-      await processCalculation(calculationData)
+      await processStatementData(calculationData)
     }
 
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with "Processing calculation issue" when processCalculation throws error with "Processing organisation issue"', async () => {
-    processCalculation.mockRejectedValue(new Error('Processing calculation issue'))
+  test('should throw error with "Type: type is invalid" when statementData.type is not recognised', async () => {
+    calculationData.type = 'Not a real type'
 
     const wrapper = async () => {
-      await processCalculation(calculationData)
+      await processStatementData(calculationData)
     }
 
-    expect(wrapper).rejects.toThrow(/^Processing calculation issue$/)
+    expect(wrapper).rejects.toThrow(/^Type is invalid: Not a real type$/)
+  })
+
+  test('should not call processCalculation when statementData.type is not recognised', async () => {
+    calculationData.type = 'Not a real type'
+    try { await processStatementData(calculationData) } catch {}
+    expect(processCalculation).not.toHaveBeenCalled()
+  })
+
+  test('should not call processOrganisation when statementData.type is not recognised', async () => {
+    organisationData.type = 'Not a real type'
+    try { await processStatementData(organisationData) } catch {}
+    expect(processOrganisation).not.toHaveBeenCalled()
   })
 })

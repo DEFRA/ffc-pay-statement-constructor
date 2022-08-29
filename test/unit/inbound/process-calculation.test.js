@@ -22,6 +22,9 @@ const getCalculationBySbi = require('../../../app/inbound/calculation/get-calcul
 jest.mock('../../../app/inbound/calculation/save-calculation')
 const saveCalculation = require('../../../app/inbound/calculation/save-calculation')
 
+jest.mock('../../../app/inbound/calculation/save-placeholder-organisation')
+const savePlaceholderOrganisation = require('../../../app/inbound/calculation/save-placeholder-organisation')
+
 jest.mock('../../../app/inbound/calculation/save-fundings')
 const saveFundings = require('../../../app/inbound/calculation/save-fundings')
 
@@ -37,6 +40,7 @@ describe('process calculation', () => {
     calculation = JSON.parse(JSON.stringify(require('../../mock-calculation')))
 
     getCalculationBySbi.mockResolvedValue(null)
+    savePlaceholderOrganisation.mockResolvedValue(undefined)
     saveFundings.mockResolvedValue(undefined)
     saveCalculation.mockResolvedValue({ ...calculation, calculationId: 1 })
     updateCalculation.mockResolvedValue(undefined)
@@ -59,6 +63,21 @@ describe('process calculation', () => {
   test('should call getCalculationBySbi with calculation.sbi and mockTransaction when a valid calculation is given and a previous calculation does not exist', async () => {
     await processCalculation(calculation)
     expect(getCalculationBySbi).toHaveBeenCalledWith(calculation.sbi, mockTransaction)
+  })
+
+  test('should call savePlaceholderOrganisation when a valid calculation is given and a previous calculation does not exist', async () => {
+    await processCalculation(calculation)
+    expect(savePlaceholderOrganisation).toHaveBeenCalled()
+  })
+
+  test('should call savePlaceholderOrganisation once when a valid calculation is given and a previous calculation does not exist', async () => {
+    await processCalculation(calculation)
+    expect(savePlaceholderOrganisation).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call savePlaceholderOrganisation with { sbi: calculation.sbi} and calculation.sbi when a valid calculation is given and a previous calculation does not exist', async () => {
+    await processCalculation(calculation)
+    expect(savePlaceholderOrganisation).toHaveBeenCalledWith({ sbi: calculation.sbi }, calculation.sbi)
   })
 
   test('should call saveCalculation when a valid calculation is given and a previous calculation does not exist', async () => {
@@ -151,6 +170,30 @@ describe('process calculation', () => {
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
+  test('should not call savePlaceholderOrganisation when a valid calculation is given and a previous calculation exists', async () => {
+    getCalculationBySbi.mockResolvedValue(calculation)
+    await processCalculation(calculation)
+    expect(savePlaceholderOrganisation).not.toHaveBeenCalled()
+  })
+
+  test('should not call saveCalculation when a valid calculation is given and a previous calculation exists', async () => {
+    getCalculationBySbi.mockResolvedValue(calculation)
+    await processCalculation(calculation)
+    expect(saveCalculation).not.toHaveBeenCalled()
+  })
+
+  test('should not call saveFundings when a valid calculation is given and a previous calculation exists', async () => {
+    getCalculationBySbi.mockResolvedValue(calculation)
+    await processCalculation(calculation)
+    expect(saveFundings).not.toHaveBeenCalled()
+  })
+
+  test('should not call updateCalculation when a valid calculation is given and a previous calculation exists', async () => {
+    getCalculationBySbi.mockResolvedValue(calculation)
+    await processCalculation(calculation)
+    expect(updateCalculation).not.toHaveBeenCalled()
+  })
+
   test('should throw when getCalculationBySbi throws', async () => {
     getCalculationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
 
@@ -181,8 +224,8 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
   })
 
-  test('should throw when saveFundings throws', async () => {
-    saveFundings.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw when savePlaceholderOrganisation throws', async () => {
+    savePlaceholderOrganisation.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
@@ -191,8 +234,8 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw Error when saveFundings throws Error', async () => {
-    saveFundings.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw Error when savePlaceholderOrganisation throws Error', async () => {
+    savePlaceholderOrganisation.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
@@ -201,8 +244,8 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with "Database save down issue" when saveFundings throws error with "Database save down issue"', async () => {
-    saveFundings.mockRejectedValue(new Error('Database save down issue'))
+  test('should throw error with "Database save down issue" when savePlaceholderOrganisation throws error with "Database save down issue"', async () => {
+    savePlaceholderOrganisation.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
@@ -233,6 +276,36 @@ describe('process calculation', () => {
 
   test('should throw error with "Database save down issue" when saveCalculation throws error with "Database save down issue"', async () => {
     saveCalculation.mockRejectedValue(new Error('Database save down issue'))
+
+    const wrapper = async () => {
+      await processCalculation(calculation)
+    }
+
+    expect(wrapper).rejects.toThrow(/^Database save down issue$/)
+  })
+
+  test('should throw when saveFundings throws', async () => {
+    saveFundings.mockRejectedValue(new Error('Database save down issue'))
+
+    const wrapper = async () => {
+      await processCalculation(calculation)
+    }
+
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw Error when saveFundings throws Error', async () => {
+    saveFundings.mockRejectedValue(new Error('Database save down issue'))
+
+    const wrapper = async () => {
+      await processCalculation(calculation)
+    }
+
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw error with "Database save down issue" when saveFundings throws error with "Database save down issue"', async () => {
+    saveFundings.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
