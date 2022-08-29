@@ -4,10 +4,14 @@ info:
   version: '1.0.0'
   description: Construct payment statements
 channels:
-  dwh/statement:
+  dwh/calculation:
       subscribe:
         message:
-          $ref: '#/components/messages/DWHStatementData'
+          $ref: '#/components/messages/DWHCalculation'
+  dwh/organisation:
+      subscribe:
+        message:
+          $ref: '#/components/messages/DWHOrganisation'
   payment/processing:
     subscribe:
       message:
@@ -18,11 +22,16 @@ channels:
         $ref: '#/components/messages/PaymentRequestSubmit'
 components:
   messages:
-    DWHStatementData:
-        name: Statement information from DWH
+    DWHCalculation:
+        name: Calculation information from DWH
         contentType: application/json
         payload:
-          $ref: '#/components/schemas/DWHStatementData'
+          $ref: '#/components/schemas/DWHCalculation'
+    DWHOrganisation:
+        name: Organisation information from DWH
+        contentType: application/json
+        payload:
+          $ref: '#/components/schemas/DWHOrganisation'
     PaymentRequestProcessing:
       name: Payment statement before PPA
       contentType: application/json
@@ -34,7 +43,23 @@ components:
       payload:
         $ref: '#/components/schemas/PaymentRequestSubmit'     
   schemas:
-    DWHStatementData:
+    DWHCalculation:
+        type: object
+        properties:
+          calculationDate:
+            $ref: '#/components/schemas/CalculationDate'
+          calculationReference:
+            $ref: '#/components/schemas/CalculationReference'
+          invoiceNumber:
+            $ref: '#/components/schemas/InvoiceNumber'
+          frn:
+            $ref: '#/components/schemas/FRN'
+          sbi:
+            $ref: '#/components/schemas/SBI'
+          type:
+            $ref: '#/components/schemas/Type'
+          updated:
+    DWHOrganisation:
       type: object
       properties:
         addressLine1:
@@ -57,6 +82,8 @@ components:
           $ref: '#/components/schemas/Postcode'
         sbi:
           $ref: '#/components/schemas/SBI'
+        type:
+          $ref: '#/components/schemas/Type'
         updated:
           $ref: '#/components/schemas/Updated'
     PaymentRequestProcessing:
@@ -139,6 +166,14 @@ components:
       type: string
       description: The payment request agreement number
       example: SIP000000000001
+    CalculationDate:
+      type: string
+      description: Date SITIAgri calculated its land based information
+      example: 2022/03/12
+    CalculationReference:
+      type: string
+      description: DWH unique reference for the calculation record
+      example: 223
     City:
       type: string
       description: City of an organisation
@@ -308,6 +343,13 @@ components:
       type: string
       description: System identifier request originates from
       example: AHWR
+    Type:
+      type: string
+      description: Type of dataset
+      example: organisation
+      enum:
+      - calculation
+      - organisation
     Updated:
       type: string
       description: Date of a DWH record's last update
