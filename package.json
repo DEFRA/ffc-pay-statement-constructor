@@ -1,6 +1,6 @@
 {
   "name": "ffc-pay-statement-constructor",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Data construction for statement generation",
   "homepage": "https://github.com/DEFRA/ffc-pay-statement-constructor",
   "main": "app/index.js",
@@ -16,7 +16,8 @@
   "author": "Defra",
   "contributors": [
     "John Watson john.watson2@rpa.gov.uk",
-    "Marc Templeton m.templeton@kainos.com"
+    "Marc Templeton m.templeton@kainos.com",
+    "Abidemi Adio abidemi.adio@defra.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
