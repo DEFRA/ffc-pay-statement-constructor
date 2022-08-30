@@ -21,7 +21,6 @@
   <changeSet author="Abidemi Adio" id="5">
     <dropColumn tableName="settlements">
       <column name="frn" />
-      <column name="sourceSystem" />
     </dropColumn>
   </changeSet>
   <changeSet author="Abidemi Adio" id="6">
