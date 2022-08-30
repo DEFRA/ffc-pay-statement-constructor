@@ -1,7 +1,7 @@
 const db = require('../../data')
 
 const savePlaceholderOrganisation = require('./save-placeholder-organisation')
-const getCalculationBySbi = require('./get-calculation-by-sbi')
+const getCalculationByCalculationReference = require('./get-calculation-by-calculation-reference')
 const saveCalculation = require('./save-calculation')
 const saveFundings = require('./save-fundings')
 const updateCalculation = require('./update-calculation')
@@ -10,9 +10,9 @@ const processCalculation = async (calculation) => {
   const transaction = await db.sequelize.transaction()
 
   try {
-    const existingCalculation = await getCalculationBySbi(calculation.sbi, transaction)
+    const existingCalculation = await getCalculationByCalculationReference(calculation.calculationReference, transaction)
     if (existingCalculation) {
-      console.info(`Duplicate calculation received, skipping ${existingCalculation.sbi}`)
+      console.info(`Duplicate calculation received, skipping ${existingCalculation.calculationReference}`)
       await transaction.rollback()
     } else {
       await savePlaceholderOrganisation({ sbi: calculation.sbi }, calculation.sbi)

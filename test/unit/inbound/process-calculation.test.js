@@ -16,8 +16,8 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/inbound/calculation/get-calculation-by-sbi')
-const getCalculationBySbi = require('../../../app/inbound/calculation/get-calculation-by-sbi')
+jest.mock('../../../app/inbound/calculation/get-calculation-by-calculation-reference')
+const getCalculationByCalculationReference = require('../../../app/inbound/calculation/get-calculation-by-calculation-reference')
 
 jest.mock('../../../app/inbound/calculation/save-calculation')
 const saveCalculation = require('../../../app/inbound/calculation/save-calculation')
@@ -39,7 +39,7 @@ describe('process calculation', () => {
   beforeEach(() => {
     calculation = JSON.parse(JSON.stringify(require('../../mock-calculation')))
 
-    getCalculationBySbi.mockResolvedValue(null)
+    getCalculationByCalculationReference.mockResolvedValue(null)
     savePlaceholderOrganisation.mockResolvedValue(undefined)
     saveFundings.mockResolvedValue(undefined)
     saveCalculation.mockResolvedValue({ ...calculation, calculationId: 1 })
@@ -50,19 +50,19 @@ describe('process calculation', () => {
     jest.clearAllMocks()
   })
 
-  test('should call getCalculationBySbi when a valid calculation is given and a previous calculation does not exist', async () => {
+  test('should call getCalculationByCalculationReference when a valid calculation is given and a previous calculation does not exist', async () => {
     await processCalculation(calculation)
-    expect(getCalculationBySbi).toHaveBeenCalled()
+    expect(getCalculationByCalculationReference).toHaveBeenCalled()
   })
 
-  test('should call getCalculationBySbi once when a valid calculation is given and a previous calculation does not exist', async () => {
+  test('should call getCalculationByCalculationReference once when a valid calculation is given and a previous calculation does not exist', async () => {
     await processCalculation(calculation)
-    expect(getCalculationBySbi).toHaveBeenCalledTimes(1)
+    expect(getCalculationByCalculationReference).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getCalculationBySbi with calculation.sbi and mockTransaction when a valid calculation is given and a previous calculation does not exist', async () => {
+  test('should call getCalculationByCalculationReference with calculation.calculationReference and mockTransaction when a valid calculation is given and a previous calculation does not exist', async () => {
     await processCalculation(calculation)
-    expect(getCalculationBySbi).toHaveBeenCalledWith(calculation.sbi, mockTransaction)
+    expect(getCalculationByCalculationReference).toHaveBeenCalledWith(calculation.calculationReference, mockTransaction)
   })
 
   test('should call savePlaceholderOrganisation when a valid calculation is given and a previous calculation does not exist', async () => {
@@ -140,62 +140,62 @@ describe('process calculation', () => {
     expect(mockTransaction.rollback).not.toHaveBeenCalled()
   })
 
-  test('should call getCalculationBySbi when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+  test('should call getCalculationByCalculationReference when a valid calculation is given and a previous calculation exists', async () => {
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
-    expect(getCalculationBySbi).toHaveBeenCalled()
+    expect(getCalculationByCalculationReference).toHaveBeenCalled()
   })
 
-  test('should call getCalculationBySbi once when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+  test('should call getCalculationByCalculationReference once when a valid calculation is given and a previous calculation exists', async () => {
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
-    expect(getCalculationBySbi).toHaveBeenCalledTimes(1)
+    expect(getCalculationByCalculationReference).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getCalculationBySbi with calculation.sbi and mockTransaction when a valid calculation is given and a previous calculation does not exist', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+  test('should call getCalculationByCalculationReference with calculation.calculationReference and mockTransaction when a valid calculation is given and a previous calculation does not exist', async () => {
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
-    expect(getCalculationBySbi).toHaveBeenCalledWith(calculation.sbi, mockTransaction)
+    expect(getCalculationByCalculationReference).toHaveBeenCalledWith(calculation.calculationReference, mockTransaction)
   })
 
   test('should call mockTransaction.rollback when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should not call savePlaceholderOrganisation when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(savePlaceholderOrganisation).not.toHaveBeenCalled()
   })
 
   test('should not call saveCalculation when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(saveCalculation).not.toHaveBeenCalled()
   })
 
   test('should not call saveFundings when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(saveFundings).not.toHaveBeenCalled()
   })
 
   test('should not call updateCalculation when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationBySbi.mockResolvedValue(calculation)
+    getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(updateCalculation).not.toHaveBeenCalled()
   })
 
-  test('should throw when getCalculationBySbi throws', async () => {
-    getCalculationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should throw when getCalculationByCalculationReference throws', async () => {
+    getCalculationByCalculationReference.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
@@ -204,8 +204,8 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should throw Error when getCalculationBySbi throws Error', async () => {
-    getCalculationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should throw Error when getCalculationByCalculationReference throws Error', async () => {
+    getCalculationByCalculationReference.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
@@ -214,8 +214,8 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with "Database retrieval issue" when getCalculationBySbi throws error with "Database retrieval issue"', async () => {
-    getCalculationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should throw error with "Database retrieval issue" when getCalculationByCalculationReference throws error with "Database retrieval issue"', async () => {
+    getCalculationByCalculationReference.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
       await processCalculation(calculation)
@@ -374,14 +374,14 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
   })
 
-  test('should call mockTransaction.rollback when getCalculationBySbi throws', async () => {
-    getCalculationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should call mockTransaction.rollback when getCalculationByCalculationReference throws', async () => {
+    getCalculationByCalculationReference.mockRejectedValue(new Error('Database retrieval issue'))
     try { await processCalculation(calculation) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should call mockTransaction.rollback once when getCalculationBySbi throws', async () => {
-    getCalculationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
+  test('should call mockTransaction.rollback once when getCalculationByCalculationReference throws', async () => {
+    getCalculationByCalculationReference.mockRejectedValue(new Error('Database retrieval issue'))
     try { await processCalculation(calculation) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
