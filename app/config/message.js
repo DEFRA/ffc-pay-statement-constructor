@@ -25,11 +25,6 @@ const mqSchema = Joi.object({
   },
   statementTopic: {
     address: Joi.string()
-  },
-  statementDataSubscription: {
-    address: Joi.string(),
-    topic: Joi.string(),
-    type: Joi.string().default('subscription')
   }
 })
 
@@ -58,11 +53,6 @@ const mqConfig = {
   },
   statementTopic: {
     address: process.env.STATEMENT_TOPIC_ADDRESS
-  },
-  statementDataSubscription: {
-    address: process.env.DATA_SUBSCRIPTION_ADDRESS,
-    topic: process.env.DATA_TOPIC_ADDRESS,
-    type: 'subscription'
   }
 }
 
@@ -79,12 +69,10 @@ const processingSubscription = { ...mqResult.value.messageQueue, ...mqResult.val
 const submitSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.submitSubscription }
 const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
 const statementTopic = { ...mqResult.value.messageQueue, ...mqResult.value.statementTopic }
-const statementDataSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.statementDataSubscription }
 
 module.exports = {
   processingSubscription,
   submitSubscription,
   returnSubscription,
-  statementTopic,
-  statementDataSubscription
+  statementTopic
 }

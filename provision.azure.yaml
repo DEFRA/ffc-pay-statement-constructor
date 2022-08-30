@@ -4,4 +4,3 @@ resources:
     - name: submit
     - name: return
     - name: statement
-    - name: data
