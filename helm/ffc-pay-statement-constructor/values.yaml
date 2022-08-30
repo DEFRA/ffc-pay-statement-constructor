@@ -42,8 +42,6 @@ container:
   returnTopicAddress: ffc-pay-return
   returnSubscriptionAddress: ffc-pay-statement-constructor
   statementTopicAddress: ffc-pay-statements
-  dataTopicAddress: ffc-pay-statement-data
-  dataSubscriptionAddress: ffc-pay-statement-constructor
   azureStorageAccountName: ffcpay
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
