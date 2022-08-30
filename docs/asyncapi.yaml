@@ -20,6 +20,10 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestSubmit'
+  return/message:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ReturnMessage'      
 components:
   messages:
     DWHCalculation:
@@ -41,7 +45,12 @@ components:
       name: Payment statement after PPA
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/PaymentRequestSubmit'     
+        $ref: '#/components/schemas/PaymentRequestSubmit'
+    ReturnMessage:
+      name: Return Message
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ReturnMessage'    
   schemas:
     DWHCalculation:
         type: object
@@ -146,6 +155,37 @@ components:
           $ref: '#/components/schemas/PaymentRequestId'
         referenceId:
           $ref: '#/components/schemas/ReferenceId'
+    ReturnMessage:
+      type: object
+      required:
+      - sourceSystem
+      - invoiceNumber
+      - frn
+      - currency
+      - value
+      - settlementDate
+      - reference 
+      - settled
+      - detail
+      properties:
+        sourceSystem:
+          $ref: '#/components/schemas/SourceSystem'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        frn:
+          $ref: '#/components/schemas/FRN'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        value:
+          $ref: '#/components/schemas/ValueInteger'
+        settlementDate:
+          $ref: '#/components/schemas/SettlementDate'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        settled:
+          $ref: '#/components/schemas/Settled'
+        detail:
+          $ref: '#/components/schemas/Detail'      
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -214,6 +254,10 @@ components:
       type: string
       description: Description of what line relates to, eg gross or penalty
       example: G00 - Gross value of claim
+    Detail:
+      type: string
+      description: Additional settlement information from DAX
+      example: BAC Rejection  
     DueDate:
       type: string
       format: DD/MM/YYYY, YYYY/MM/DD, DD-MM-YYYY or YYYY-MM-DD
@@ -300,15 +344,19 @@ components:
       description: Version of payment request starting with 1, anything greater than 1 is an adjustment
       minimum: 1
       maximum: 99
-    Postcode:
+    Reference:
       type: string
-      description: Postcode of an organisation's address
-      example: AB1 2CD
+      description: Settlement reference of payment request
+      example: PY1234567  
     ReferenceId:
       type: string
       format: uuid
       description: GUID for a specific event reference
       example: ce6ec916-bebe-4bc0-bad1-255298c82845
+    Postcode:
+      type: string
+      description: Postcode of an organisation's address
+      example: AB1 2CD
     SBI:
       type: number
       description: Single Business Identifier
@@ -339,6 +387,13 @@ components:
       - 3 (Lump Sums)
       - 4 (LNR)
       - 5 (Vet Visits)
+    Settled:
+      type: boolean
+      description: Whether the return file has been settled or not  
+    SettlementDate:
+      type: string
+      description: Date of settlement
+      example: Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)  
     SourceSystem:
       type: string
       description: System identifier request originates from
@@ -361,3 +416,5 @@ components:
       minimum: 0
       maximum: 999999999999
       example: 50000
+
+  
