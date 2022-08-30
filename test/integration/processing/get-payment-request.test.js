@@ -55,7 +55,7 @@ describe('process payment request', () => {
     expect(result).toStrictEqual({
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
-      frequency: SCHEDULE_NAMES.QUARTERLY,
+      frequency: SCHEDULE_NAMES.Q4,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -69,7 +69,7 @@ describe('process payment request', () => {
     expect(result).toStrictEqual({
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
-      frequency: SCHEDULE_NAMES.QUARTERLY,
+      frequency: SCHEDULE_NAMES.Q4,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -83,7 +83,7 @@ describe('process payment request', () => {
     expect(result).toStrictEqual({
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
-      frequency: SCHEDULE_NAMES.QUARTERLY,
+      frequency: SCHEDULE_NAMES.Q4,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -97,7 +97,7 @@ describe('process payment request', () => {
     expect(result).toStrictEqual({
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
-      frequency: SCHEDULE_NAMES.QUARTERLY,
+      frequency: SCHEDULE_NAMES.Q4,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -111,7 +111,7 @@ describe('process payment request', () => {
     expect(result).toStrictEqual({
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
-      frequency: SCHEDULE_NAMES.QUARTERLY,
+      frequency: SCHEDULE_NAMES.Q4,
       year: paymentRequestCompleted.marketingYear
     })
   })

@@ -1,9 +1,8 @@
 jest.mock('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 
-
 jest.mock('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
-const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
+// const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 
 jest.mock('../../../../app/processing/payment-request/map-payment-request')
 // const mapPaymentRequest = require('../../../../app/processing/payment-request/map-payment-request')
@@ -12,10 +11,14 @@ const getPaymentRequest = require('../../../../app/processing/payment-request/ge
 
 let paymentRequest
 
+const { NAMES } = require('../../../../app/constants/schedules')
+
 describe('get and map required payment request information for building a statement object', () => {
   beforeEach(() => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-
+    const mappedPaymentRequest = {paymentRequestId: 1,
+    dueDate: paymentRequest.dueDate,
+  frequency: } 
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(null)
   })
 
