@@ -2,7 +2,6 @@ const db = require('../../../app/data')
 
 const schemes = require('../../../app/constants/schemes')
 const { NAMES: SCHEDULE_NAMES } = require('../../../app/constants/schedules')
-// const fundingOptions = require('../../../app/constants/funding-options')
 
 const getPaymentRequest = require('../../../app/processing/payment-request')
 
@@ -21,12 +20,10 @@ describe('process payment request', () => {
   })
 
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
     paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../mock-payment-request').processingPaymentRequest))
     paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
-    // await db.fundingOption.bulkCreate(fundingOptions)
     await db.invoiceNumber.create({
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       originalInvoiceNumber: paymentRequestInProgress.invoiceNumber.slice(0, 5)
