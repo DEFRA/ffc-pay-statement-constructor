@@ -344,6 +344,10 @@ components:
       description: Version of payment request starting with 1, anything greater than 1 is an adjustment
       minimum: 1
       maximum: 99
+    Postcode:
+      type: string
+      description: Postcode of an organisation's address
+      example: AB1 2CD
     Reference:
       type: string
       description: Settlement reference of payment request
@@ -353,10 +357,6 @@ components:
       format: uuid
       description: GUID for a specific event reference
       example: ce6ec916-bebe-4bc0-bad1-255298c82845
-    Postcode:
-      type: string
-      description: Postcode of an organisation's address
-      example: AB1 2CD
     SBI:
       type: number
       description: Single Business Identifier
@@ -416,5 +416,3 @@ components:
       minimum: 0
       maximum: 999999999999
       example: 50000
-
-  
