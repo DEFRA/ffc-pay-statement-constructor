@@ -29,7 +29,7 @@ describe('process settlement', () => {
     await db.paymentRequest.create(paymentRequest)
 
     settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
-    try { await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false }) } catch (err) { console.error(err) }
+    await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false })
 
     mappedSettlement = {
       paymentRequestId: 1,
