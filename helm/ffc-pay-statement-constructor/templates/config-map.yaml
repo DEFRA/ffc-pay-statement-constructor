@@ -29,4 +29,5 @@ data:
   AZURE_STORAGE_CREATE_CONTAINERS: {{ quote .Values.container.azureStorageCreateContainers }}
   AZURE_STORAGE_CONTAINER: {{ quote .Values.container.storageContainer }}
   AZURE_STORAGE_FOLDER: {{ quote .Values.container.storageFolder }}
+  SETTLEMENT_PROCESSING_INTERVAL: {{ quote .Values.container.settlementProcessingInterval }}
 {{- end -}}

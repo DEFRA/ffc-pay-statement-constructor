@@ -48,6 +48,7 @@ container:
   azureStorageCreateContainers: false
   storageContainer: statements
   storageFolder: inbound
+  settlementProcessingInterval: 60000
 
 postgresService:
   postgresDb: ffc_pay_statement_constructor
