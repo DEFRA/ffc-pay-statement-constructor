@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     frn: DataTypes.INTEGER,
     invoiceNumber: DataTypes.STRING,
     ledger: DataTypes.STRING,
-    reference: DataTypes.INTEGER,
+    reference: DataTypes.STRING,
     settled: DataTypes.BOOLEAN,
     settlementDate: DataTypes.DATE,
-    sourceSystem: DataTypes.STRING
+    value: DataTypes.INTEGER
   },
   {
     tableName: 'settlements',
