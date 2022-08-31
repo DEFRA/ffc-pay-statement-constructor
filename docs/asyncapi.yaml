@@ -68,6 +68,7 @@ components:
           type:
             $ref: '#/components/schemas/Type'
           updated:
+            $ref: '#/components/schemas/Updated'
     DWHOrganisation:
       type: object
       properties:
