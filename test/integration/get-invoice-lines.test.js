@@ -54,7 +54,8 @@ describe('process payment request', () => {
   })
 
   test('should return invoiceLine object', async () => {
-    const result = await getInvoiceLines(1)
+    mockPaymentRequest.paymentRequestId = 1
+    const result = await getInvoiceLines(mockPaymentRequest.paymentRequestId)
     console.log(result)
     expect(result).toStrictEqual({
       accountCode: 'SOS123',
