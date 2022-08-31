@@ -517,4 +517,16 @@ describe('process submit payment request', () => {
     const result = await db.invoiceLine.findOne({ where: { paymentRequestId: 1 } })
     expect(result.schemeCode).toBeUndefined()
   })
+  test('should not save frn in the table when valid payment request received', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.invoiceNumber).not.toBeUndefined()
+    expect(result.schemeId).not.toBeUndefined()
+    expect(result.marketingYear).not.toBeUndefined()
+    expect(result.sourceSystem).not.toBeUndefined()
+    expect(result.frn).toBeUndefined()
+
+  })
+
 })
