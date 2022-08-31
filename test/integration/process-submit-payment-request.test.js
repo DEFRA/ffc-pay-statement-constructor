@@ -517,7 +517,7 @@ describe('process submit payment request', () => {
     const result = await db.invoiceLine.findOne({ where: { paymentRequestId: 1 } })
     expect(result.schemeCode).toBeUndefined()
   })
-  test('should not save frn in the table when valid payment request received', async () => {
+  test('should not save frn in paymentRequests table when valid payment request received', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
