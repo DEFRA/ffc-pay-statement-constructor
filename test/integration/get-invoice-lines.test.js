@@ -52,16 +52,4 @@ describe('process payment request', () => {
     const result = await getInvoiceLines(mockPaymentRequest.paymentRequestId)
     // expect(result).toHaveLength(3)
   })
-
-  // test('should throw an error when invoiceLine has no description', async () => {
-  //   delete mockInvoiceLineGrossPayment.description
-  //   await db.invoiceLine.create(mockInvoiceLineGrossPayment)
-  //   mockPaymentRequest.paymentRequestId = 1
-
-  //   const wrapper = async () => {
-  //     await getInvoiceLines(mockPaymentRequest.paymentRequestId)
-  //   }
-
-  //   expect(wrapper).toThrow(new Error())
-  // })
 })
