@@ -1,9 +1,11 @@
 const db = require('../../data')
 
+// this will return an array
+// possible multiple invoiceLines per paymentRequest
+// some gross payment and some reductions
 const getInvoiceLineByPaymentRequestId = async (paymentRequestId, transaction) => {
-  return db.invoiceLine.findOne({
+  return db.invoiceLine.findAll({
     transaction,
-    lock: true,
     attributes: [
       'accountCode',
       'description',
