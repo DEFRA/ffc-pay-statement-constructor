@@ -47,9 +47,21 @@ describe('process payment request', () => {
     await db.sequelize.close()
   })
 
-  test('should return invoiceLine objects in an array', async () => {
+  test('test', async () => {
     mockPaymentRequest.paymentRequestId = 1
     const result = await getInvoiceLines(mockPaymentRequest.paymentRequestId)
-    expect(result).toHaveLength(3)
+    // expect(result).toHaveLength(3)
   })
+
+  // test('should throw an error when invoiceLine has no description', async () => {
+  //   delete mockInvoiceLineGrossPayment.description
+  //   await db.invoiceLine.create(mockInvoiceLineGrossPayment)
+  //   mockPaymentRequest.paymentRequestId = 1
+
+  //   const wrapper = async () => {
+  //     await getInvoiceLines(mockPaymentRequest.paymentRequestId)
+  //   }
+
+  //   expect(wrapper).toThrow(new Error())
+  // })
 })

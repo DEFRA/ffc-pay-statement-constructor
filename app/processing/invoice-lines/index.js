@@ -1,20 +1,12 @@
-const schema = require('./invoice-line-schema')
 
 const getInvoiceLinesByPaymentRequestId = require('./get-invoice-lines-by-payment-request-id')
+const validateInvoiceLines = require('./validate-invoice-lines')
+const mapInvoiceLines = require('./map-invoice-lines')
 
 const getInvoiceLines = async (paymentRequestId) => {
   const invoiceLines = await getInvoiceLinesByPaymentRequestId(paymentRequestId)
-
-  invoiceLines.forEach(invoiceLine => {
-    const result = schema.validate(invoiceLine, { abortEarly: false })
-    if (result.error) {
-      throw new Error(`Invoice line with paymentRequestId: ${paymentRequestId} does not have the required data: ${result.error.message}`)
-    } else {
-      console.log(`Valid invoice line: ${invoiceLine.description}`)
-    }
-  })
-
-  return invoiceLines
+  validateInvoiceLines(invoiceLines, paymentRequestId)
+  mapInvoiceLines(invoiceLines)
 }
 
 module.exports = getInvoiceLines
