@@ -4,7 +4,6 @@ const { COMPLETED } = require('../../constants/statuses')
 const getCompletedPaymentRequestByPaymentRequestId = async (paymentRequestId, transaction) => {
   return db.paymentRequest.findOne({
     transaction,
-    lock: true,
     attributes: [
       'paymentRequestId',
       'dueDate',
