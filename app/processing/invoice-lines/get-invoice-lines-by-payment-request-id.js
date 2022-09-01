@@ -9,7 +9,7 @@ const getInvoiceLinesByPaymentRequestId = async (paymentRequestId, transaction) 
     attributes: [
       'accountCode',
       'description',
-      'fundCode',
+      'fundingCode',
       'value'
     ],
     where: {
