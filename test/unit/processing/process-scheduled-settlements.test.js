@@ -27,12 +27,12 @@ jest.mock('../../../app/processing/update-scheduled-settlements-by-schedule-ids'
 const updateScheduledSettlementsByScheduleId = require('../../../app/processing/update-scheduled-settlements-by-schedule-ids')
 
 const moment = require('moment')
-const processSettlements = require('../../../app/processing/process-settlements')
+const processScheduledSettlements = require('../../../app/processing/process-scheduled-settlements')
 
 let mockStarted
 let retreivedSchedules
 
-describe('process settlements', () => {
+describe('process scheduled settlements', () => {
   beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
@@ -48,10 +48,16 @@ describe('process settlements', () => {
       settlementId: schedule.settlementId
     }
 
-    retreivedSchedules = [retreivedSchedule]
+    retreivedSchedules = [
+      { ...retreivedSchedule },
+      { ...retreivedSchedule, scheduleId: 2 }
+    ]
 
     getScheduledSettlements.mockResolvedValue(retreivedSchedules)
-    schema.validate.mockReturnValue({ value: retreivedSchedule })
+    schema.validate
+      .mockReturnValue({ value: retreivedSchedules[0] })
+      .mockReturnValueOnce({ value: retreivedSchedules[0] })
+      .mockReturnValueOnce({ value: retreivedSchedules[1] })
     updateScheduledSettlementsByScheduleId.mockResolvedValue(undefined)
   })
 
@@ -60,186 +66,148 @@ describe('process settlements', () => {
   })
 
   test('should call getScheduledSettlements', async () => {
-    await processSettlements()
+    await processScheduledSettlements()
     expect(getScheduledSettlements).toHaveBeenCalled()
   })
 
   test('should call getScheduledSettlements once', async () => {
-    await processSettlements()
+    await processScheduledSettlements()
     expect(getScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
   test('should call getScheduledSettlements with new Date() and mockTransaction', async () => {
-    await processSettlements()
+    await processScheduledSettlements()
     expect(getScheduledSettlements).toHaveBeenCalledWith(new Date(), mockTransaction)
   })
 
+  test('should call schema.validate', async () => {
+    await processScheduledSettlements()
+    expect(schema.validate).toHaveBeenCalled()
+  })
+
+  test('should call schema.validate twice when getScheduledSettlements returns 2 schedule records', async () => {
+    await processScheduledSettlements()
+    expect(schema.validate).toHaveBeenCalledTimes(2)
+  })
+
+  test('should call schema.validate with each retreivedSchedules and { abortEarly: false }', async () => {
+    await processScheduledSettlements()
+    expect(schema.validate).toHaveBeenCalledWith(retreivedSchedules[0], { abortEarly: false })
+    expect(schema.validate).toHaveBeenCalledWith(retreivedSchedules[1], { abortEarly: false })
+  })
+
   test('should call updateScheduledSettlementsByScheduleId', async () => {
-    await processSettlements()
+    await processScheduledSettlements()
     expect(updateScheduledSettlementsByScheduleId).toHaveBeenCalled()
   })
 
-  test('should call updateScheduledSettlementsByScheduleId once', async () => {
-    await processSettlements()
-    expect(updateScheduledSettlementsByScheduleId).toHaveBeenCalledTimes(1)
+  test('should call updateScheduledSettlementsByScheduleId twice when getScheduledSettlements returns 2 valid schedule records', async () => {
+    await processScheduledSettlements()
+    expect(updateScheduledSettlementsByScheduleId).toHaveBeenCalledTimes(2)
   })
 
   test('should call updateScheduledSettlementsByScheduleId with each retreivedSchedules.scheduleId, new Date() and mockTransaction', async () => {
-    await processSettlements()
-    expect(updateScheduledSettlementsByScheduleId).toHaveBeenCalledWith([retreivedSchedules[0].scheduleId], new Date(), mockTransaction)
+    await processScheduledSettlements()
+    expect(updateScheduledSettlementsByScheduleId).toHaveBeenCalledWith(retreivedSchedules[0].scheduleId, new Date(), mockTransaction)
+    expect(updateScheduledSettlementsByScheduleId).toHaveBeenCalledWith(retreivedSchedules[1].scheduleId, new Date(), mockTransaction)
   })
 
   test('should call mockTransaction.commit', async () => {
-    await processSettlements()
+    await processScheduledSettlements()
     expect(mockTransaction.commit).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.commit once', async () => {
-    await processSettlements()
+    await processScheduledSettlements()
     expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
   })
 
-  test('should throw when getScheduledSettlements throws', async () => {
-    getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-
-    const wrapper = async () => {
-      await processSettlements()
-    }
-
-    expect(wrapper).rejects.toThrow()
+  test('should return retreivedSchedules when getScheduledSettlements returns 2 valid schedule records', async () => {
+    const result = await processScheduledSettlements()
+    expect(result).toStrictEqual(retreivedSchedules)
   })
 
-  test('should throw Error when getScheduledSettlements throws Error', async () => {
+  test('should not throw when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await processSettlements()
+      await processScheduledSettlements()
     }
 
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw error with "Database retrieval issue" when getScheduledSettlements throws error with "Database retrieval issue"', async () => {
-    getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-
-    const wrapper = async () => {
-      await processSettlements()
-    }
-
-    expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
+    expect(wrapper).not.toThrow()
   })
 
   test('should call mockTransaction.rollback when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await processSettlements() } catch { }
+    try { await processScheduledSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await processSettlements() } catch { }
+    try { await processScheduledSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should throw when updateScheduledSettlementsByScheduleId throws', async () => {
+  test('should not throw when updateScheduledSettlementsByScheduleId throws', async () => {
     updateScheduledSettlementsByScheduleId.mockRejectedValue(new Error('Database save down issue'))
 
     const wrapper = async () => {
-      await processSettlements()
+      await processScheduledSettlements()
     }
 
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when updateScheduledSettlementsByScheduleId throws Error', async () => {
-    updateScheduledSettlementsByScheduleId.mockRejectedValue(new Error('Database save down issue'))
-
-    const wrapper = async () => {
-      await processSettlements()
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw error with "Database save down issue" when updateScheduledSettlementsByScheduleId throws error with "Database save down issue"', async () => {
-    updateScheduledSettlementsByScheduleId.mockRejectedValue(new Error('Database save down issue'))
-
-    const wrapper = async () => {
-      await processSettlements()
-    }
-
-    expect(wrapper).rejects.toThrow(/^Database save down issue$/)
+    expect(wrapper).not.toThrow()
   })
 
   test('should call mockTransaction.rollback when updateScheduledSettlementsByScheduleId throws', async () => {
     updateScheduledSettlementsByScheduleId.mockRejectedValue(new Error('Database save down issue'))
-    try { await processSettlements() } catch {}
+    try { await processScheduledSettlements() } catch {}
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when updateScheduledSettlementsByScheduleId throws', async () => {
     updateScheduledSettlementsByScheduleId.mockRejectedValue(new Error('Database save down issue'))
-    try { await processSettlements() } catch {}
+    try { await processScheduledSettlements() } catch {}
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should throw when mockTransaction.commit throws', async () => {
+  test('should not throw when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
 
     const wrapper = async () => {
-      await processSettlements()
+      await processScheduledSettlements()
     }
 
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when mockTransaction.commit throws Error', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
-
-    const wrapper = async () => {
-      await processSettlements()
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw error with "Sequelize transaction commit issue" when mockTransaction.commit throws error with "Sequelize transaction commit issue"', async () => {
-    mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
-
-    const wrapper = async () => {
-      await processSettlements()
-    }
-
-    expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
+    expect(wrapper).not.toThrow()
   })
 
   test('should call mockTransaction.rollback when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
-    try { await processSettlements() } catch {}
+    try { await processScheduledSettlements() } catch {}
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
-    try { await processSettlements() } catch { }
+    try { await processScheduledSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should call getScheduledSettlements when a started time is given', async () => {
     console.error(mockStarted)
-    await processSettlements(mockStarted)
+    await processScheduledSettlements(mockStarted)
     expect(getScheduledSettlements).toHaveBeenCalled()
   })
 
   test('should call getScheduledSettlements once when a started time is given', async () => {
     console.error(mockStarted)
-    await processSettlements(mockStarted)
+    await processScheduledSettlements(mockStarted)
     expect(getScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
   test('should call getScheduledSettlements with mockStarted and mockTransaction when a started time is given', async () => {
     console.error(mockStarted)
-    await processSettlements(mockStarted)
+    await processScheduledSettlements(mockStarted)
     expect(getScheduledSettlements).toHaveBeenCalledWith(mockStarted, mockTransaction)
   })
 })

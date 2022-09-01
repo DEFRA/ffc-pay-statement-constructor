@@ -5,25 +5,37 @@ const schema = require('./schema')
 const getScheduledSettlements = require('./get-scheduled-settlements')
 const updateScheduledSettlementsByScheduleId = require('./update-scheduled-settlements-by-schedule-ids')
 
-const processSettlements = async (started = new Date()) => {
+const processScheduledSettlements = async (started = new Date()) => {
   const transaction = await db.sequelize.transaction()
   try {
     const scheduledSettlements = await getScheduledSettlements(started, transaction)
 
-    const result = schema.validate(scheduledSettlements[0], {
-      abortEarly: false
-    })
+    const validScheduledSettlements = []
 
-    if (result.error) {
-      throw new Error(`Schedule with scheduleId: ${scheduledSettlements.scheduleId} does not have the required data: ${result.error.message}`)
+    for (const scheduledSettlement of scheduledSettlements) {
+      try {
+        const result = schema.validate(scheduledSettlement, {
+          abortEarly: false
+        })
+
+        if (result.error) {
+          console.error(`Schedule with scheduleId: ${scheduledSettlements.scheduleId} does not have the required data: ${result.error.message}`)
+        } else {
+          validScheduledSettlements.push(result.value)
+        }
+      } catch (error) {
+        console.error('Could not validate: ', scheduledSettlement)
+      }
     }
 
-    await updateScheduledSettlementsByScheduleId(scheduledSettlements.map(x => x.scheduleId), started, transaction)
+    await updateScheduledSettlementsByScheduleId(validScheduledSettlements.map(x => x.scheduleId), started, transaction)
     await transaction.commit()
+
+    return validScheduledSettlements
   } catch (error) {
     await transaction.rollback()
-    throw (error)
+    console.error('Could not schedule settlements')
   }
 }
 
-module.exports = processSettlements
+module.exports = processScheduledSettlements
