@@ -8,7 +8,9 @@ const mockFundingOptions = {
 
 const getInvoiceLines = require('../../app/processing/invoice-lines')
 const mockPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
-const mockInvoiceLine = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLine))
+const mockInvoiceLineGrossPayment = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLineGrossPayment))
+const mockInvoiceLineReduction = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLineReduction))
+const mockInvoiceLines = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLines))
 
 describe('process payment request', () => {
   beforeAll(async () => {
@@ -28,7 +30,7 @@ describe('process payment request', () => {
       })
       await db.paymentRequest.create(mockPaymentRequest)
       await db.fundingOption.create(mockFundingOptions)
-      await db.invoiceLine.create(mockInvoiceLine)
+      await db.invoiceLine.bulkCreate(mockInvoiceLines)
     } catch (err) {
       console.log(err)
     }
@@ -45,15 +47,9 @@ describe('process payment request', () => {
     await db.sequelize.close()
   })
 
-  test('should return invoiceLine object', async () => {
+  test('should return invoiceLine objects in an array', async () => {
     mockPaymentRequest.paymentRequestId = 1
     const result = await getInvoiceLines(mockPaymentRequest.paymentRequestId)
-    console.log(result)
-    expect(result).toStrictEqual([{
-      accountCode: mockInvoiceLine.accountCode,
-      description: mockInvoiceLine.description,
-      fundCode: mockInvoiceLine.fundCode,
-      value: mockInvoiceLine.value
-    }])
+    expect(result).toHaveLength(3)
   })
 })
