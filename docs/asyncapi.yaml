@@ -212,7 +212,7 @@ components:
       description: Date SITIAgri calculated its land based information
       example: 2022/03/12
     CalculationReference:
-      type: string
+      type: number
       description: DWH unique reference for the calculation record
       example: 223
     City:

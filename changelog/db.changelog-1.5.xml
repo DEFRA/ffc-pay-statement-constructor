@@ -18,7 +18,7 @@
   </changeSet>
   <changeSet author="Marc Templeton" id="5">
     <addColumn tableName="calculations">
-      <column afterColumn="calculationDate" name="calculationReference" type="VARCHAR(63)" />
+      <column afterColumn="calculationDate" name="calculationReference" type="INTEGER" />
     </addColumn>
   </changeSet>
   <changeSet author="Marc Templeton" id="6">
