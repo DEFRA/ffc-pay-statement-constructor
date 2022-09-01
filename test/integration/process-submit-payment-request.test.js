@@ -522,10 +522,6 @@ describe('process submit payment request', () => {
     await processSubmitPaymentRequest(paymentRequest)
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.invoiceNumber).not.toBeUndefined()
-    expect(result.schemeId).not.toBeUndefined()
-    expect(result.marketingYear).not.toBeUndefined()
-    expect(result.sourceSystem).not.toBeUndefined()
     expect(result.frn).toBeUndefined()
   })
 })
