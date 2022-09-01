@@ -30,6 +30,7 @@ value.processingSubscription = mqConfig.processingSubscription
 value.submitSubscription = mqConfig.submitSubscription
 value.returnSubscription = mqConfig.returnSubscription
 value.statementTopic = mqConfig.statementTopic
+value.statementDataSubscription = mqConfig.statementDataSubscription
 
 value.dbConfig = dbConfig
 value.processingConfig = processingConfig
