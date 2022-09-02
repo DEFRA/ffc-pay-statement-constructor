@@ -1,7 +1,7 @@
 const db = require('../../data')
 
 const getScheduledSettlements = require('./get-scheduled-settlements')
-const validateScheduledSettlement = require('./validate-scheduled-settlement')
+const validateSchedule = require('./validate-schedule')
 const updateScheduledSettlementsByScheduleId = require('./update-scheduled-settlements-by-schedule-ids')
 
 const batchSchedule = async (started = new Date()) => {
@@ -12,13 +12,14 @@ const batchSchedule = async (started = new Date()) => {
     const validScheduledSettlements = []
     for (const scheduledSettlement of scheduledSettlements) {
       try {
-        const a = validateScheduledSettlement(scheduledSettlement)
+        const a = validateSchedule(scheduledSettlement)
         validScheduledSettlements.push(a)
       } catch (err) {
         console.error(err)
       }
     }
 
+    console.log(validScheduledSettlements)
     for (const [ind, validScheduledSettlement] of validScheduledSettlements.entries()) {
       try {
         await updateScheduledSettlementsByScheduleId(validScheduledSettlement.scheduleId, started, transaction)
@@ -27,6 +28,7 @@ const batchSchedule = async (started = new Date()) => {
         validScheduledSettlements.splice(ind, 1)
       }
     }
+    console.log(validScheduledSettlements)
 
     await transaction.commit()
     return validScheduledSettlements
