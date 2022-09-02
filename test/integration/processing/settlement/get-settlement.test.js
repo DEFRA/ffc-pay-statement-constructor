@@ -1,9 +1,9 @@
-const db = require('../../../app/data')
+const db = require('../../../../app/data')
 
-const getSettlement = require('../../../app/processing/settlement')
+const getSettlement = require('../../../../app/processing/settlement')
 
-const schemes = require('../../../app/constants/schemes')
-const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
+const schemes = require('../../../../app/constants/schemes')
+const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
 
 const SETTLEMENT_ID_NOT_SETTLED = 1
 const SETTLEMENT_ID_SETTLED = 2
@@ -28,7 +28,7 @@ describe('process settlement', () => {
 
     await db.paymentRequest.create(paymentRequest)
 
-    settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
     await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false })
 
     mappedSettlement = {
@@ -50,7 +50,7 @@ describe('process settlement', () => {
   })
 
   test('should return mapped settled object when existing settled settlement with required information exists', async () => {
-    try { await db.settlement.create({ ...settlement, paymentRequestId: 1 }) } catch (err) { console.error(err) }
+    try { await db.settlement.create({ ...settlement, paymentRequestId: 1 }) } catch { }
     const result = await getSettlement(SETTLEMENT_ID_SETTLED)
     expect(result).toStrictEqual(mappedSettlement)
   })
