@@ -11,10 +11,24 @@ const mockFundingOptions = [{
 }]
 
 const getInvoiceLines = require('../../app/processing/invoice-lines')
+
 const mockPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
 const mockInvoiceLineGrossPayment = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLineGrossPayment))
 const mockInvoiceLineReduction = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLineReduction))
 const mockInvoiceLines = JSON.parse(JSON.stringify(require('../mock-invoice-line').mockInvoiceLines))
+
+const mappedInvoiceLine = {
+  annualValue: mockInvoiceLineGrossPayment.value,
+  fundingCode: mockFundingOptions[0].fundingCode,
+  reductions: [{ reason: mockInvoiceLineReduction.description, value: mockInvoiceLineReduction.value }, { reason: mockInvoiceLineReduction.description, value: mockInvoiceLineReduction.value }],
+  quarterlyValue: mockInvoiceLineGrossPayment.value / 4,
+  quarterlyPayment: (mockInvoiceLineGrossPayment.value - 20000) / 4,
+  quarterlyReduction: mockInvoiceLineReduction.value * 2 / 4
+}
+const mappedInvoiceLines = [
+  { ...mappedInvoiceLine },
+  { ...mappedInvoiceLine, fundingCode: mockFundingOptions[1].fundingCode }
+]
 
 describe('process payment request', () => {
   beforeAll(async () => {
@@ -25,7 +39,6 @@ describe('process payment request', () => {
   })
 
   beforeEach(async () => {
-    // data needed in invoiceLines, paymentRequest, fundingOptions, invoice number, scheme
     try {
       await db.scheme.bulkCreate(schemes)
       await db.invoiceNumber.create({
@@ -51,9 +64,36 @@ describe('process payment request', () => {
     await db.sequelize.close()
   })
 
-  test('test', async () => {
+  test('should return mapped invoice line array when valid paymentRequestId given', async () => {
     mockPaymentRequest.paymentRequestId = 1
     const result = await getInvoiceLines(mockPaymentRequest.paymentRequestId)
-    // expect(result).toHaveLength(3)
+    expect(result).toStrictEqual(mappedInvoiceLines)
+  })
+
+  test('should throw when an invoiceLine has no description', async () => {
+    delete mockInvoiceLineGrossPayment.description
+    await db.invoiceLine.create(mockInvoiceLineGrossPayment)
+    mockPaymentRequest.paymentRequestId = 1
+
+    const wrapper = async () => { await getInvoiceLines(mockPaymentRequest.paymentRequestId) }
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw when an invoiceLine has no accountCode', async () => {
+    delete mockInvoiceLineGrossPayment.accountCode
+    await db.invoiceLine.create(mockInvoiceLineGrossPayment)
+    mockPaymentRequest.paymentRequestId = 1
+
+    const wrapper = async () => { await getInvoiceLines(mockPaymentRequest.paymentRequestId) }
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw when an invoiceLine has no value', async () => {
+    delete mockInvoiceLineGrossPayment.value
+    await db.invoiceLine.create(mockInvoiceLineGrossPayment)
+    mockPaymentRequest.paymentRequestId = 1
+
+    const wrapper = async () => { await getInvoiceLines(mockPaymentRequest.paymentRequestId) }
+    expect(wrapper).rejects.toThrow()
   })
 })
