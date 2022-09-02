@@ -1,9 +1,9 @@
-const db = require('../../../app/data')
+const db = require('../../../../app/data')
 
-const schemes = require('../../../app/constants/schemes')
-const { NAMES: SCHEDULE_NAMES } = require('../../../app/constants/schedules')
+const schemes = require('../../../../app/constants/schemes')
+const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
-const getPaymentRequest = require('../../../app/processing/payment-request')
+const getPaymentRequest = require('../../../../app/processing/payment-request')
 
 const PAYMENT_REQUEST_ID_IN_PROGRESS = 1
 const PAYMENT_REQUEST_ID_COMPLETED = 2
@@ -20,8 +20,8 @@ describe('process payment request', () => {
   })
 
   beforeEach(async () => {
-    paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../mock-payment-request').processingPaymentRequest))
-    paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
+    paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
+    paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({
