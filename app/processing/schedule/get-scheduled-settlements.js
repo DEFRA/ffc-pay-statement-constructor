@@ -1,5 +1,5 @@
 const moment = require('moment')
-const db = require('../../app/data')
+const db = require('../../data')
 
 const STATEMENT_CREATION_ELASPED_MAX_TIME = 300000
 

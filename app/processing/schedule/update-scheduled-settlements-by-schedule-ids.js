@@ -1,4 +1,4 @@
-const db = require('../../app/data')
+const db = require('../../data')
 
 const updateScheduledSettlementsByScheduleId = async (scheduleIds, started, transaction) => {
   for (const scheduleId in scheduleIds) {

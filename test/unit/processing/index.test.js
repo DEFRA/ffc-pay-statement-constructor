@@ -4,29 +4,29 @@ jest.spyOn(global, 'setTimeout')
 jest.mock('../../../app/config')
 const { processingConfig } = require('../../../app/config')
 
-jest.mock('../../../app/processing/process-settlements')
-const processSettlements = require('../../../app/processing/process-settlements')
+jest.mock('../../../app/processing/schedule/batch-schedule')
+const batchSchedule = require('../../../app/processing/schedule/batch-schedule')
 
 const processing = require('../../../app/processing')
 
 describe('start processing', () => {
   beforeEach(() => {
     processingConfig.settlementProcessingInterval = 10000
-    processSettlements.mockResolvedValue(undefined)
+    batchSchedule.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('should call processSettlements', async () => {
+  test('should call batchSchedule', async () => {
     await processing.start()
-    expect(processSettlements).toHaveBeenCalled()
+    expect(batchSchedule).toHaveBeenCalled()
   })
 
-  test('should call processSettlements once', async () => {
+  test('should call batchSchedule once', async () => {
     await processing.start()
-    expect(processSettlements).toHaveBeenCalledTimes(1)
+    expect(batchSchedule).toHaveBeenCalledTimes(1)
   })
 
   test('should call setTimeout', async () => {
@@ -44,8 +44,8 @@ describe('start processing', () => {
     expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
   })
 
-  test('should not throw when processSettlements throws', async () => {
-    processSettlements.mockRejectedValue(new Error('Processing issue'))
+  test('should not throw when batchSchedule throws', async () => {
+    batchSchedule.mockRejectedValue(new Error('Processing issue'))
 
     const wrapper = async () => {
       await processing.start()
@@ -54,20 +54,20 @@ describe('start processing', () => {
     expect(wrapper).not.toThrow()
   })
 
-  test('should call setTimeout when processSettlements throws', async () => {
-    processSettlements.mockRejectedValue(new Error('Processing issue'))
+  test('should call setTimeout when batchSchedule throws', async () => {
+    batchSchedule.mockRejectedValue(new Error('Processing issue'))
     await processing.start()
     expect(setTimeout).toHaveBeenCalled()
   })
 
-  test('should call setTimeout once when processSettlements throws', async () => {
-    processSettlements.mockRejectedValue(new Error('Processing issue'))
+  test('should call setTimeout once when batchSchedule throws', async () => {
+    batchSchedule.mockRejectedValue(new Error('Processing issue'))
     await processing.start()
     expect(setTimeout).toHaveBeenCalledTimes(1)
   })
 
-  test('should call setTimeout with processing.start and processingConfig.settlementProcessingInterval when processSettlements throws', async () => {
-    processSettlements.mockRejectedValue(new Error('Processing issue'))
+  test('should call setTimeout with processing.start and processingConfig.settlementProcessingInterval when batchSchedule throws', async () => {
+    batchSchedule.mockRejectedValue(new Error('Processing issue'))
     await processing.start()
     expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
   })
