@@ -1,11 +1,13 @@
 const Joi = require('joi')
 
 const schema = Joi.object({
-  settlementProcessingInterval: Joi.number().default(10000) // 10 secondss
+  settlementProcessingInterval: Joi.number().default(10000), // 10 seconds
+  scheduleProcessingMaxElaspedTime: Joi.number().default(300000) // 5 minutes
 })
 
 const config = {
-  settlementProcessingInterval: process.env.SETTLEMENT_PROCESSING_INTERVAL
+  settlementProcessingInterval: process.env.SETTLEMENT_PROCESSING_INTERVAL,
+  scheduleProcessingMaxElaspedTime: process.env.SCHEDULE_PROCESSING_ELASPED_MAX_TIME
 }
 
 const result = schema.validate(config, {

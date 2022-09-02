@@ -1,3 +1,4 @@
+const moment = require('moment')
 
 const mockCommit = jest.fn()
 const mockRollback = jest.fn()
@@ -26,7 +27,6 @@ const validateSchedule = require('../../../../app/processing/schedule/validate-s
 jest.mock('../../../../app/processing/schedule/update-scheduled-settlements-by-schedule-ids')
 const updateScheduledSettlementsByScheduleId = require('../../../../app/processing/schedule/update-scheduled-settlements-by-schedule-ids')
 
-const moment = require('moment')
 const batchSchedule = require('../../../../app/processing/schedule/batch-schedule')
 
 let mockStarted

@@ -1,7 +1,6 @@
 const moment = require('moment')
 const db = require('../../data')
-
-const STATEMENT_CREATION_ELASPED_MAX_TIME = 300000
+const config = require('../../config').processingConfig
 
 const getScheduledSettlements = async (started, transaction) => {
   return db.schedule.findAll({
@@ -15,7 +14,7 @@ const getScheduledSettlements = async (started, transaction) => {
       [db.Sequelize.Op.or]: [{
         started: null
       }, {
-        started: { [db.Sequelize.Op.lte]: moment(started).subtract(STATEMENT_CREATION_ELASPED_MAX_TIME).toDate() }
+        started: { [db.Sequelize.Op.lte]: moment(started).subtract(config.scheduleProcessingMaxElaspedTime).toDate() }
       }]
     },
     raw: true
