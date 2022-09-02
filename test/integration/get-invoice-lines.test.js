@@ -7,7 +7,7 @@ const mockFundingOptions = [{
 },
 {
   fundingCode: '80002',
-  name: 'Name: level' // eg Arable and horticulral: introductory
+  name: 'Name: level'
 }]
 
 const getInvoiceLines = require('../../app/processing/invoice-lines')

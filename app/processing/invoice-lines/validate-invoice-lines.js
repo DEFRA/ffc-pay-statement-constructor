@@ -1,4 +1,4 @@
-const schema = require('./invoice-line-schema')
+const schema = require('./schema')
 
 const validateInvoiceLines = (invoiceLines, paymentRequestId) => {
   invoiceLines.forEach(invoiceLine => {
