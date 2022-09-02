@@ -4,9 +4,9 @@ const calculateTotalReduction = require('./calculate-total-reduction')
 
 const mapInvoiceLines = (invoiceLines) => {
   const invoiceLinesGroupedByFundingCode = groupInvoiceLinesByFundingCode(invoiceLines)
-  const fundingCode = invoiceLinesGroupedByFundingCode[0][0].fundingCode
 
   const mappedInvoiceLinesArray = invoiceLinesGroupedByFundingCode.map(invoiceLineGroup => {
+    const fundingCode = invoiceLineGroup[0].fundingCode
     const annualValue = invoiceLineGroup.find(invoiceLine => invoiceLine.description === 'G00 - Gross value of claim').value
     const reductions = mapInvoiceLineReductions(invoiceLineGroup)
     const totalReduction = calculateTotalReduction(reductions)

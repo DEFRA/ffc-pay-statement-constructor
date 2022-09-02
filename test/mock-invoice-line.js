@@ -23,7 +23,8 @@ const mockInvoiceLines = [
   mockInvoiceLineGrossPayment,
   mockInvoiceLineReduction,
   mockInvoiceLineReduction,
-  { ...mockInvoiceLineGrossPayment, fundingCode: '80002' }
+  { ...mockInvoiceLineGrossPayment, fundingCode: '80002' },
+  { ...mockInvoiceLineReduction, fundingCode: '80002' },
   { ...mockInvoiceLineReduction, fundingCode: '80002' }
 ]
 

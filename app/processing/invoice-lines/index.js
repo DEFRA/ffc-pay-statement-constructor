@@ -4,6 +4,9 @@ const mapInvoiceLines = require('./map-invoice-lines')
 
 const getInvoiceLines = async (paymentRequestId) => {
   const invoiceLines = await getInvoiceLinesByPaymentRequestId(paymentRequestId)
+  if (!invoiceLines.length) {
+    throw new Error(`No invoice lines found for payment request id ${paymentRequestId}`)
+  }
   validateInvoiceLines(invoiceLines, paymentRequestId)
   return mapInvoiceLines(invoiceLines)
 }

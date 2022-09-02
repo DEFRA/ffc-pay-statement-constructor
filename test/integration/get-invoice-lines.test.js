@@ -1,10 +1,14 @@
 const db = require('../../app/data')
 
 const schemes = require('../../app/constants/schemes')
-const mockFundingOptions = {
+const mockFundingOptions = [{
   fundingCode: '80001',
   name: 'Name: level' // eg Arable and horticulral: introductory
-}
+},
+{
+  fundingCode: '80002',
+  name: 'Name: level' // eg Arable and horticulral: introductory
+}]
 
 const getInvoiceLines = require('../../app/processing/invoice-lines')
 const mockPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
@@ -29,7 +33,7 @@ describe('process payment request', () => {
         originalInvoiceNumber: mockPaymentRequest.invoiceNumber.slice(0, 5)
       })
       await db.paymentRequest.create(mockPaymentRequest)
-      await db.fundingOption.create(mockFundingOptions)
+      await db.fundingOption.bulkCreate(mockFundingOptions)
       await db.invoiceLine.bulkCreate(mockInvoiceLines)
     } catch (err) {
       console.log(err)
