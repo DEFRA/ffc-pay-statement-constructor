@@ -1,6 +1,10 @@
 {
   "name": "ffc-pay-statement-constructor",
+<<<<<<< HEAD
   "version": "0.8.0",
+=======
+  "version": "0.6.0",
+>>>>>>> main
   "description": "Data construction for statement generation",
   "homepage": "https://github.com/DEFRA/ffc-pay-statement-constructor",
   "main": "app/index.js",
