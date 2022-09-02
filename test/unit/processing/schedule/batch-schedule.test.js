@@ -6,7 +6,7 @@ const mockTransaction = {
   rollback: mockRollback
 }
 
-jest.mock('../../../app/data', () => {
+jest.mock('../../../../app/data', () => {
   return {
     sequelize:
        {
@@ -17,17 +17,17 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/processing/schedule/get-scheduled-settlements')
-const getScheduledSettlements = require('../../../app/processing/schedule/get-scheduled-settlements')
+jest.mock('../../../../app/processing/schedule/get-scheduled-settlements')
+const getScheduledSettlements = require('../../../../app/processing/schedule/get-scheduled-settlements')
 
-jest.mock('../../../app/processing/schedule/validate-schedule')
-const validateSchedule = require('../../../app/processing/schedule/validate-schedule')
+jest.mock('../../../../app/processing/schedule/validate-schedule')
+const validateSchedule = require('../../../../app/processing/schedule/validate-schedule')
 
-jest.mock('../../../app/processing/schedule/update-scheduled-settlements-by-schedule-ids')
-const updateScheduledSettlementsByScheduleId = require('../../../app/processing/schedule/update-scheduled-settlements-by-schedule-ids')
+jest.mock('../../../../app/processing/schedule/update-scheduled-settlements-by-schedule-ids')
+const updateScheduledSettlementsByScheduleId = require('../../../../app/processing/schedule/update-scheduled-settlements-by-schedule-ids')
 
 const moment = require('moment')
-const batchSchedule = require('../../../app/processing/schedule/batch-schedule')
+const batchSchedule = require('../../../../app/processing/schedule/batch-schedule')
 
 let mockStarted
 let retreivedSchedules
@@ -41,7 +41,7 @@ describe('batch schedule', () => {
 
     mockStarted = moment(new Date()).subtract(30000)
 
-    const schedule = JSON.parse(JSON.stringify(require('../../mock-schedule')))
+    const schedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
 
     const retreivedSchedule = {
       scheduleId: 1,
