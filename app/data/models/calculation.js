@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     paymentRequestId: DataTypes.INTEGER,
     sbi: DataTypes.INTEGER,
     calculationDate: DataTypes.DATE,
-    invoiceNumber: DataTypes.STRING
+    calculationReference: DataTypes.INTEGER,
+    invoiceNumber: DataTypes.STRING,
+    updated: DataTypes.DATE
   },
   {
     tableName: 'calculations',

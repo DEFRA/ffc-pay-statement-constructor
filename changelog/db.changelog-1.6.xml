@@ -4,26 +4,21 @@
     <tagDatabase tag="v1.4.0" />
   </changeSet>
   <changeSet author="Abidemi Adio" id="2">
-    <addColumn tableName="calculations">
-      <column name="invoiceNumber" type="VARCHAR(20)" />
-    </addColumn>
-  </changeSet>
-  <changeSet author="Abidemi Adio" id="3">
     <addColumn tableName="fundings">
       <column name="rate"  type="DECIMAL(7,2)" />
     </addColumn>
   </changeSet>
-  <changeSet author="Abidemi Adio" id="4">
+  <changeSet author="Abidemi Adio" id="3">
     <dropColumn tableName="fundingOptions">
       <column name="rate" />
     </dropColumn>
   </changeSet>
-  <changeSet author="Abidemi Adio" id="5">
+  <changeSet author="Abidemi Adio" id="4">
     <dropColumn tableName="settlements">
       <column name="frn" />
     </dropColumn>
   </changeSet>
-  <changeSet author="Abidemi Adio" id="6">
+  <changeSet author="Abidemi Adio" id="5">
     <dropColumn tableName="schedules">
       <column name="planned" />
     </dropColumn>
