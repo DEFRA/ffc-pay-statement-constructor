@@ -2,7 +2,7 @@ const db = require('../../data')
 
 const getScheduledSettlements = require('./get-scheduled-settlements')
 const validateSchedule = require('./validate-schedule')
-const updateScheduledSettlementsByScheduleId = require('./update-scheduled-settlements-by-schedule-ids')
+const updateScheduledSettlementByScheduleId = require('./update-scheduled-settlement-by-schedule-id')
 
 const batchSchedule = async (started = new Date()) => {
   const transaction = await db.sequelize.transaction()
@@ -21,7 +21,7 @@ const batchSchedule = async (started = new Date()) => {
     const updatedScheduledSettlements = []
     for (const validScheduledSettlement of validScheduledSettlements) {
       try {
-        await updateScheduledSettlementsByScheduleId(validScheduledSettlement.scheduleId, started, transaction)
+        await updateScheduledSettlementByScheduleId(validScheduledSettlement.scheduleId, started, transaction)
         updatedScheduledSettlements.push(validScheduledSettlement)
       } catch (err) {
         console.error(`Could not update saved for: ${validScheduledSettlement.scheduleId}, removing from schedule`)

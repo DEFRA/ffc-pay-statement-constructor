@@ -11,6 +11,7 @@ jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
 const LESS_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElaspedTime - 500).toDate()
 const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElaspedTime + 500).toDate()
+const MOCK_STARTED = moment(new Date()).subtract(10000).toDate()
 
 let schedule
 
@@ -47,7 +48,7 @@ describe('batch schedule', () => {
     await db.sequelize.close()
   })
 
-  test('should return mapped schedule array when existing valid schedule with null completed and null started exists', async () => {
+  test('should return mapped schedule array when existing schedule with null completed and null started exists', async () => {
     await db.schedule.create(schedule)
 
     const result = await batchSchedule()
@@ -117,5 +118,77 @@ describe('batch schedule', () => {
     const result = await batchSchedule()
 
     expect(result).toStrictEqual([])
+  })
+
+  test('should update started as new Date() when existing schedule with null completed and null started exists', async () => {
+    await db.schedule.create(schedule)
+    const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+
+    await batchSchedule()
+
+    const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+    expect(startedTimeBefore).toBeNull()
+    expect(startedTimeAfter).toStrictEqual(new Date())
+  })
+
+  test('should update started as MOCK_STARTED when existing schedule with null completed and null started exists', async () => {
+    await db.schedule.create(schedule)
+    const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+
+    await batchSchedule(MOCK_STARTED)
+
+    const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+    expect(startedTimeBefore).toBeNull()
+    expect(startedTimeAfter).toStrictEqual(MOCK_STARTED)
+  })
+
+  test('should not update started when existing schedule with null completed and started is LESS_TIME_THAN_ELASPED_MAX exists', async () => {
+    schedule.started = LESS_TIME_THAN_ELASPED_MAX
+    await db.schedule.create(schedule)
+    const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+
+    await batchSchedule()
+
+    const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+    expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
+    expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
+  })
+
+  test('should not update started when existing schedule with not null completed and null started exists', async () => {
+    schedule.completed = new Date()
+    await db.schedule.create(schedule)
+    const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+
+    await batchSchedule()
+
+    const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+    expect(startedTimeBefore).toBeNull()
+    expect(startedTimeAfter).toBeNull()
+  })
+
+  test('should not update started when existing schedule with not null completed and started is MORE_TIME_THAN_ELASPED_MAX exists', async () => {
+    schedule.started = MORE_TIME_THAN_ELASPED_MAX
+    schedule.completed = new Date()
+    await db.schedule.create(schedule)
+    const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+
+    await batchSchedule()
+
+    const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+    expect(startedTimeBefore).toStrictEqual(MORE_TIME_THAN_ELASPED_MAX)
+    expect(startedTimeAfter).toStrictEqual(MORE_TIME_THAN_ELASPED_MAX)
+  })
+
+  test('should not update started when existing schedule with not null completed and started is LESS_TIME_THAN_ELASPED_MAX exists', async () => {
+    schedule.started = LESS_TIME_THAN_ELASPED_MAX
+    schedule.completed = new Date()
+    await db.schedule.create(schedule)
+    const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+
+    await batchSchedule()
+
+    const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
+    expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
+    expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
   })
 })
