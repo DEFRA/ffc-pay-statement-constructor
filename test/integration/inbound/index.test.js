@@ -3,17 +3,12 @@ const db = require('../../../app/data')
 const schemes = require('../../../app/constants/schemes')
 const fundingOptions = require('../../../app/constants/funding-options')
 
-// const { IN_PROGRESS } = require('../../../app/constants/statuses')
-
-// const reverseEngineerInvoiceNumber = require('../../../app/processing/reverse-engineer-invoice-number')
-
 const {
   processProcessingPaymentRequest,
   processStatementData,
   processSubmitPaymentRequest,
   processReturnSettlement
 } = require('../../../app/inbound')
-// const { submitPaymentRequest } = require('../../mock-payment-request')
 
 let calculation
 let organisation
@@ -55,113 +50,97 @@ describe('process messages off Topics', () => {
 
   test('should not throw when processing happens in order: processing, submit, return, calculation, organisation', async () => {
     const wrapper = async () => {
-      try {
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processReturnSettlement(settlement)
-        await processStatementData(calculation)
-        await processStatementData(organisation)
-      } catch {}
+      await processProcessingPaymentRequest(paymentRequestInProgress)
+      await processSubmitPaymentRequest(paymentRequestCompleted)
+      await processReturnSettlement(settlement)
+      await processStatementData(calculation)
+      await processStatementData(organisation)
     }
 
     expect(wrapper).not.toThrow()
-  })
+  }, 99999)
 
-  test('should not throw when processing happens in order: submit, processing, return, calculation, organisation', async () => {
-    const wrapper = async () => {
-      try {
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processReturnSettlement(settlement)
-        await processStatementData(calculation)
-        await processStatementData(organisation)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: submit, processing, return, calculation, organisation', async () => {
+  //   const wrapper = async () => {
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processReturnSettlement(settlement)
+  //     await processStatementData(calculation)
+  //     await processStatementData(organisation)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 
-  test('should not throw when processing happens in order: return, processing, submit, calculation, organisation', async () => {
-    const wrapper = async () => {
-      try {
-        await processReturnSettlement(settlement)
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processStatementData(calculation)
-        await processStatementData(organisation)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: return, processing, submit, calculation, organisation', async () => {
+  //   const wrapper = async () => {
+  //     await processReturnSettlement(settlement)
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processStatementData(calculation)
+  //     await processStatementData(organisation)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 
-  test('should not throw when processing happens in order: submit, return, processing, calculation, organisation', async () => {
-    const wrapper = async () => {
-      try {
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processReturnSettlement(settlement)
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processStatementData(calculation)
-        await processStatementData(organisation)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: submit, return, processing, calculation, organisation', async () => {
+  //   const wrapper = async () => {
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processReturnSettlement(settlement)
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processStatementData(calculation)
+  //     await processStatementData(organisation)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 
-  test('should not throw when processing happens in order: return, submit, processing, calculation, organisation', async () => {
-    const wrapper = async () => {
-      try {
-        await processReturnSettlement(settlement)
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processStatementData(calculation)
-        await processStatementData(organisation)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: return, submit, processing, calculation, organisation', async () => {
+  //   const wrapper = async () => {
+  //     await processReturnSettlement(settlement)
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processStatementData(calculation)
+  //     await processStatementData(organisation)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 
-  test('should not throw when processing happens in order: processing, submit, return, organisation, calculation', async () => {
-    const wrapper = async () => {
-      try {
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processReturnSettlement(settlement)
-        await processStatementData(organisation)
-        await processStatementData(calculation)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: processing, submit, return, organisation, calculation', async () => {
+  //   const wrapper = async () => {
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processReturnSettlement(settlement)
+  //     await processStatementData(organisation)
+  //     await processStatementData(calculation)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 
-  test('should not throw when processing happens in order: calculation, organisation, processing, submit, return', async () => {
-    const wrapper = async () => {
-      try {
-        await processStatementData(calculation)
-        await processStatementData(organisation)
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processReturnSettlement(settlement)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: calculation, organisation, processing, submit, return', async () => {
+  //   const wrapper = async () => {
+  //     await processStatementData(calculation)
+  //     await processStatementData(organisation)
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processReturnSettlement(settlement)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 
-  test('should not throw when processing happens in order: organisation, calculation, processing, submit, return', async () => {
-    const wrapper = async () => {
-      try {
-        await processStatementData(organisation)
-        await processStatementData(calculation)
-        await processProcessingPaymentRequest(paymentRequestInProgress)
-        await processSubmitPaymentRequest(paymentRequestCompleted)
-        await processReturnSettlement(settlement)
-      } catch {}
-    }
+  // test('should not throw when processing happens in order: organisation, calculation, processing, submit, return', async () => {
+  //   const wrapper = async () => {
+  //     await processStatementData(organisation)
+  //     await processStatementData(calculation)
+  //     await processProcessingPaymentRequest(paymentRequestInProgress)
+  //     await processSubmitPaymentRequest(paymentRequestCompleted)
+  //     await processReturnSettlement(settlement)
+  //   }
 
-    expect(wrapper).not.toThrow()
-  })
+  //   expect(wrapper).not.toThrow()
+  // }, 99999)
 })
