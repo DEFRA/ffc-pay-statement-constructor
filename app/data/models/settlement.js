@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     detail: DataTypes.STRING,
     invalid: DataTypes.BOOLEAN,
     generated: DataTypes.BOOLEAN,
-    frn: DataTypes.INTEGER,
     invoiceNumber: DataTypes.STRING,
     ledger: DataTypes.STRING,
     reference: DataTypes.STRING,
