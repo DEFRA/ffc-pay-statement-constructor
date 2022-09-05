@@ -1,7 +1,7 @@
 const db = require('../../data')
 
 const getScheduledSettlements = require('./get-scheduled-settlements')
-const validateSchedule = require('./validate-schedule')
+const getValidScheduledSettlements = require('./get-valid-scheduled-settlements')
 const updateScheduledSettlementByScheduleId = require('./update-scheduled-settlement-by-schedule-id')
 
 const batchSchedule = async () => {
@@ -10,14 +10,7 @@ const batchSchedule = async () => {
   try {
     const scheduledSettlements = await getScheduledSettlements(started, transaction)
 
-    const validScheduledSettlements = []
-    for (const scheduledSettlement of scheduledSettlements) {
-      try {
-        validScheduledSettlements.push(validateSchedule(scheduledSettlement))
-      } catch (err) {
-        console.error(err)
-      }
-    }
+    const validScheduledSettlements = getValidScheduledSettlements(scheduledSettlements)
 
     const updatedScheduledSettlements = []
     for (const validScheduledSettlement of validScheduledSettlements) {

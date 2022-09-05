@@ -19,8 +19,8 @@ jest.mock('../../../../app/data', () => {
 jest.mock('../../../../app/processing/schedule/get-scheduled-settlements')
 const getScheduledSettlements = require('../../../../app/processing/schedule/get-scheduled-settlements')
 
-jest.mock('../../../../app/processing/schedule/validate-schedule')
-const validateSchedule = require('../../../../app/processing/schedule/validate-schedule')
+jest.mock('../../../../app/processing/schedule/get-valid-scheduled-settlements')
+const getValidScheduledSettlements = require('../../../../app/processing/schedule/get-valid-scheduled-settlements')
 
 jest.mock('../../../../app/processing/schedule/update-scheduled-settlement-by-schedule-id')
 const updateScheduledSettlementByScheduleId = require('../../../../app/processing/schedule/update-scheduled-settlement-by-schedule-id')
@@ -49,9 +49,7 @@ describe('batch schedule', () => {
     ]
 
     getScheduledSettlements.mockResolvedValue(retreivedSchedules)
-    validateSchedule.mockImplementation(() => { return retreivedSchedules[0] })
-      .mockImplementationOnce(() => { return retreivedSchedules[0] })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
+    getValidScheduledSettlements.mockReturnValue(retreivedSchedules)
     updateScheduledSettlementByScheduleId.mockResolvedValue(undefined)
   })
 
@@ -74,20 +72,19 @@ describe('batch schedule', () => {
     expect(getScheduledSettlements).toHaveBeenCalledWith(new Date(), mockTransaction)
   })
 
-  test('should call validateSchedule', async () => {
+  test('should call getValidScheduledSettlements', async () => {
     await batchSchedule()
-    expect(validateSchedule).toHaveBeenCalled()
+    expect(getValidScheduledSettlements).toHaveBeenCalled()
   })
 
-  test('should call validateSchedule twice when getScheduledSettlements returns 2 schedule records', async () => {
+  test('should call getValidScheduledSettlements once when getScheduledSettlements returns 2 schedule records', async () => {
     await batchSchedule()
-    expect(validateSchedule).toHaveBeenCalledTimes(2)
+    expect(getValidScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
-  test('should call validateSchedule with each retreivedSchedules when getScheduledSettlements returns 2 schedule records', async () => {
+  test('should call getValidScheduledSettlements with each retreivedSchedules when getScheduledSettlements returns 2 schedule records', async () => {
     await batchSchedule()
-    expect(validateSchedule).toHaveBeenCalledWith(retreivedSchedules[0])
-    expect(validateSchedule).toHaveBeenCalledWith(retreivedSchedules[1])
+    expect(getValidScheduledSettlements).toHaveBeenCalledWith(retreivedSchedules)
   })
 
   test('should call updateScheduledSettlementByScheduleId', async () => {
@@ -95,7 +92,7 @@ describe('batch schedule', () => {
     expect(updateScheduledSettlementByScheduleId).toHaveBeenCalled()
   })
 
-  test('should call updateScheduledSettlementByScheduleId twice when getScheduledSettlements returns 2 valid schedule records', async () => {
+  test('should call updateScheduledSettlementByScheduleId twice when getValidScheduledSettlements returns 2 schedules', async () => {
     await batchSchedule()
     expect(updateScheduledSettlementByScheduleId).toHaveBeenCalledTimes(2)
   })
@@ -116,7 +113,7 @@ describe('batch schedule', () => {
     expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
   })
 
-  test('should return retreivedSchedules when getScheduledSettlements returns 2 valid schedule records', async () => {
+  test('should return retreivedSchedules', async () => {
     const result = await batchSchedule()
     expect(result).toStrictEqual(retreivedSchedules)
   })
@@ -148,10 +145,10 @@ describe('batch schedule', () => {
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should not call validateSchedule when getScheduledSettlements throws', async () => {
+  test('should not call getValidScheduledSettlements when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
     try { await batchSchedule() } catch { }
-    expect(validateSchedule).not.toHaveBeenCalled()
+    expect(getValidScheduledSettlements).not.toHaveBeenCalled()
   })
 
   test('should not call updateScheduledSettlementByScheduleId when getScheduledSettlements throws', async () => {
@@ -166,8 +163,8 @@ describe('batch schedule', () => {
     expect(mockTransaction.commit).not.toHaveBeenCalled()
   })
 
-  test('should not throw when validateSchedule throws', async () => {
-    validateSchedule.mockImplementation(() => { throw new Error('Joi validation issue') })
+  test('should not throw when getValidScheduledSettlements throws', async () => {
+    getValidScheduledSettlements.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
       await batchSchedule()
@@ -176,59 +173,28 @@ describe('batch schedule', () => {
     expect(wrapper).not.toThrow()
   })
 
-  test('should call updateScheduledSettlementByScheduleId when validateSchedule throws and then resolves', async () => {
-    validateSchedule.mockImplementationOnce(() => { throw Error('Joi validation issue') })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
-
+  test('should call mockTransaction.rollback when getValidScheduledSettlements throws', async () => {
+    getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
     await batchSchedule()
-
-    expect(updateScheduledSettlementByScheduleId).toHaveBeenCalled()
+    expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should call updateScheduledSettlementByScheduleId once when validateSchedule throws and then resolves', async () => {
-    validateSchedule.mockReset()
-      .mockImplementationOnce(() => { throw new Error('Joi validation issue') })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
-
+  test('should call mockTransaction.rollback once when getValidScheduledSettlements throws', async () => {
+    getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
     await batchSchedule()
-
-    expect(updateScheduledSettlementByScheduleId).toHaveBeenCalledTimes(1)
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
-  test('should call updateScheduledSettlementByScheduleId with resolved schedule.scheduleId, new Date() and mockTransaction when validateSchedule throws and then resolves', async () => {
-    validateSchedule.mockImplementationOnce(() => { throw Error('Joi validation issue') })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
-
+  test('should not call updateScheduledSettlementByScheduleId when getValidScheduledSettlements throws', async () => {
+    getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
     await batchSchedule()
-
-    expect(updateScheduledSettlementByScheduleId).toHaveBeenCalledWith(retreivedSchedules[1].scheduleId, new Date(), mockTransaction)
+    expect(updateScheduledSettlementByScheduleId).not.toHaveBeenCalled()
   })
 
-  test('should call mockTransaction.commit when validateSchedule throws and then resolves', async () => {
-    validateSchedule.mockImplementationOnce(() => { throw Error('Joi validation issue') })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
-
+  test('should not call mockTransaction.commit when getValidScheduledSettlements throws', async () => {
+    getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
     await batchSchedule()
-
-    expect(mockTransaction.commit).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.commit once when validateSchedule throws and then resolves', async () => {
-    validateSchedule.mockImplementationOnce(() => { throw Error('Joi validation issue') })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
-
-    await batchSchedule()
-
-    expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
-  })
-
-  test('should return resolved schedule when validateSchedule throws and then resolves', async () => {
-    validateSchedule.mockImplementationOnce(() => { throw Error('Joi validation issue') })
-      .mockImplementationOnce(() => { return retreivedSchedules[1] })
-
-    const result = await batchSchedule()
-
-    expect(result).toStrictEqual([retreivedSchedules[1]])
+    expect(mockTransaction.commit).not.toHaveBeenCalled()
   })
 
   test('should not throw when updateScheduledSettlementByScheduleId throws', async () => {
