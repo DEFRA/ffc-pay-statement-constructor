@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     scheduleId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     settlementId: DataTypes.INTEGER,
     completed: DataTypes.DATE,
-    planned: DataTypes.DATE,
     started: DataTypes.DATE
   },
   {

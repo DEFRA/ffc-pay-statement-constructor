@@ -49,13 +49,6 @@ describe('process return settlement', () => {
     expect(result).toBe(1)
   })
 
-  test('should save entry into settlement table with frn of settlement.frn', async () => {
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.frn).toBe(String(settlement.frn))
-  })
-
   test('should save entry into settlement table with value of settlement.value', async () => {
     await processReturnSettlement(settlement)
 
@@ -82,5 +75,12 @@ describe('process return settlement', () => {
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.sourceSystem).toBeUndefined()
+  })
+
+  test('should not save frn in the table when valid settlement received ', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.frn).toBeUndefined()
   })
 })
