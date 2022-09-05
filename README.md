@@ -75,15 +75,15 @@ These values are stored in the `fundingOptions` PostgreSQL database table.
 
 | Name | Code |
 | ---- | ---- |
-| Arable and Horticultural Land | 80001 |
-| Arable and Horticultural Soils| 80002 |
+| Arable and horticultural land | 80001 |
+| Arable and horticultural soils| 80002 |
 | Hedgerow | 80003 |
-| Improved Grassland Soils | 80004 |
-| Improved Grassland | 80005 |
-| On Farm Woodland | 80006 |
-| Low and no input Grassland | 80007 |
-| Water body Buffering | 80008 |
-| Pilot Participation Payment | 80009 |
+| Improved grassland soils | 80004 |
+| Improved grassland | 80005 |
+| On farm woodland | 80006 |
+| Low and no input grassland | 80007 |
+| Water body buffering | 80008 |
+| Pilot participation payment | 80009 |
 
 ### SFI
 
