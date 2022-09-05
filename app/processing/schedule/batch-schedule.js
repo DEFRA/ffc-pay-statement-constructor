@@ -4,7 +4,8 @@ const getScheduledSettlements = require('./get-scheduled-settlements')
 const validateSchedule = require('./validate-schedule')
 const updateScheduledSettlementByScheduleId = require('./update-scheduled-settlement-by-schedule-id')
 
-const batchSchedule = async (started = new Date()) => {
+const batchSchedule = async () => {
+  const started = new Date()
   const transaction = await db.sequelize.transaction()
   try {
     const scheduledSettlements = await getScheduledSettlements(started, transaction)
