@@ -89,8 +89,8 @@ These values are stored in the `fundingOptions` PostgreSQL database table.
 
 | Name | Code |
 | ---- | ---- |
-| Arable and Horticultural Soils: Introductory | 80101 |
-| Arable and Horticultural Soils: Intermediate | 80102 |
+| Arable and horticultural soils: Introductory | 80101 |
+| Arable and horticultural soils: Intermediate | 80102 |
 | Improved grassland soils: Introductory | 80111 |
 | Improved grassland soils: Intermediate | 80112 |
 | Moorland: Introductory | 80121 |
