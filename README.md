@@ -66,6 +66,52 @@ scripts/test
 scripts/test -w
 ```
 
+## Funding codes
+
+In order to persist payment request data and construct a statement dataset, the service must be populated with a mapping of funding option codes to a name.
+These values are stored in the `fundingOptions` PostgreSQL database table.
+
+### SFI Pilot
+
+| Name | Code |
+| ---- | ---- |
+| Arable and horticultural land | 80001 |
+| Arable and horticultural soils| 80002 |
+| Hedgerow | 80003 |
+| Improved grassland soils | 80004 |
+| Improved grassland | 80005 |
+| On farm woodland | 80006 |
+| Low and no input grassland | 80007 |
+| Water body buffering | 80008 |
+| Pilot participation payment | 80009 |
+
+### SFI
+
+| Name | Code |
+| ---- | ---- |
+| Arable and horticultural soils: Introductory | 80101 |
+| Arable and horticultural soils: Intermediate | 80102 |
+| Improved grassland soils: Introductory | 80111 |
+| Improved grassland soils: Intermediate | 80112 |
+| Moorland: Introductory | 80121 |
+| Moorland: Additional | 80190 |
+| Common land: Additional | 80195 |
+
+### Lump sums
+
+| Name | Code |
+| ---- | ---- |
+| Lump sum exit scheme | 10570 |
+
+### Vet Visits
+
+| Name | Code |
+| ---- | ---- |
+| Sheep | 18001 |
+| Beef cattle | 18002 |
+| Dairy cattle | 18003 |
+| Pigs | 18004 |
+
 ## CI pipeline
 
 This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
