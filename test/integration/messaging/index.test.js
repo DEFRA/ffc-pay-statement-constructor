@@ -48,8 +48,8 @@ describe('process messages off Topics', () => {
 
   test('should not throw when processing happens in order: processing, submit, return, calculation, organisation', async () => {
     const wrapper = async () => {
-      await processSubmitPaymentRequest(paymentRequestCompleted)
       await processProcessingPaymentRequest(paymentRequestInProgress)
+      await processSubmitPaymentRequest(paymentRequestCompleted)
       await processReturnSettlement(settlement)
       await processStatementData(calculation)
       await processStatementData(organisation)

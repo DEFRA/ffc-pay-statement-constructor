@@ -30,7 +30,7 @@ const savePaymentRequest = require('../../../app/inbound/save-payment-request')
 jest.mock('../../../app/inbound/save-invoice-lines')
 const saveInvoiceLines = require('../../../app/inbound/save-invoice-lines')
 
-const { processProcessingPaymentRequest } = require('../../../app/inbound')
+const processProcessingPaymentRequest = require('../../../app/inbound/processing')
 
 let paymentRequest
 
