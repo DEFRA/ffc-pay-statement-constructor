@@ -7,6 +7,11 @@ const getFundingsByCalculationId = async (calculationId) => {
       'areaClaimed',
       'rate'
     ],
+    include: [{
+      model: db.fundingOption,
+      as: 'fundingOptions',
+      attributes: ['name']
+    }],
     where: {
       calculationId
     },

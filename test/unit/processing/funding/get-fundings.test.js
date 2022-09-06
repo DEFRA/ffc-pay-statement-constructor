@@ -5,18 +5,26 @@ const getFundingsByCalculationId = require('../../../../app/processing/funding/g
 jest.mock('../../../../app/processing/funding/fundings-schema')
 const schema = require('../../../../app/processing/funding/fundings-schema')
 
+jest.mock('../../../../app/processing/funding/map-fundings')
+const mapFundings = require('../../../../app/processing/funding/map-fundings')
+
 const getFundings = require('../../../../app/processing/funding/get-fundings')
+
 let rawFundingsData
+let mappedFundings
 
 describe('get and transform fundings object for building a statement object', () => {
   beforeEach(() => {
     const retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
-
+    const mappedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').mappedFundingsData))
     rawFundingsData = retrievedFundingsData
     getFundingsByCalculationId.mockResolvedValue(rawFundingsData)
 
     rawFundingsData = retrievedFundingsData
     getFundingsByCalculationId.mockResolvedValue(rawFundingsData)
+
+    mappedFundings = mappedFundingsData
+    mapFundings.mockResolvedValue(mappedFundings)
 
     schema.validate.mockReturnValue({ value: rawFundingsData })
   })
@@ -55,10 +63,18 @@ describe('get and transform fundings object for building a statement object', ()
     expect(schema.validate).toHaveBeenCalledTimes(1)
   })
 
-  test('should call schema.validate with rawFundingsData and { abortEarly: false } when a calculationId is given', async () => {
+  test('should call mapFundings with rawFundingsData when a calculationId is given', async () => {
     const calculationId = 1
     await getFundings(calculationId)
-    expect(schema.validate).toHaveBeenCalledWith(rawFundingsData, { abortEarly: false })
+
+    expect(mapFundings).toHaveBeenCalledWith(rawFundingsData)
+  })
+
+  test('should call schema.validate with mappedFundings and { abortEarly: false } when a calculationId is given', async () => {
+    const calculationId = 1
+    await getFundings(calculationId)
+
+    expect(schema.validate).toHaveBeenCalledWith(mappedFundings, { abortEarly: false })
   })
 
   test('should throw when getFundingsByCalculationId throws', async () => {
