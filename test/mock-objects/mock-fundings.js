@@ -7,21 +7,21 @@ const rawFundingsData = [
     fundingCode: ARABLE_SOIL_INTRODUCTORY.ARABLE_SOIL_INTRODUCTORY,
     areaClaimed: 5.00,
     rate: 28.55,
-    'fundingOptions.name': 'local : braid'
+    fundingOptions: { name: 'TestLand : UpperLevel' }
   },
   {
     calculationId: 1,
     fundingCode: ARABLE_SOIL_INTRODUCTORY.ARABLE_SOIL_INTRODUCTORY,
     areaClaimed: 6.00,
     rate: 38.55,
-    'fundingOptions.name': 'my test now'
+    fundingOptions: { name: 'Free Arable Land' }
   },
   {
     calculationId: 1,
     fundingCode: ARABLE_SOIL_INTRODUCTORY.ARABLE_SOIL_INTRODUCTORY,
     areaClaimed: 9.00,
     rate: 48.55,
-    'fundingOptions.name': 'last row'
+    fundingOptions: { name: 'Free New Land' }
   }
 ]
 

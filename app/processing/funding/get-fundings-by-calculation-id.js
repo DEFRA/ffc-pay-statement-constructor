@@ -15,7 +15,8 @@ const getFundingsByCalculationId = async (calculationId) => {
     where: {
       calculationId
     },
-    raw: true
+    raw: true,
+    nest: true
   })
 }
 
