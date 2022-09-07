@@ -1,8 +1,10 @@
 const db = require('../../app/data')
 const schemes = require('../../app/constants/schemes')
+
 const { SFI_FIRST_PAYMENT: invoiceNumber } = require('../mock-components/mock-invoice-number')
 const { SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber } = require('../mock-components/mock-invoice-number')
-const processReturnSettlement = require('../../app/inbound/process-return-settlement')
+
+const processReturnSettlement = require('../../app/inbound/return')
 
 let settlement
 let paymentRequest

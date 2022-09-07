@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('../../data')
 
 const getSettlementByInvoiceNumberAndValue = async (invoiceNumber, value, transaction) => {
   return db.settlement.findOne({
