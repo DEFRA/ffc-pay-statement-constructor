@@ -1,9 +1,10 @@
 jest.mock('ffc-messaging')
 
-jest.mock('../../../app/inbound/process-return-settlement')
-const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
+jest.mock('../../../app/inbound/return/process-return-settlement')
+const processReturnSettlement = require('../../../app/inbound/return/process-return-settlement')
 
 const processReturnMessage = require('../../../app/messaging/process-return-message')
+
 let receiver
 let settlement
 let message

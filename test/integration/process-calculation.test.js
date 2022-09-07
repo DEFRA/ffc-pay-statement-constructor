@@ -90,7 +90,7 @@ describe('process calculation', () => {
 
   test('should save entry into calculation with paymentRequestId as null when no matching completed paymentRequest records where calculation.invoiceNumber', async () => {
     await db.invoiceNumber.create({ invoiceNumber: paymentRequestInProgress.invoiceNumber, originalInvoiceNumber: paymentRequestInProgress.invoiceNumber.slice(0, 5) })
-    try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { console.error(err) }
+    try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { }
     await processCalculation(calculation)
 
     const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
