@@ -90,7 +90,7 @@ describe('process calculation', () => {
 
   test('should save entry into calculation with paymentRequestId as null when no matching completed paymentRequest records where calculation.invoiceNumber', async () => {
     await db.invoiceNumber.create({ invoiceNumber: paymentRequestInProgress.invoiceNumber, originalInvoiceNumber: paymentRequestInProgress.invoiceNumber.slice(0, 5) })
-    try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { console.error(err) }
+    try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { }
     await processCalculation(calculation)
 
     const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
@@ -190,14 +190,14 @@ describe('process calculation', () => {
     expect(result.areaClaimed).toBe(String(calculation.fundings[0].areaClaimed))
   })
 
-  test('should not save calculation.fundings[0].rate into entry where calculationId is 1 when calculation has 1 funding', async () => {
+  test('should save calculation.fundings[0].rate into entry where calculationId is 1 when calculation has 1 funding', async () => {
     calculation.fundings = [calculation.fundings[0]]
 
     await processCalculation(calculation)
 
     const result = await db.funding.findOne({ where: { calculationId: 1 } })
     expect(calculation.fundings[0].rate).toBeDefined()
-    expect(result.rate).toBeUndefined()
+    expect(result.rate).toBeDefined()
   })
 
   test('should save 2 entries into fundings where calculationId is 1 when calculation has 2 fundings', async () => {
@@ -231,12 +231,12 @@ describe('process calculation', () => {
     expect(result[1].areaClaimed).toBe(String(calculation.fundings[0].areaClaimed))
   })
 
-  test('should not save calculation.fundings[0].rate into entries where calculationId is 1 when calculation has 2 fundings', async () => {
+  test('should save calculation.fundings[0].rate into entries where calculationId is 1 when calculation has 2 fundings', async () => {
     await processCalculation(calculation)
 
     const result = await db.funding.findAll({ where: { calculationId: 1 } })
     expect(calculation.fundings[0].rate).toBeDefined()
-    expect(result[0].rate).toBeUndefined()
-    expect(result[1].rate).toBeUndefined()
+    expect(result[0].rate).toBeDefined()
+    expect(result[1].rate).toBeDefined()
   })
 })

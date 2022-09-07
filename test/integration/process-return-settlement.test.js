@@ -1,8 +1,10 @@
 const db = require('../../app/data')
 const schemes = require('../../app/constants/schemes')
+
 const { SFI_FIRST_PAYMENT: invoiceNumber } = require('../mock-components/mock-invoice-number')
 const { SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber } = require('../mock-components/mock-invoice-number')
-const processReturnSettlement = require('../../app/inbound/process-return-settlement')
+
+const processReturnSettlement = require('../../app/inbound/return')
 
 let settlement
 let paymentRequest
@@ -49,13 +51,6 @@ describe('process return settlement', () => {
     expect(result).toBe(1)
   })
 
-  test('should save entry into settlement table with frn of settlement.frn', async () => {
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.frn).toBe(String(settlement.frn))
-  })
-
   test('should save entry into settlement table with value of settlement.value', async () => {
     await processReturnSettlement(settlement)
 
@@ -82,5 +77,12 @@ describe('process return settlement', () => {
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.sourceSystem).toBeUndefined()
+  })
+
+  test('should not save frn in the table when valid settlement received ', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.frn).toBeUndefined()
   })
 })

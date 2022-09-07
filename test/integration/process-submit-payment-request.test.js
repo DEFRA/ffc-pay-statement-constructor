@@ -12,7 +12,7 @@ const {
 const { COMPLETED } = require('../../app/constants/statuses')
 
 const reverseEngineerInvoiceNumber = require('../../app/processing/reverse-engineer-invoice-number')
-const processSubmitPaymentRequest = require('../../app/inbound/submit/process-submit-payment-request.js')
+const processSubmitPaymentRequest = require('../../app/inbound/submit')
 
 let paymentRequest
 
@@ -516,5 +516,12 @@ describe('process submit payment request', () => {
 
     const result = await db.invoiceLine.findOne({ where: { paymentRequestId: 1 } })
     expect(result.schemeCode).toBeUndefined()
+  })
+
+  test('should not save frn in paymentRequests table when valid payment request received', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.frn).toBeUndefined()
   })
 })

@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('../../data')
 const saveSettlement = require('./save-settlement')
 const getSettlementByInvoiceNumberAndValue = require('./get-settlement-by-invoice-number-and-value')
 

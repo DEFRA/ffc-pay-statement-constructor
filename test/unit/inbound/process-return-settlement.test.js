@@ -16,13 +16,14 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/inbound/get-settlement-by-invoice-number-and-value')
-const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/get-settlement-by-invoice-number-and-value')
+jest.mock('../../../app/inbound/return/get-settlement-by-invoice-number-and-value')
+const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/return/get-settlement-by-invoice-number-and-value')
 
-jest.mock('../../../app/inbound/save-settlement')
-const saveSettlement = require('../../../app/inbound/save-settlement')
+jest.mock('../../../app/inbound/return/save-settlement')
+const saveSettlement = require('../../../app/inbound/return/save-settlement')
 
-const processReturnSettlement = require('../../../app/inbound/process-return-settlement')
+const processReturnSettlement = require('../../../app/inbound/return')
+
 let settlement
 
 describe('process return settlement request', () => {

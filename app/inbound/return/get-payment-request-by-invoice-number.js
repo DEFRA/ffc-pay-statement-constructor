@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('../../data')
 
 const getPaymentRequestbyInvoiceNumber = async (invoiceNumber, transaction) => {
   return db.paymentRequest.findOne({
