@@ -6,7 +6,7 @@ const { DRD10 } = require('../app/constants/fund-codes')
 const { ARABLE_SOIL_INTRODUCTORY } = require('../app/constants/funding-codes')
 const { AP } = require('../app/constants/ledgers')
 const { FIRST_PAYMENT: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER } = require('../app/constants/payment-request-numbers')
-const { QUARTERLY } = require('../app/constants/schedules')
+const { DAX_CODES } = require('../app/constants/schedules')
 const { SFI: SFI_SCHEME_ID } = require('../app/constants/scheme-ids')
 const { SFI: SFI_SOURCE_SYSTEM } = require('../app/constants/source-systems')
 const { COMPLETED, IN_PROGRESS } = require('../app/constants/statuses')
@@ -41,7 +41,7 @@ const paymentRequest = {
   ledger: AP,
   marketingYear: _2022,
   paymentRequestNumber: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER,
-  schedule: QUARTERLY,
+  schedule: DAX_CODES.QUARTERLY,
   schemeId: SFI_SCHEME_ID,
   sourceSystem: SFI_SOURCE_SYSTEM,
   value: FIVE_HUNDRED_POUNDS

@@ -1,6 +1,6 @@
 const db = require('../../app/data')
 
-const processOrganisation = require('../../app/inbound/organisation/process-organisation.js')
+const processOrganisation = require('../../app/inbound/organisation')
 
 let organisation
 

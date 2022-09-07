@@ -5,7 +5,7 @@ const processCalculation = require('../../../app/inbound/calculation/process-cal
 jest.mock('../../../app/inbound/organisation/process-organisation')
 const processOrganisation = require('../../../app/inbound/organisation/process-organisation')
 
-const { processStatementData } = require('../../../app/inbound')
+const processStatementData = require('../../../app/inbound/statement-data')
 
 let calculationData
 let organisationData
