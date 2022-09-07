@@ -25,7 +25,7 @@ const getValidScheduledSettlements = require('../../../../app/processing/schedul
 jest.mock('../../../../app/processing/schedule/get-updated-scheduled-settlements')
 const getUpdatedScheduledSettlements = require('../../../../app/processing/schedule/get-updated-scheduled-settlements')
 
-const batchSchedule = require('../../../../app/processing/schedule/batch-schedule')
+const schedulePendingSettlements = require('../../../../app/processing/schedule/schedule-pending-settlements')
 
 let retreivedSchedules
 
@@ -58,67 +58,67 @@ describe('batch schedule', () => {
   })
 
   test('should call getScheduledSettlements', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getScheduledSettlements).toHaveBeenCalled()
   })
 
   test('should call getScheduledSettlements once', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
   test('should call getScheduledSettlements with new Date() and mockTransaction', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getScheduledSettlements).toHaveBeenCalledWith(new Date(), mockTransaction)
   })
 
   test('should call getValidScheduledSettlements', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getValidScheduledSettlements).toHaveBeenCalled()
   })
 
   test('should call getValidScheduledSettlements once when getScheduledSettlements returns 2 schedule records', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getValidScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
   test('should call getValidScheduledSettlements with each retreivedSchedules when getScheduledSettlements returns 2 schedule records', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getValidScheduledSettlements).toHaveBeenCalledWith(retreivedSchedules)
   })
 
   test('should call getUpdatedScheduledSettlements', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getUpdatedScheduledSettlements).toHaveBeenCalled()
   })
 
   test('should call getUpdatedScheduledSettlements once when getValidScheduledSettlements returns 2 schedules', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getUpdatedScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
   test('should call getUpdatedScheduledSettlements with retreivedSchedules, new Date() and mockTransaction when getValidScheduledSettlements returns 2 valid schedule records', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getUpdatedScheduledSettlements).toHaveBeenCalledWith(retreivedSchedules, new Date(), mockTransaction)
   })
 
   test('should call mockTransaction.commit', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(mockTransaction.commit).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.commit once', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
   })
 
   test('should return retreivedSchedules', async () => {
-    const result = await batchSchedule()
+    const result = await schedulePendingSettlements()
     expect(result).toStrictEqual(retreivedSchedules)
   })
 
   test('should not call mockTransaction.rollback', async () => {
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(mockTransaction.rollback).not.toHaveBeenCalled()
   })
 
@@ -126,7 +126,7 @@ describe('batch schedule', () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await batchSchedule()
+      await schedulePendingSettlements()
     }
 
     expect(wrapper).not.toThrow()
@@ -134,31 +134,31 @@ describe('batch schedule', () => {
 
   test('should call mockTransaction.rollback when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should not call getValidScheduledSettlements when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(getValidScheduledSettlements).not.toHaveBeenCalled()
   })
 
   test('should not call getUpdatedScheduledSettlements when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(getUpdatedScheduledSettlements).not.toHaveBeenCalled()
   })
 
   test('should not call mockTransaction.commit when getScheduledSettlements throws', async () => {
     getScheduledSettlements.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(mockTransaction.commit).not.toHaveBeenCalled()
   })
 
@@ -166,7 +166,7 @@ describe('batch schedule', () => {
     getValidScheduledSettlements.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      await batchSchedule()
+      await schedulePendingSettlements()
     }
 
     expect(wrapper).not.toThrow()
@@ -174,25 +174,25 @@ describe('batch schedule', () => {
 
   test('should call mockTransaction.rollback when getValidScheduledSettlements throws', async () => {
     getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when getValidScheduledSettlements throws', async () => {
     getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should not call getUpdatedScheduledSettlements when getValidScheduledSettlements throws', async () => {
     getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(getUpdatedScheduledSettlements).not.toHaveBeenCalled()
   })
 
   test('should not call mockTransaction.commit when getValidScheduledSettlements throws', async () => {
     getValidScheduledSettlements.mockImplementation(() => { throw Error('Joi validation issue') })
-    await batchSchedule()
+    await schedulePendingSettlements()
     expect(mockTransaction.commit).not.toHaveBeenCalled()
   })
 
@@ -200,22 +200,22 @@ describe('batch schedule', () => {
     getUpdatedScheduledSettlements.mockRejectedValue(new Error('Database update issue'))
 
     const wrapper = async () => {
-      await batchSchedule()
+      await schedulePendingSettlements()
     }
 
     expect(wrapper).not.toThrow()
   })
 
-  test('should call mockTransaction.commit when getUpdatedScheduledSettlements throws', async () => {
+  test('should call mockTransaction.rollback when getUpdatedScheduledSettlements throws', async () => {
     getUpdatedScheduledSettlements.mockRejectedValue(new Error('Database update issue'))
-    await batchSchedule()
-    expect(mockTransaction.commit).toHaveBeenCalled()
+    await schedulePendingSettlements()
+    expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
-  test('should call mockTransaction.commit once when getUpdatedScheduledSettlements throws', async () => {
+  test('should call mockTransaction.rollback once when getUpdatedScheduledSettlements throws', async () => {
     getUpdatedScheduledSettlements.mockRejectedValue(new Error('Database update issue'))
-    await batchSchedule()
-    expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
+    await schedulePendingSettlements()
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should not return the corresponding thrown schedule when getUpdatedScheduledSettlements throws then resolves', async () => {
@@ -223,7 +223,7 @@ describe('batch schedule', () => {
       .mockRejectedValueOnce(new Error('Database update issue'))
       .mockResolvedValueOnce(retreivedSchedules[1])
 
-    const result = await batchSchedule()
+    const result = await schedulePendingSettlements()
 
     expect(result).not.toStrictEqual([retreivedSchedules[0]])
   })
@@ -231,9 +231,10 @@ describe('batch schedule', () => {
   test('should return the corresponding resolved schedule when getUpdatedScheduledSettlements throws then resolves', async () => {
     getUpdatedScheduledSettlements.mockReset()
       .mockRejectedValueOnce(new Error('Database update issue'))
-      .mockResolvedValueOnce(retreivedSchedules[1])
+      .mockResolvedValueOnce([retreivedSchedules[1]])
 
-    const result = await batchSchedule()
+    await schedulePendingSettlements()
+    const result = await schedulePendingSettlements()
 
     expect(result).toStrictEqual([retreivedSchedules[1]])
   })
@@ -243,7 +244,7 @@ describe('batch schedule', () => {
       .mockRejectedValueOnce(new Error('Database update issue'))
       .mockRejectedValueOnce(new Error('Database update issue'))
 
-    const result = await batchSchedule()
+    const result = await schedulePendingSettlements()
 
     expect(result).toStrictEqual([])
   })
@@ -252,7 +253,7 @@ describe('batch schedule', () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
 
     const wrapper = async () => {
-      await batchSchedule()
+      await schedulePendingSettlements()
     }
 
     expect(wrapper).not.toThrow()
@@ -260,13 +261,13 @@ describe('batch schedule', () => {
 
   test('should call mockTransaction.rollback when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalled()
   })
 
   test('should call mockTransaction.rollback once when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
-    try { await batchSchedule() } catch { }
+    try { await schedulePendingSettlements() } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,9 +1,9 @@
 const { processingConfig } = require('../config')
-const batchSchedule = require('./schedule')
+const schedulePendingSettlements = require('./schedule')
 
 const start = async () => {
   try {
-    await batchSchedule()
+    await schedulePendingSettlements()
   } catch (err) {
     console.error(err)
   } finally {

@@ -1,3 +1,3 @@
-const batchSchedule = require('./batch-schedule')
+const schedulePendingSettlements = require('./schedule-pending-settlements')
 
-module.exports = batchSchedule
+module.exports = schedulePendingSettlements

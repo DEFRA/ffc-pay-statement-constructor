@@ -4,7 +4,7 @@ const getScheduledSettlements = require('./get-scheduled-settlements')
 const getValidScheduledSettlements = require('./get-valid-scheduled-settlements')
 const getUpdatedScheduledSettlements = require('./get-updated-scheduled-settlements')
 
-const batchSchedule = async () => {
+const schedulePendingSettlements = async () => {
   const started = new Date()
   const transaction = await db.sequelize.transaction()
   try {
@@ -13,10 +13,11 @@ const batchSchedule = async () => {
     const updatedScheduledSettlements = await getUpdatedScheduledSettlements(validScheduledSettlements, started, transaction)
     await transaction.commit()
     return updatedScheduledSettlements
-  } catch {
+  } catch (err) {
     await transaction.rollback()
-    console.error('Could not schedule settlements')
+    console.error('Could not schedule settlements', err)
+    return []
   }
 }
 
-module.exports = batchSchedule
+module.exports = schedulePendingSettlements

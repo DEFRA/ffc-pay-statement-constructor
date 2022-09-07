@@ -30,10 +30,10 @@ deployment:
 
 container:
   imagePullPolicy: Always
-  requestMemory: 150Mi
-  requestCpu: 120m
-  limitMemory: 150Mi
-  limitCpu: 180m
+  requestMemory: 180Mi
+  requestCpu: 100m
+  limitMemory: 500Mi
+  limitCpu: 500m
   messageQueueHost: namespace.servicebus.windows.net
   processingTopicAddress: ffc-pay-processing
   processingSubscriptionAddress: ffc-pay-statement-constructor
