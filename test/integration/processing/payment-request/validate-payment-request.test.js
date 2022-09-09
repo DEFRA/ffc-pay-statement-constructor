@@ -9,8 +9,10 @@ describe('validate payment request', () => {
     const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
     retreivedPaymentRequest = {
       paymentRequestId: 1,
+      agreementNumber: paymentRequest.agreementNumber,
       dueDate: new Date(paymentRequest.dueDate),
       marketingYear: paymentRequest.marketingYear,
+      value: 50000,
       schedule: paymentRequest.schedule
     }
   })

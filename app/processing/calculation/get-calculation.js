@@ -13,8 +13,10 @@ const getCalculation = async (paymentRequestId) => {
   }
 
   return {
+    calculationId: calculation.calculationId,
     sbi: calculation.sbi,
-    calculated: calculation.calculationDate
+    calculated: calculation.calculationDate,
+    invoiceNumber: calculation.invoiceNumber
   }
 }
 

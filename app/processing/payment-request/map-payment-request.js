@@ -6,9 +6,12 @@ const mapPaymentRequest = async (paymentRequest) => {
 
   return {
     paymentRequestId: paymentRequest.paymentRequestId,
+    agreementNumber: paymentRequest.agreementNumber,
     dueDate: paymentRequest.dueDate,
     frequency,
+    value: paymentRequest.value,
     year
+
   }
 }
 

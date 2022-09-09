@@ -3,8 +3,10 @@ const db = require('../../data')
 const getCalculationByPaymentRequestId = async (paymentRequestId) => {
   return db.calculation.findOne({
     attributes: [
-      'sbi',
-      'calculationDate'
+      'calculationId',
+      'calculationDate',
+      'invoiceNumber',
+      'sbi'
     ],
     where: {
       paymentRequestId

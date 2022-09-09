@@ -11,15 +11,19 @@ describe('map required payment request information for building a statement obje
 
     retreivedPaymentRequest = {
       paymentRequestId: 1,
+      agreementNumber: paymentRequest.agreementNumber,
       dueDate: paymentRequest.dueDate,
       marketingYear: paymentRequest.marketingYear,
+      value: paymentRequest.value,
       schedule: paymentRequest.schedule
     }
 
     mappedPaymentRequest = {
       paymentRequestId: retreivedPaymentRequest.paymentRequestId,
+      agreementNumber: retreivedPaymentRequest.agreementNumber,
       dueDate: retreivedPaymentRequest.dueDate,
       frequency: SCHEDULE_NAMES[retreivedPaymentRequest.schedule],
+      value: retreivedPaymentRequest.value,
       year: retreivedPaymentRequest.marketingYear
     }
   })

@@ -6,9 +6,11 @@ const getCompletedPaymentRequestByPaymentRequestId = async (paymentRequestId, tr
     transaction,
     attributes: [
       'paymentRequestId',
+      'agreementNumber',
       'dueDate',
       'marketingYear',
-      'schedule'
+      'schedule',
+      'value'
     ],
     where: {
       paymentRequestId,

@@ -50,9 +50,11 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
       frequency: SCHEDULE_NAMES.Q4,
+      value: 50000,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -64,9 +66,11 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
       frequency: SCHEDULE_NAMES.Q4,
+      value: 50000,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -78,9 +82,11 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
       frequency: SCHEDULE_NAMES.Q4,
+      value: 50000,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -92,9 +98,11 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
       frequency: SCHEDULE_NAMES.Q4,
+      value: 50000,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -106,9 +114,11 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(paymentRequestCompleted.dueDate),
       frequency: SCHEDULE_NAMES.Q4,
+      value: 50000,
       year: paymentRequestCompleted.marketingYear
     })
   })
