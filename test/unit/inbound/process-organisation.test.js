@@ -16,9 +16,6 @@ jest.mock('../../../app/data', () => {
   }
 })
 
-jest.mock('../../../app/inbound/organisation/get-organisation-by-sbi')
-const getOrganisationBySbi = require('../../../app/inbound/organisation/get-organisation-by-sbi')
-
 jest.mock('../../../app/inbound/organisation/save-organisation')
 const saveOrganisation = require('../../../app/inbound/organisation/save-organisation')
 
@@ -29,28 +26,11 @@ let organisation
 describe('process organisation', () => {
   beforeEach(() => {
     organisation = JSON.parse(JSON.stringify(require('../../mock-organisation')))
-
-    getOrganisationBySbi.mockResolvedValue(null)
     saveOrganisation.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
-  })
-
-  test('should call getOrganisationBySbi when a valid organisation is given', async () => {
-    await processOrganisation(organisation)
-    expect(getOrganisationBySbi).toHaveBeenCalled()
-  })
-
-  test('should call getOrganisationBySbi once when a valid organisation is given', async () => {
-    await processOrganisation(organisation)
-    expect(getOrganisationBySbi).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call getOrganisationBySbi with organisation.sbi and mockTransaction when a valid organisation is given', async () => {
-    await processOrganisation(organisation)
-    expect(getOrganisationBySbi).toHaveBeenCalledWith(organisation.sbi, mockTransaction)
   })
 
   test('should call saveOrganisation when a valid organisation is given', async () => {
@@ -81,66 +61,6 @@ describe('process organisation', () => {
   test('should not call mockTransaction.rollback when a valid organisation is given and nothing throws', async () => {
     await processOrganisation(organisation)
     expect(mockTransaction.rollback).not.toHaveBeenCalled()
-  })
-
-  test('should call getOrganisationBySbi when a valid organisation is given and a previous organisation exist', async () => {
-    getOrganisationBySbi.mockResolvedValue(organisation)
-    await processOrganisation(organisation)
-    expect(getOrganisationBySbi).toHaveBeenCalled()
-  })
-
-  test('should call getOrganisationBySbi once when a valid organisation is given and a previous organisation exist', async () => {
-    getOrganisationBySbi.mockResolvedValue(organisation)
-    await processOrganisation(organisation)
-    expect(getOrganisationBySbi).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call getOrganisationBySbi with organisation.sbi and mockTransaction when a valid organisation is given', async () => {
-    getOrganisationBySbi.mockResolvedValue(organisation)
-    await processOrganisation(organisation)
-    expect(getOrganisationBySbi).toHaveBeenCalledWith(organisation.sbi, mockTransaction)
-  })
-
-  test('should call mockTransaction.rollback when a valid organisation is given and a previous organisation exist', async () => {
-    getOrganisationBySbi.mockResolvedValue(organisation)
-    await processOrganisation(organisation)
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when a valid organisation is given and a previous organisation exist', async () => {
-    getOrganisationBySbi.mockResolvedValue(organisation)
-    await processOrganisation(organisation)
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-
-  test('should throw when getOrganisationBySbi throws', async () => {
-    getOrganisationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
-
-    const wrapper = async () => {
-      await processOrganisation(organisation)
-    }
-
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when getOrganisationBySbi throws Error', async () => {
-    getOrganisationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
-
-    const wrapper = async () => {
-      await processOrganisation(organisation)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw error with "Database retrieval issue" when getOrganisationBySbi throws error with "Database retrieval issue"', async () => {
-    getOrganisationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
-
-    const wrapper = async () => {
-      await processOrganisation(organisation)
-    }
-
-    expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
   })
 
   test('should throw when saveOrganisation throws', async () => {
@@ -201,18 +121,6 @@ describe('process organisation', () => {
     }
 
     expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
-  })
-
-  test('should call mockTransaction.rollback when getOrganisationBySbi throws', async () => {
-    getOrganisationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await processOrganisation(organisation) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when getOrganisationBySbi throws', async () => {
-    getOrganisationBySbi.mockRejectedValue(new Error('Database retrieval issue'))
-    try { await processOrganisation(organisation) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })
 
   test('should call mockTransaction.rollback when saveOrganisation throws', async () => {
