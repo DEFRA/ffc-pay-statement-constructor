@@ -2,7 +2,7 @@ const db = require('../../../../app/data')
 
 const sendStatement = require('../../../../app/processing/statement')
 const scheduleId = 1
-const statement = JSON.parse(JSON.stringify(require('../../../mock-statement')))
+const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
 
 describe('send statement', () => {
   beforeAll(async () => {

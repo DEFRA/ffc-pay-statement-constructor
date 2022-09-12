@@ -1,15 +1,39 @@
-const mockStatement = {
+const {
+  LINE_1,
+  LINE_2,
+  LINE_3,
+  CITY,
+  COUNTY,
+  POSTCODE
+} = require('../mock-components/mock-address')
+const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
+const EMAIL_ADDRESS = require('../mock-components/mock-email-address')
+
+const FRN = require('../mock-components/mock-frn')
+
+const SBI = require('../mock-components/mock-sbi')
+const { Q4: FREQUENCY_QUARTERLY } = require('../../app/constants/schedules').NAMES
+const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names')
+const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names').LONG_NAMES
+const _2022 = require('./mock-components/mock-marketing-year')
+
+const INVOICE_NUMBER = require('../mock-components/mock-invoice-number')
+const DUE_DATE = require('../mock-components/mock-due-date').DAY_FORMAT
+
+const CALCULATION_REFERENCE = require('../mock-components/mock-calculation-reference')
+
+module.exports = {
   address: {
-    line1: 'A Farm',
-    line2: '',
-    line3: 'Near a field',
-    line4: 'Newcastle Upon Tyne',
-    line5: 'Tyne & Wear',
-    postcode: 'NE1 1AA'
+    line1: LINE_1,
+    line2: LINE_2,
+    line3: LINE_3,
+    line4: CITY,
+    line5: COUNTY,
+    postcode: POSTCODE
   },
-  businessName: 'Mr A Farmer',
-  email: 'farmer@farms.com',
-  frn: '12345674890',
+  businessName: BUSINESS_NAME,
+  email: EMAIL_ADDRESS,
+  frn: FRN.toString(),
   funding: [
     {
       annualValue: '110.00',
@@ -86,21 +110,19 @@ const mockStatement = {
   ],
   payments: [
     {
-      calculated: '16 June 2022',
-      dueDate: '1 July 2022',
-      invoiceNumber: 'S0000001C000001V001',
-      reference: 'PY123456',
-      settled: '1 July 2022',
+      calculated: DUE_DATE,
+      dueDate: DUE_DATE,
+      invoiceNumber: INVOICE_NUMBER,
+      reference: CALCULATION_REFERENCE,
+      settled: DUE_DATE,
       value: '242.15'
     }
   ],
-  sbi: '1234567489',
+  sbi: SBI.toString(),
   scheme: {
-    frequency: 'Quarterly',
-    name: 'Sustainable Farming Incentive',
-    shortName: 'SFI',
-    year: '2022'
+    frequency: FREQUENCY_QUARTERLY,
+    name: SFI_LONG_SCHEME_NAME,
+    shortName: SFI_SHORT_SCHEME_NAME,
+    year: _2022
   }
 }
-
-module.exports = mockStatement
