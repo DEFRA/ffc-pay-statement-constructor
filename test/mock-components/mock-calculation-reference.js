@@ -1,1 +1,1 @@
-module.exports = 'PY123456'
+module.exports = 123

@@ -13,9 +13,9 @@ const FRN = require('../mock-components/mock-frn')
 
 const SBI = require('../mock-components/mock-sbi')
 const { Q4: FREQUENCY_QUARTERLY } = require('../../app/constants/schedules').NAMES
-const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names')
+const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names').SHORT_NAMES
 const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names').LONG_NAMES
-const _2022 = require('./mock-components/mock-marketing-year')
+const _2022 = require('../mock-components/mock-marketing-year')
 
 const INVOICE_NUMBER = require('../mock-components/mock-invoice-number')
 const DUE_DATE = require('../mock-components/mock-due-date').DAY_FORMAT
