@@ -2,13 +2,13 @@ const db = require('../../../../app/data')
 
 const sendStatement = require('../../../../app/processing/statement')
 
-const mockSendMessages = jest.fn()
+const mockSendMessage = jest.fn()
 
 jest.mock('ffc-messaging', () => {
   return {
     MessageSender: jest.fn().mockImplementation(() => {
       return {
-        sendMessage: mockSendMessages,
+        sendMessage: mockSendMessage,
         closeConnection: jest.fn()
       }
     })
@@ -18,7 +18,7 @@ jest.mock('ffc-messaging', () => {
 const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
 const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
-const scheduleId = 1
+let scheduleId = 1
 
 describe('send statement', () => {
   beforeAll(async () => {
@@ -29,13 +29,9 @@ describe('send statement', () => {
   })
 
   beforeEach(async () => {
-    try {
-      jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
-      await db.settlement.create(mockSettlement)
-      await db.schedule.create(mockSchedule)
-    } catch (err) {
-      console.error(err)
-    }
+    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+    await db.settlement.create(mockSettlement)
+    await db.schedule.create(mockSchedule)
   })
 
   afterEach(async () => {
@@ -64,5 +60,13 @@ describe('send statement', () => {
 
     const updatedSchedule = await db.schedule.findOne({ where: { scheduleId } })
     expect(updatedSchedule.completed).toStrictEqual(new Date(2022, 7, 5, 12, 0, 0, 0))
+  })
+
+  test('should not throw if the scheduleId is not present', async () => {
+    scheduleId = 12
+    const wrapper = async () => {
+      await sendStatement(scheduleId, statement)
+    }
+    expect(wrapper).not.toThrow()
   })
 })
