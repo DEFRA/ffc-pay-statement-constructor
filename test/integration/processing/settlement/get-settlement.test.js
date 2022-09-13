@@ -32,9 +32,11 @@ describe('process settlement', () => {
     await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false })
 
     mappedSettlement = {
+      invoiceNumber: settlement.invoiceNumber,
       paymentRequestId: 1,
       reference: settlement.reference,
-      settled: settlement.settled
+      settled: settlement.settled,
+      settlementDate: new Date(settlement.settlementDate)
     }
   })
 

@@ -4,9 +4,11 @@ const getSettledSettlementBySettlementId = async (settlementId, transaction) => 
   return db.settlement.findOne({
     transaction,
     attributes: [
+      'invoiceNumber',
       'paymentRequestId',
       'reference',
-      'settled'
+      'settled',
+      'settlementDate'
     ],
     where: {
       settlementId,

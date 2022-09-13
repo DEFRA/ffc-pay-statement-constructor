@@ -31,9 +31,12 @@ describe('get various components and transform to statement object', () => {
     const retreivedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 
     settlement = {
+      invoiceNumber: retreivedSettlement.invoiceNumber,
       paymentRequestId: 1,
       reference: retreivedSettlement.reference,
-      settled: retreivedSettlement.settled
+      settled: retreivedSettlement.settled,
+      settlementDate: new Date(retreivedSettlement.settlementDate)
+
     }
 
     getSettledSettlementBySettlementId.mockResolvedValue(settlement)

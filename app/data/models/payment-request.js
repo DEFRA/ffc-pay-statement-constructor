@@ -1,3 +1,5 @@
+const { reverseInvoiceNumber } = require('../../utility')
+
 module.exports = (sequelize, DataTypes) => {
   const paymentRequest = sequelize.define('paymentRequest', {
     paymentRequestId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -12,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     marketingYear: DataTypes.INTEGER,
     received: DataTypes.DATE,
     referenceId: DataTypes.UUID,
+    reversedInvoiceNumber: {
+      type: DataTypes.VIRTUAL,
+      get () {
+        return reverseInvoiceNumber(this.invoiceNumber)
+      }
+    },
     schedule: DataTypes.STRING,
     sourceSystem: DataTypes.STRING,
     status: DataTypes.STRING,

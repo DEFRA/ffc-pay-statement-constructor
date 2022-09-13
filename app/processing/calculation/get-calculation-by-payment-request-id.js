@@ -6,6 +6,7 @@ const getCalculationByPaymentRequestId = async (paymentRequestId) => {
       'calculationId',
       'calculationDate',
       'invoiceNumber',
+      'paymentRequestId',
       'sbi'
     ],
     where: {

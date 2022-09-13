@@ -44,7 +44,7 @@ describe('process get calculation object', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should not throw error when there is existing calculation data with sbi, calculationId, invoiceNumber and calculationDate', async () => {
+  test('should not throw error when there is existing calculation data with sbi, calculationId, invoiceNumber, calculationDate and paymentRequestId', async () => {
     await db.calculation.create(rawCalculationData)
 
     const result = await getCalculation(rawCalculationData.paymentRequestId)
@@ -53,7 +53,8 @@ describe('process get calculation object', () => {
       calculationId: rawCalculationData.calculationId,
       sbi: rawCalculationData.sbi,
       calculated: new Date(rawCalculationData.calculationDate),
-      invoiceNumber: rawCalculationData.invoiceNumber
+      invoiceNumber: rawCalculationData.invoiceNumber,
+      paymentRequestId: rawCalculationData.paymentRequestId
     })
   })
 

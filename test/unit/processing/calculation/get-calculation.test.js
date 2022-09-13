@@ -16,7 +16,9 @@ describe('get and transform payment request information for building a statement
     rawCalculationData = retrievedCalculationData
     calculation = {
       sbi: rawCalculationData.sbi,
-      calculated: new Date(rawCalculationData.calculationDate)
+      calculated: new Date(rawCalculationData.calculationDate),
+      invoiceNumber: rawCalculationData.invoiceNumber,
+      paymentRequestId: rawCalculationData.paymentRequestId
     }
 
     schema.validate.mockReturnValue({ value: calculation })
