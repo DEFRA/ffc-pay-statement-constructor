@@ -20,6 +20,7 @@ const sendMessage = require('../../../app/messaging/send-message')
 const mockStatement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
 const type = 'uk.gov.pay.statement'
 const config = require('../../../app/config')
+const { MessageSender } = require('ffc-messaging')
 const options = {}
 
 describe('send message', () => {
@@ -43,5 +44,15 @@ describe('send message', () => {
   test('should call createMessage with mockStatement, type and options', async () => {
     await sendMessage(mockStatement, type, config.statementTopic, options)
     expect(createMessage).toHaveBeenCalledWith(mockStatement, type, options)
+  })
+
+  test('should call mockSendMessage', async () => {
+    await sendMessage(mockStatement, type, config.statementTopic, options)
+    expect(mockSendMessage).toHaveBeenCalled()
+  })
+
+  test('should call mockSendMessage once', async () => {
+    await sendMessage(mockStatement, type, config.statementTopic, options)
+    expect(mockSendMessage).toHaveBeenCalledTimes(1)
   })
 })
