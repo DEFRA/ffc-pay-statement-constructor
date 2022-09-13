@@ -12,7 +12,7 @@ const {
   POSTCODE
 } = require('./mock-components/mock-address')
 const SBI = require('./mock-components/mock-sbi')
-const { UPDATED: UPDATED_TIMESTAMP } = require('./mock-components/mock-timestamps')
+const { DATE: UPDATED_TIMESTAMP } = require('./mock-components/mock-dates').UPDATED
 
 module.exports = {
   addressLine1: LINE_1,
