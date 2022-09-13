@@ -13,7 +13,7 @@ const { COMPLETED, IN_PROGRESS } = require('../app/constants/statuses')
 
 const { SFI: SFI_AGREEMENT_NUMBER } = require('./mock-components/mock-agreement-number')
 const { SFI: SFI_CONTRACT_NUMBER } = require('./mock-components/mock-contract-number')
-const DUE_DATE = require('./mock-components/mock-due-date').DATE_FORMAT
+const { DATE_FORMAT: DUE_DATE } = require('./mock-components/mock-dates').DUE
 const FRN = require('./mock-components/mock-frn')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('./mock-components/mock-invoice-number')
 const _2022 = require('./mock-components/mock-marketing-year')

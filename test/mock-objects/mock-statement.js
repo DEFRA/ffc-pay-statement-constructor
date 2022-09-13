@@ -8,7 +8,6 @@ const {
 } = require('../mock-components/mock-address')
 const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
 const EMAIL_ADDRESS = require('../mock-components/mock-email-address')
-
 const FRN = require('../mock-components/mock-frn')
 
 const SBI = require('../mock-components/mock-sbi')
@@ -18,7 +17,9 @@ const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names'
 const _2022 = require('../mock-components/mock-marketing-year')
 
 const INVOICE_NUMBER = require('../mock-components/mock-invoice-number')
-const DUE_DATE = require('../mock-components/mock-due-date').DAY_FORMAT
+const { DAY_FORMAT: CALCULATED_DATE } = require('../mock-components/mock-dates').CALCULATED
+const { DAY_FORMAT: DUE_DATE } = require('../mock-components/mock-dates').DUE
+const { DAY_FORMAT: SETTLED_DATE } = require('../mock-components/mock-dates').SETTLEMENT
 
 const CALCULATION_REFERENCE = require('../mock-components/mock-calculation-reference')
 
@@ -110,11 +111,11 @@ module.exports = {
   ],
   payments: [
     {
-      calculated: DUE_DATE,
+      calculated: CALCULATED_DATE,
       dueDate: DUE_DATE,
       invoiceNumber: INVOICE_NUMBER,
       reference: CALCULATION_REFERENCE,
-      settled: DUE_DATE,
+      settled: SETTLED_DATE,
       value: '242.15'
     }
   ],
