@@ -2,11 +2,24 @@
 jest.mock('../../../../app/processing/statement/update-schedule-by-schedule-id')
 const updateScheduleByScheduleId = require('../../../../app/processing/statement/update-schedule-by-schedule-id')
 
+const mockSendMessages = jest.fn()
+
+jest.mock('ffc-messaging', () => {
+  return {
+    MessageSender: jest.fn().mockImplementation(() => {
+      return {
+        sendMessage: mockSendMessages,
+        closeConnection: jest.fn()
+      }
+    })
+  }
+})
+
 const sendStatement = require('../../../../app/processing/statement/send-statement')
 
 const scheduleId = 1
 const mockStatement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
-const transaction = {} // do we need to mock this?
+const transaction = {} // mock this as in previous tests
 
 describe('send statement', () => {
   beforeEach(() => {

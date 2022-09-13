@@ -1,6 +1,20 @@
 const db = require('../../../../app/data')
 
 const sendStatement = require('../../../../app/processing/statement')
+
+const mockSendMessages = jest.fn()
+
+jest.mock('ffc-messaging', () => {
+  return {
+    MessageSender: jest.fn().mockImplementation(() => {
+      return {
+        sendMessage: mockSendMessages,
+        closeConnection: jest.fn()
+      }
+    })
+  }
+})
+
 const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
 const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
@@ -33,11 +47,6 @@ describe('send statement', () => {
 
   afterAll(async () => {
     await db.sequelize.close()
-  })
-
-  test('should return array', async () => {
-    const result = await sendStatement(scheduleId, statement)
-    expect(result).toStrictEqual([scheduleId, statement])
   })
 
   test('schedule.completed should be null before sendStatement is called and should not be null after sendStatement is called', async () => {
