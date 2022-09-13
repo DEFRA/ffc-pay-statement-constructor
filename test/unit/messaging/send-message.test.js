@@ -20,7 +20,6 @@ const sendMessage = require('../../../app/messaging/send-message')
 const mockStatement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
 const type = 'uk.gov.pay.statement'
 const config = require('../../../app/config')
-const { MessageSender } = require('ffc-messaging')
 const options = {}
 
 describe('send message', () => {
