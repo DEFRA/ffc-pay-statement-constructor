@@ -7,8 +7,12 @@ const publishStatement = require('../../../../app/processing/statement/publish-s
 const sendStatement = require('../../../../app/processing/statement/send-statement')
 
 const scheduleId = 1
-const mockStatement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
-const transaction = {} // mock this as in previous tests
+const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
+
+const mockTransaction = {
+  commit: jest.fn(),
+  rollback: jest.fn()
+}
 
 describe('send statement', () => {
   beforeEach(() => {
@@ -21,39 +25,39 @@ describe('send statement', () => {
   })
 
   test('should call updateScheduleByScheduleId', async () => {
-    await sendStatement(scheduleId, mockStatement, transaction)
+    await sendStatement(scheduleId, statement, mockTransaction)
     expect(updateScheduleByScheduleId).toHaveBeenCalled()
   })
 
   test('should call updateScheduleByScheduleId once', async () => {
-    await sendStatement(scheduleId, mockStatement, transaction)
+    await sendStatement(scheduleId, statement, mockTransaction)
     expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(1)
   })
 
-  test('should call updateScheduleByScheduleId with scheduleId and transaction', async () => {
-    await sendStatement(scheduleId, mockStatement, transaction)
-    expect(updateScheduleByScheduleId).toHaveBeenCalledWith(scheduleId, transaction)
+  test('should call updateScheduleByScheduleId with scheduleId and mockTransaction', async () => {
+    await sendStatement(scheduleId, statement, mockTransaction)
+    expect(updateScheduleByScheduleId).toHaveBeenCalledWith(scheduleId, mockTransaction)
   })
 
   test('should call publishStatement', async () => {
-    await sendStatement(scheduleId, mockStatement, transaction)
+    await sendStatement(scheduleId, statement, mockTransaction)
     expect(publishStatement).toHaveBeenCalled()
   })
 
   test('should call publishStatement once', async () => {
-    await sendStatement(scheduleId, mockStatement, transaction)
+    await sendStatement(scheduleId, statement, mockTransaction)
     expect(publishStatement).toHaveBeenCalledTimes(1)
   })
 
-  test('should call publishStatement with mockStatement', async () => {
-    await sendStatement(scheduleId, mockStatement, transaction)
-    expect(publishStatement).toHaveBeenCalledWith(mockStatement)
+  test('should call publishStatement with statement', async () => {
+    await sendStatement(scheduleId, statement, mockTransaction)
+    expect(publishStatement).toHaveBeenCalledWith(statement)
   })
 
   test('should throw when publishStatement rejects ', async () => {
     publishStatement.mockRejectedValue(Error)
     const wrapper = async () => {
-      await sendStatement(scheduleId, mockStatement, transaction)
+      await sendStatement(scheduleId, statement, mockTransaction)
     }
     await expect(wrapper).rejects.toThrow()
   })
@@ -61,7 +65,7 @@ describe('send statement', () => {
   test('should throw error when publishStatement rejects ', async () => {
     publishStatement.mockRejectedValue(Error)
     const wrapper = async () => {
-      await sendStatement(scheduleId, mockStatement, transaction)
+      await sendStatement(scheduleId, statement, mockTransaction)
     }
     await expect(wrapper).rejects.toThrow(Error)
   })
@@ -69,7 +73,7 @@ describe('send statement', () => {
   test('should throw error with message "Failed to send statement with scheduleId of {scheduleId}" when publishStatement rejects ', async () => {
     publishStatement.mockRejectedValue(Error)
     const wrapper = async () => {
-      await sendStatement(scheduleId, mockStatement, transaction)
+      await sendStatement(scheduleId, statement, mockTransaction)
     }
     await expect(wrapper).rejects.toThrow(new Error(`Failed to send statement with scheduleId of ${scheduleId}`))
   })
@@ -77,7 +81,7 @@ describe('send statement', () => {
   test('should throw when updateScheduleByScheduleId rejects ', async () => {
     updateScheduleByScheduleId.mockRejectedValue(Error)
     const wrapper = async () => {
-      await sendStatement(scheduleId, mockStatement, transaction)
+      await sendStatement(scheduleId, statement, mockTransaction)
     }
     await expect(wrapper).rejects.toThrow()
   })
@@ -85,7 +89,7 @@ describe('send statement', () => {
   test('should throw error when updateScheduleByScheduleId rejects ', async () => {
     updateScheduleByScheduleId.mockRejectedValue(Error)
     const wrapper = async () => {
-      await sendStatement(scheduleId, mockStatement, transaction)
+      await sendStatement(scheduleId, statement, mockTransaction)
     }
     await expect(wrapper).rejects.toThrow(Error)
   })
@@ -93,7 +97,7 @@ describe('send statement', () => {
   test('should throw error with message "Failed to send statement with scheduleId of {scheduleId}" when updateScheduleByScheduleId rejects ', async () => {
     updateScheduleByScheduleId.mockRejectedValue(Error)
     const wrapper = async () => {
-      await sendStatement(scheduleId, mockStatement, transaction)
+      await sendStatement(scheduleId, statement, mockTransaction)
     }
     await expect(wrapper).rejects.toThrow(new Error(`Failed to send statement with scheduleId of ${scheduleId}`))
   })
