@@ -2,23 +2,24 @@ const db = require('../../../../app/data')
 
 const sendStatement = require('../../../../app/processing/statement')
 
-const mockSendMessage = jest.fn()
-
 jest.mock('ffc-messaging', () => {
   return {
     MessageSender: jest.fn().mockImplementation(() => {
       return {
-        sendMessage: mockSendMessage,
+        sendMessage: jest.fn(),
         closeConnection: jest.fn()
       }
     })
   }
 })
 
+const { DATE: COMPLETED_DATE } = require('../../../mock-components/mock-dates').SCHEDULED
+
 const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
 const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
-let scheduleId = 1
+
+let scheduleId
 
 describe('send statement', () => {
   beforeAll(async () => {
@@ -29,9 +30,10 @@ describe('send statement', () => {
   })
 
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+    jest.useFakeTimers().setSystemTime(COMPLETED_DATE)
     await db.settlement.create(mockSettlement)
     await db.schedule.create(mockSchedule)
+    scheduleId = 1
   })
 
   afterEach(async () => {
@@ -59,7 +61,7 @@ describe('send statement', () => {
     await sendStatement(scheduleId, statement)
 
     const updatedSchedule = await db.schedule.findOne({ where: { scheduleId } })
-    expect(updatedSchedule.completed).toStrictEqual(new Date(2022, 7, 5, 12, 0, 0, 0))
+    expect(updatedSchedule.completed).toStrictEqual(COMPLETED_DATE)
   })
 
   test('should not throw if the scheduleId is not present', async () => {
