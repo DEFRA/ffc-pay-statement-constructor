@@ -10,12 +10,14 @@ data:
   RETURN_TOPIC_ADDRESS: {{ .Values.container.returnTopicAddress }}-{{ .Values.environmentCode }}
   STATEMENT_TOPIC_ADDRESS: {{ .Values.container.statementTopicAddress }}-{{ .Values.environmentCode }}
   DATA_TOPIC_ADDRESS: {{ .Values.container.dataTopicAddress }}-{{ .Values.environmentCode }}
+  GENERATOR_TOPIC_ADDRESS: {{ .Values.container.generatorTopicAddress }}-{{ .Values.environmentCode }}
   {{ else }}
   PROCESSING_TOPIC_ADDRESS: {{ .Values.container.processingTopicAddress }}
   SUBMIT_TOPIC_ADDRESS: {{ .Values.container.submitTopicAddress }}
   RETURN_TOPIC_ADDRESS: {{ .Values.container.returnTopicAddress }}
   STATEMENT_TOPIC_ADDRESS: {{ .Values.container.statementTopicAddress }}
   DATA_TOPIC_ADDRESS: {{ .Values.container.dataTopicAddress }}
+  GENERATOR_TOPIC_ADDRESS: {{ .Values.container.generatorTopicAddress }}
   {{- end }}
   PROCESSING_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.processingSubscriptionAddress }}
   SUBMIT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.submitSubscriptionAddress }}
