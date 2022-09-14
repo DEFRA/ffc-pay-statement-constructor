@@ -1,10 +1,11 @@
 const sendMessage = require('../../../../app/messaging/send-message')
 jest.mock('../../../../app/messaging/send-message')
 
-const mockStatement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
-const type = 'uk.gov.pay.statement'
 const config = require('../../../../app/config')
+jest.mock('../../../../app/config')
 
+const type = 'uk.gov.pay.statement'
+const mockStatement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
 const publishStatement = require('../../../../app/processing/statement/publish-statement')
 
 describe('publish statement', () => {
