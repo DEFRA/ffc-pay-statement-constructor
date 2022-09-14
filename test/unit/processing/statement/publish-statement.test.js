@@ -24,6 +24,6 @@ describe('publish statement', () => {
 
   test('should call sendMessage with mockStatement, type and config.statementTopic', async () => {
     await publishStatement(mockStatement)
-    expect(sendMessage).toHaveBeenCalledWith(mockStatement, type, config.statementTopic)
+    expect(sendMessage).toHaveBeenCalledWith(mockStatement, type, config.generatorTopic)
   })
 })
