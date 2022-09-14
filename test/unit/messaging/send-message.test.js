@@ -1,12 +1,13 @@
 
 const mockSendMessage = jest.fn()
+const mockCloseConnection = jest.fn()
 
 jest.mock('ffc-messaging', () => {
   return {
     MessageSender: jest.fn().mockImplementation(() => {
       return {
         sendMessage: mockSendMessage,
-        closeConnection: jest.fn()
+        closeConnection: mockCloseConnection
       }
     })
   }
@@ -18,12 +19,22 @@ const createMessage = require('../../../app/messaging/create-message')
 const sendMessage = require('../../../app/messaging/send-message')
 
 const mockStatement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
-const type = 'uk.gov.pay.statement'
 const config = require('../../../app/config')
-const options = {}
+let options, type
 
 describe('send message', () => {
   beforeEach(() => {
+    const source = 'ffc-pay-statement-constructor'
+    const body = { ...mockStatement }
+    type = 'uk.gov.pay.statement'
+    options = {}
+
+    createMessage.mockReturnValue({
+      body,
+      type,
+      source,
+      ...options
+    })
   })
 
   afterEach(() => {
@@ -53,5 +64,21 @@ describe('send message', () => {
   test('should call mockSendMessage once', async () => {
     await sendMessage(mockStatement, type, config.statementTopic, options)
     expect(mockSendMessage).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call mockSendMessage with message', async () => {
+    const message = createMessage()
+    await sendMessage(mockStatement, type, config.statementTopic, options)
+    expect(mockSendMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('should call mockCloseConnection', async () => {
+    await sendMessage(mockStatement, type, config.statementTopic, options)
+    expect(mockCloseConnection).toHaveBeenCalled()
+  })
+
+  test('should call mockCloseConnection once', async () => {
+    await sendMessage(mockStatement, type, config.statementTopic, options)
+    expect(mockCloseConnection).toHaveBeenCalledTimes(1)
   })
 })
