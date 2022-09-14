@@ -1,4 +1,4 @@
-const createMessage = async (body, type, options) => {
+const createMessage = (body, type, options) => {
   return {
     body,
     type,
