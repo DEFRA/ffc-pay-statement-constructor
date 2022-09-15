@@ -12,7 +12,7 @@ const {
   SFI,
   SFI_PILOT,
   VET_VISITS
-} = require('./scheme-names')
+} = require('./scheme-names').SHORT_NAMES
 
 module.exports = [{
   schemeId: LNR_ID,
