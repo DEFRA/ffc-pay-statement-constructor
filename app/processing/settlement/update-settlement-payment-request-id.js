@@ -2,7 +2,7 @@ const db = require('../../data')
 const getCompletedPaymentRequestByInvoiceNumber = require('./get-completed-payment-request-by-invoice-number')
 
 const updateSettlementPaymentRequestId = async (settlement, transaction) => {
-  const paymentRequest = await getCompletedPaymentRequestByInvoiceNumber(settlement.invoiceNumber)
+  const paymentRequest = await getCompletedPaymentRequestByInvoiceNumber(settlement.invoiceNumber, transaction)
 
   if (paymentRequest) {
     const { paymentRequestId } = paymentRequest

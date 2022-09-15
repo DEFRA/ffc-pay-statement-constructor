@@ -1,4 +1,22 @@
 
+const mockCommit = jest.fn()
+const mockRollback = jest.fn()
+const mockTransaction = {
+  commit: mockCommit,
+  rollback: mockRollback
+}
+
+jest.mock('../../../../app/data', () => {
+  return {
+    sequelize:
+       {
+         transaction: jest.fn().mockImplementation(() => {
+           return { ...mockTransaction }
+         })
+       }
+  }
+})
+
 jest.mock('../../../../app/processing/funding/get-fundings-by-calculation-id')
 const getFundingsByCalculationId = require('../../../../app/processing/funding/get-fundings-by-calculation-id')
 
@@ -47,8 +65,8 @@ describe('get and transform fundings object for building a statement object', ()
 
   test('should call getFundingsByCalculationId with calculationId when a calculationId is given', async () => {
     const calculationId = 1
-    await getFundings(calculationId)
-    expect(getFundingsByCalculationId).toHaveBeenCalledWith(calculationId)
+    await getFundings(calculationId, mockTransaction)
+    expect(getFundingsByCalculationId).toHaveBeenCalledWith(calculationId, mockTransaction)
   })
 
   test('should call schema.validate when a calculationId is given', async () => {

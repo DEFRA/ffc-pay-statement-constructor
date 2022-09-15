@@ -1,7 +1,8 @@
 const db = require('../../data')
 
-const getCalculationByPaymentRequestId = async (paymentRequestId) => {
+const getCalculationByPaymentRequestId = async (paymentRequestId, transaction) => {
   return db.calculation.findOne({
+    transaction,
     attributes: [
       'calculationId',
       'calculationDate',

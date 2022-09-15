@@ -1,7 +1,8 @@
 const db = require('../../data')
 
-const getFundingsByCalculationId = async (calculationId) => {
+const getFundingsByCalculationId = async (calculationId, transaction) => {
   return db.funding.findAll({
+    transaction,
     attributes: [
       'calculationId',
       'areaClaimed',

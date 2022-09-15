@@ -1,7 +1,7 @@
 const getOrganisation = require('../../organisation')
 
-const getDetails = async (sbi) => {
-  const organisation = await getOrganisation(sbi)
+const getDetails = async (sbi, transaction) => {
+  const organisation = await getOrganisation(sbi, transaction)
   return {
     businessName: organisation.businessName,
     email: organisation.email,

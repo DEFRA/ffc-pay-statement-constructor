@@ -1,9 +1,9 @@
 const schema = require('./invoice-line-schema')
 
-const getInvoiceLineByFundingCodeAndPaymentId = require('./get-invoice-line-by-funding-code-and-payment-id')
+const getPositiveInvoiceLineByFundingCodeAndPaymentId = require('./get-positive-invoice-line-by-funding-code-and-payment-id')
 
-const getInvoiceLine = async (fundingCode, paymentRequestId) => {
-  const invoiceLine = await getInvoiceLineByFundingCodeAndPaymentId(fundingCode, paymentRequestId)
+const getPositiveInvoiceLine = async (fundingCode, paymentRequestId) => {
+  const invoiceLine = await getPositiveInvoiceLineByFundingCodeAndPaymentId(fundingCode, paymentRequestId)
   const result = schema.validate(invoiceLine, {
     abortEarly: false
   })
@@ -30,4 +30,4 @@ const getInvoiceLine = async (fundingCode, paymentRequestId) => {
   }
 }
 
-module.exports = getInvoiceLine
+module.exports = getPositiveInvoiceLine

@@ -2,7 +2,7 @@ const db = require('../../../../app/data')
 const schemes = require('../../../../app/constants/schemes')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../../mock-components/mock-invoice-number')
 
-const getInvoiceLine = require('../../../../app/processing/invoice-line/get-invoice-line')
+const getPositiveInvoiceLine = require('../../../../app/processing/invoice-line/get-positive-invoice-line')
 
 let rawInvoiceLinesData
 
@@ -51,7 +51,7 @@ describe('process get invoice line object', () => {
   test('should throw error when no existing invoice-line data in database', async () => {
     const fundingOptionCode = '300001'
     const paymentRequestId = 20
-    const wrapper = async () => { await getInvoiceLine(fundingOptionCode, paymentRequestId) }
+    const wrapper = async () => { await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -60,7 +60,7 @@ describe('process get invoice line object', () => {
     await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
     const fundingOptionCode = '300001'
     const paymentRequestId = 20
-    const wrapper = async () => { await getInvoiceLine(fundingOptionCode, paymentRequestId) }
+    const wrapper = async () => { await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -69,7 +69,7 @@ describe('process get invoice line object', () => {
     await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
     const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
     const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
-    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+    const result = await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId)
 
     const annualValue = rawInvoiceLinesData[0].value
     const quarterlyValue = annualValue > 0 ? annualValue / 4 : 0

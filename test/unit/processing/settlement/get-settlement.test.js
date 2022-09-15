@@ -1,3 +1,21 @@
+const mockCommit = jest.fn()
+const mockRollback = jest.fn()
+const mockTransaction = {
+  commit: mockCommit,
+  rollback: mockRollback
+}
+
+jest.mock('../../../../app/data', () => {
+  return {
+    sequelize:
+       {
+         transaction: jest.fn().mockImplementation(() => {
+           return { ...mockTransaction }
+         })
+       }
+  }
+})
+
 jest.mock('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 const getSettledSettlementBySettlementId = require('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 
@@ -28,7 +46,7 @@ describe('get required settlement information for building a statement object', 
 
   test('should call getSettledSettlementBySettlementId when a settlementId is given', async () => {
     const settlementId = 1
-    await getSettlement(settlementId)
+    await getSettlement(settlementId, mockTransaction)
     expect(getSettledSettlementBySettlementId).toHaveBeenCalled()
   })
 
@@ -40,8 +58,8 @@ describe('get required settlement information for building a statement object', 
 
   test('should call getSettledSettlementBySettlementId with settlementId when a settlementId is given', async () => {
     const settlementId = 1
-    await getSettlement(settlementId)
-    expect(getSettledSettlementBySettlementId).toHaveBeenCalledWith(settlementId)
+    await getSettlement(settlementId, mockTransaction)
+    expect(getSettledSettlementBySettlementId).toHaveBeenCalledWith(settlementId, mockTransaction)
   })
 
   test('should call validateSettlement when a settlementId is given', async () => {

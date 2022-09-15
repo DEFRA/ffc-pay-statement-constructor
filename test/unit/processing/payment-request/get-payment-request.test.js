@@ -1,3 +1,21 @@
+const mockCommit = jest.fn()
+const mockRollback = jest.fn()
+const mockTransaction = {
+  commit: mockCommit,
+  rollback: mockRollback
+}
+
+jest.mock('../../../../app/data', () => {
+  return {
+    sequelize:
+       {
+         transaction: jest.fn().mockImplementation(() => {
+           return { ...mockTransaction }
+         })
+       }
+  }
+})
+
 jest.mock('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 
@@ -55,8 +73,8 @@ describe('get and map required payment request information for building a statem
 
   test('should call getCompletedPaymentRequestByPaymentRequestId with paymentRequestId when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
-    expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, mockTransaction)
+    expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
   })
 
   test('should call validatePaymentRequest when a paymentRequestId is given', async () => {

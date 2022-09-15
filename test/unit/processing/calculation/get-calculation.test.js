@@ -1,3 +1,21 @@
+const mockCommit = jest.fn()
+const mockRollback = jest.fn()
+const mockTransaction = {
+  commit: mockCommit,
+  rollback: mockRollback
+}
+
+jest.mock('../../../../app/data', () => {
+  return {
+    sequelize:
+       {
+         transaction: jest.fn().mockImplementation(() => {
+           return { ...mockTransaction }
+         })
+       }
+  }
+})
+
 jest.mock('../../../../app/processing/calculation/calculation-schema')
 const schema = require('../../../../app/processing/calculation/calculation-schema')
 
@@ -31,7 +49,7 @@ describe('get and transform payment request information for building a statement
 
   test('should call getCalculationByPaymentRequestId when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getCalculation(paymentRequestId)
+    await getCalculation(paymentRequestId, mockTransaction)
     expect(getCalculationByPaymentRequestId).toHaveBeenCalled()
   })
 
@@ -43,8 +61,8 @@ describe('get and transform payment request information for building a statement
 
   test('should call getCalculationByPaymentRequestId with paymentRequestId when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getCalculation(paymentRequestId)
-    expect(getCalculationByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId)
+    await getCalculation(paymentRequestId, mockTransaction)
+    expect(getCalculationByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
   })
 
   test('should call schema.validate when a paymentRequestId is given', async () => {

@@ -11,7 +11,6 @@ const mapPaymentRequest = async (paymentRequest) => {
     frequency,
     value: paymentRequest.value,
     year
-
   }
 }
 

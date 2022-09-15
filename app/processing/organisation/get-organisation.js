@@ -1,7 +1,7 @@
 const getOrganisationBySbi = require('./get-organisation-by-sbi')
 
-const getOrganisation = async (sbi) => {
-  const organisation = await getOrganisationBySbi(sbi)
+const getOrganisation = async (sbi, transaction) => {
+  const organisation = await getOrganisationBySbi(sbi, transaction)
 
   return {
     line1: organisation.addressLine1,

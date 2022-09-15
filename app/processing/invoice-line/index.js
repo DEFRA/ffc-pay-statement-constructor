@@ -1,3 +1,3 @@
-const getInvoiceLine = require('./get-invoice-line')
+const getPositiveInvoiceLine = require('./get-positive-invoice-line')
 
-module.exports = getInvoiceLine
+module.exports = getPositiveInvoiceLine
