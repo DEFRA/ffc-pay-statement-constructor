@@ -9,6 +9,10 @@ const mockStatement = JSON.parse(JSON.stringify(require('../../../mock-objects/m
 const publishStatement = require('../../../../app/processing/statement/publish-statement')
 
 describe('publish statement', () => {
+  beforeEach(() => {
+    config.statementTopic = 'statement-topic'
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })

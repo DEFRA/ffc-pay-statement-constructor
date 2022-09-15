@@ -70,12 +70,12 @@ describe('send statement', () => {
     await expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with message "Failed to send statement with scheduleId of {scheduleId}" when publishStatement rejects ', async () => {
+  test('should throw error with message which starts with "Failed to send statement with scheduleId of {scheduleId}" when publishStatement rejects ', async () => {
     publishStatement.mockRejectedValue(Error)
     const wrapper = async () => {
       await sendStatement(scheduleId, statement, mockTransaction)
     }
-    await expect(wrapper).rejects.toThrow(new Error(`Failed to send statement with scheduleId of ${scheduleId}`))
+    await expect(wrapper).rejects.toThrow((/^Failed to send statement with scheduleId/))
   })
 
   test('should throw when updateScheduleByScheduleId rejects ', async () => {
@@ -94,11 +94,11 @@ describe('send statement', () => {
     await expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error with message "Failed to send statement with scheduleId of {scheduleId}" when updateScheduleByScheduleId rejects ', async () => {
+  test('should throw error with message which starts with "Failed to send statement with scheduleId of {scheduleId}" when updateScheduleByScheduleId rejects ', async () => {
     updateScheduleByScheduleId.mockRejectedValue(Error)
     const wrapper = async () => {
       await sendStatement(scheduleId, statement, mockTransaction)
     }
-    await expect(wrapper).rejects.toThrow(new Error(`Failed to send statement with scheduleId of ${scheduleId}`))
+    await expect(wrapper).rejects.toThrow(/^Failed to send statement with scheduleId/)
   })
 })
