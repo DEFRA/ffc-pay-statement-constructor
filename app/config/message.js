@@ -29,7 +29,8 @@ const mqSchema = Joi.object({
     type: Joi.string().default('subscription')
   },
   statementTopic: {
-    address: Joi.string()
+    address: Joi.string(),
+    source: Joi.string()
   }
 })
 
@@ -62,7 +63,8 @@ const mqConfig = {
     type: 'subscription'
   },
   statementTopic: {
-    address: process.env.STATEMENT_TOPIC_ADDRESS
+    address: process.env.STATEMENT_TOPIC_ADDRESS,
+    source: 'ffc-pay-statement-constructor'
   }
 }
 

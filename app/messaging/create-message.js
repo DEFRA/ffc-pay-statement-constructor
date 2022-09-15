@@ -1,8 +1,8 @@
-const createMessage = (body, type, options) => {
+const createMessage = (body, type, source, options) => {
   return {
     body,
     type,
-    source: 'ffc-pay-statement-constructor',
+    source,
     ...options
   }
 }
