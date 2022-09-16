@@ -4,6 +4,10 @@ const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../.
 
 const getPositiveInvoiceLine = require('../../../../app/processing/invoice-line/get-positive-invoice-line')
 
+const QUARTER = 0.25
+const MIN_PAYMENT_VALUE = 0
+const DEFAULT_REDUCTION_VALUE = 0
+
 let rawInvoiceLinesData
 
 describe('process get invoice line object', () => {
@@ -72,8 +76,8 @@ describe('process get invoice line object', () => {
     const result = await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId)
 
     const annualValue = rawInvoiceLinesData[0].value
-    const quarterlyValue = annualValue > 0 ? annualValue / 4 : 0
-    const quarterlyReduction = 0
+    const quarterlyValue = annualValue > MIN_PAYMENT_VALUE ? Math.trunc(annualValue * QUARTER) : MIN_PAYMENT_VALUE
+    const quarterlyReduction = DEFAULT_REDUCTION_VALUE
     const quarterlyPayment = quarterlyValue - quarterlyReduction
     const reductions = []
 
