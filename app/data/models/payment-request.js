@@ -1,4 +1,4 @@
-const { reverseInvoiceNumber } = require('../../utility')
+const { reverseEngineerInvoiceNumber } = require('../../utility')
 
 module.exports = (sequelize, DataTypes) => {
   const paymentRequest = sequelize.define('paymentRequest', {
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     reversedInvoiceNumber: {
       type: DataTypes.VIRTUAL,
       get () {
-        return reverseInvoiceNumber(this.invoiceNumber)
+        return reverseEngineerInvoiceNumber(this.invoiceNumber)
       }
     },
     schedule: DataTypes.STRING,
