@@ -18,7 +18,14 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
       reductions
     }
 
-    const detailedFunding = { ...funding, ...invoiceLineInPounds }
+    const detailedFunding = {
+      area: String(funding.area.toFixed(2)),
+      level: funding.level,
+      name: funding.name,
+      rate: String(funding.rate.toFixed(2)),
+      ...invoiceLineInPounds
+    }
+
     detailedFundings.push(detailedFunding)
   }
 

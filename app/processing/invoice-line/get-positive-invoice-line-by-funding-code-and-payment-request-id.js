@@ -1,6 +1,6 @@
 const db = require('../../data')
 
-const getPositiveInvoiceLineByFundingCodeAndPaymentId = async (fundingCode, paymentRequestId, transaction) => {
+const getPositiveInvoiceLineByFundingCodeAndPaymentRequestId = async (fundingCode, paymentRequestId, transaction) => {
   return db.invoiceLine.findOne({
     transaction,
     attributes: [
@@ -15,4 +15,4 @@ const getPositiveInvoiceLineByFundingCodeAndPaymentId = async (fundingCode, paym
   })
 }
 
-module.exports = getPositiveInvoiceLineByFundingCodeAndPaymentId
+module.exports = getPositiveInvoiceLineByFundingCodeAndPaymentRequestId
