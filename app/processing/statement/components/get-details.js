@@ -5,8 +5,8 @@ const getDetails = async (sbi, transaction) => {
   return {
     businessName: organisation.businessName,
     email: organisation.email,
-    frn: organisation.frn,
-    sbi: organisation.sbi
+    frn: Number(organisation.frn),
+    sbi: Number(organisation.sbi)
   }
 }
 
