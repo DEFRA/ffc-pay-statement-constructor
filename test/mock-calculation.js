@@ -1,12 +1,12 @@
-const { SFI } = require('../app/constants/scheme-names')
+const { SFI } = require('../app/constants/scheme-names').SHORT_NAMES
 const { CALCULATION: CALCULATION_TYPE } = require('../app/constants/types')
 
 const CALCULATION_REFERENCE = require('./mock-components/mock-calculation-reference')
-const { RECEIVED: CALCULATION_DATE } = require('./mock-components/mock-timestamps')
+const { DATE: CALCULATION_DATE } = require('./mock-components/mock-dates').CALCULATED
 const FUNDINGS = require('./mock-components/mock-fundings')
 const SBI = require('./mock-components/mock-sbi')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('./mock-components/mock-invoice-number')
-const { UPDATED: UPDATED_TIMESTAMP } = require('./mock-components/mock-timestamps')
+const { DATE: UPDATED_TIMESTAMP } = require('./mock-components/mock-dates').UPDATED
 
 module.exports = {
   calculationDate: CALCULATION_DATE,

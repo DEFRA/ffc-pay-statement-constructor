@@ -16,7 +16,7 @@ const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/pr
 jest.mock('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 const getSettledSettlementBySettlementId = require('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 
-const getStatement = require('../../../../app/processing/statement')
+const { getStatement } = require('../../../../app/processing/statement')
 
 let calculation
 let paymentRequest

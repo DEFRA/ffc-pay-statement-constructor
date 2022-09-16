@@ -23,13 +23,14 @@ const mqSchema = Joi.object({
     topic: Joi.string(),
     type: Joi.string().default('subscription')
   },
-  statementTopic: {
-    address: Joi.string()
-  },
   statementDataSubscription: {
     address: Joi.string(),
     topic: Joi.string(),
     type: Joi.string().default('subscription')
+  },
+  statementTopic: {
+    address: Joi.string(),
+    source: Joi.string()
   }
 })
 
@@ -56,13 +57,14 @@ const mqConfig = {
     topic: process.env.RETURN_TOPIC_ADDRESS,
     type: 'subscription'
   },
-  statementTopic: {
-    address: process.env.STATEMENT_TOPIC_ADDRESS
-  },
   statementDataSubscription: {
     address: process.env.DATA_SUBSCRIPTION_ADDRESS,
     topic: process.env.DATA_TOPIC_ADDRESS,
     type: 'subscription'
+  },
+  statementTopic: {
+    address: process.env.STATEMENT_TOPIC_ADDRESS,
+    source: 'ffc-pay-statement-constructor'
   }
 }
 
@@ -70,7 +72,6 @@ const mqResult = mqSchema.validate(mqConfig, {
   abortEarly: false
 })
 
-// Throw if config is invalid
 if (mqResult.error) {
   throw new Error(`The message queue config is invalid. ${mqResult.error.message}`)
 }
@@ -78,13 +79,13 @@ if (mqResult.error) {
 const processingSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.processingSubscription }
 const submitSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.submitSubscription }
 const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
-const statementTopic = { ...mqResult.value.messageQueue, ...mqResult.value.statementTopic }
 const statementDataSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.statementDataSubscription }
+const statementTopic = { ...mqResult.value.messageQueue, ...mqResult.value.statementTopic }
 
 module.exports = {
   processingSubscription,
   submitSubscription,
   returnSubscription,
-  statementTopic,
-  statementDataSubscription
+  statementDataSubscription,
+  statementTopic
 }

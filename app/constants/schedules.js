@@ -5,6 +5,6 @@ module.exports = {
     THREE_DAY_QUARTERLY: 'T4'
   },
   NAMES: {
-    Q4: 'QUARTERLY'
+    Q4: 'Quarterly'
   }
 }
