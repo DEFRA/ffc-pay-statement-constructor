@@ -104,6 +104,48 @@ describe('start processing', () => {
     expect(getStatement).not.toHaveBeenCalled()
   })
 
+  test('should call sendStatement when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(sendStatement).toHaveBeenCalled()
+  })
+
+  test('should call sendStatement once when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(sendStatement).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call sendStatement with schedulePendingSettlements()[0].scheduleId and getStatement when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(sendStatement).toHaveBeenCalledWith((await schedulePendingSettlements())[0].scheduleId, await getStatement())
+  })
+
+  test('should call sendStatement when schedulePendingSettlements returns 2 records', async () => {
+    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    await processing.start()
+    expect(sendStatement).toHaveBeenCalled()
+  })
+
+  test('should call sendStatement twice when schedulePendingSettlements returns 2 records', async () => {
+    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    await processing.start()
+    expect(sendStatement).toHaveBeenCalledTimes(2)
+  })
+
+  test('should call sendStatement with each schedulePendingSettlements().scheduleId and getStatement when schedulePendingSettlements returns 2 records', async () => {
+    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+
+    await processing.start()
+
+    expect(sendStatement).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].scheduleId, await getStatement())
+    expect(sendStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].scheduleId, await getStatement())
+  })
+
+  test('should not call sendStatement when schedulePendingSettlements returns an empty array', async () => {
+    schedulePendingSettlements.mockResolvedValue([])
+    await processing.start()
+    expect(sendStatement).not.toHaveBeenCalled()
+  })
+
   test('should not throw when schedulePendingSettlements throws', async () => {
     schedulePendingSettlements.mockRejectedValue(new Error('Processing issue'))
 
@@ -126,6 +168,16 @@ describe('start processing', () => {
 
   test('should not throw when getStatement throws', async () => {
     getStatement.mockRejectedValue(new Error('Processing issue'))
+
+    const wrapper = async () => {
+      await processing.start()
+    }
+
+    expect(wrapper).not.toThrow()
+  })
+
+  test('should not throw when sendStatement throws', async () => {
+    sendStatement.mockRejectedValue(new Error('Sending issue'))
 
     const wrapper = async () => {
       await processing.start()
@@ -167,24 +219,6 @@ describe('start processing', () => {
     expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
   })
 
-  test('should call setTimeout when schedulePendingSettlements throws', async () => {
-    schedulePendingSettlements.mockRejectedValue(new Error('Processing issue'))
-    await processing.start()
-    expect(setTimeout).toHaveBeenCalled()
-  })
-
-  test('should call setTimeout once when schedulePendingSettlements throws', async () => {
-    schedulePendingSettlements.mockRejectedValue(new Error('Processing issue'))
-    await processing.start()
-    expect(setTimeout).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call setTimeout with processing.start and processingConfig.settlementProcessingInterval when schedulePendingSettlements throws', async () => {
-    schedulePendingSettlements.mockRejectedValue(new Error('Processing issue'))
-    await processing.start()
-    expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
-  })
-
   test('should call setTimeout when schedulePendingSettlements returns an empty array', async () => {
     schedulePendingSettlements.mockResolvedValue([])
     await processing.start()
@@ -199,6 +233,42 @@ describe('start processing', () => {
 
   test('should call setTimeout with processing.start and processingConfig.settlementProcessingInterval when schedulePendingSettlements returns an empty array', async () => {
     schedulePendingSettlements.mockResolvedValue([])
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
+  })
+
+  test('should call setTimeout when getStatement throws', async () => {
+    getStatement.mockRejectedValue(new Error('Processing issue'))
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalled()
+  })
+
+  test('should call setTimeout once when getStatement throws', async () => {
+    getStatement.mockRejectedValue(new Error('Processing issue'))
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call setTimeout with processing.start and processingConfig.settlementProcessingInterval when getStatement throws', async () => {
+    getStatement.mockRejectedValue(new Error('Processing issue'))
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
+  })
+
+  test('should call setTimeout when sendStatement throws', async () => {
+    sendStatement.mockRejectedValue(new Error('Sending issue'))
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalled()
+  })
+
+  test('should call setTimeout once when sendStatement throws', async () => {
+    sendStatement.mockRejectedValue(new Error('Sending issue'))
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call setTimeout with processing.start and processingConfig.settlementProcessingInterval when sendStatement throws', async () => {
+    sendStatement.mockRejectedValue(new Error('Sending issue'))
     await processing.start()
     expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
   })
