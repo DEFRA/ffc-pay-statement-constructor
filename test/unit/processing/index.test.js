@@ -29,6 +29,7 @@ const { getStatement, sendStatement } = require('../../../app/processing/stateme
 
 const processing = require('../../../app/processing')
 
+let retreivedSchedule
 let statement
 
 describe('start processing', () => {
@@ -36,7 +37,7 @@ describe('start processing', () => {
     processingConfig.settlementProcessingInterval = 10000
 
     const schedule = JSON.parse(JSON.stringify(require('../../mock-schedule')))
-    const retreivedSchedule = {
+    retreivedSchedule = {
       scheduleId: 1,
       settlementId: schedule.settlementId
     }
@@ -74,6 +75,27 @@ describe('start processing', () => {
   test('should call getStatement with schedulePendingSettlements()[0].settlementId and mockTransaction when schedulePendingSettlements returns 1 record', async () => {
     await processing.start()
     expect(getStatement).toHaveBeenCalledWith((await schedulePendingSettlements())[0].settlementId, mockTransaction)
+  })
+
+  test('should call getStatement when schedulePendingSettlements returns 2 records', async () => {
+    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    await processing.start()
+    expect(getStatement).toHaveBeenCalled()
+  })
+
+  test('should call getStatement twice when schedulePendingSettlements returns 2 records', async () => {
+    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    await processing.start()
+    expect(getStatement).toHaveBeenCalledTimes(2)
+  })
+
+  test('should call getStatement with each schedulePendingSettlements().settlementId and mockTransaction when schedulePendingSettlements returns 2 records', async () => {
+    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+
+    await processing.start()
+
+    expect(getStatement).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].settlementId, mockTransaction)
+    expect(getStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].settlementId, mockTransaction)
   })
 
   test('should not call getStatement when schedulePendingSettlements returns an empty array', async () => {
