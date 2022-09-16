@@ -6,6 +6,7 @@ const getFundingsByCalculationId = async (calculationId, transaction) => {
     attributes: [
       'calculationId',
       'areaClaimed',
+      'fundingCode',
       'rate'
     ],
     include: [{
