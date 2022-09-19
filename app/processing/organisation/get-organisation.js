@@ -1,7 +1,16 @@
+const schema = require('./organisation-schema')
 const getOrganisationBySbi = require('./get-organisation-by-sbi')
 
 const getOrganisation = async (sbi, transaction) => {
   const organisation = await getOrganisationBySbi(sbi, transaction)
+
+  const result = schema.validate(organisation, {
+    abortEarly: false
+  })
+
+  if (result.error) {
+    throw new Error(`Organisation with the sbi: ${sbi} does not have the required details data: ${result.error.message}`)
+  }
 
   return {
     line1: organisation.addressLine1,
