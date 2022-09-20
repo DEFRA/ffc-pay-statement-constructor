@@ -9,6 +9,7 @@ const mapPaymentRequest = async (paymentRequest) => {
     agreementNumber: paymentRequest.agreementNumber,
     dueDate: paymentRequest.dueDate,
     frequency,
+    invoiceNumber: paymentRequest.invoiceNumber,
     value: paymentRequest.value,
     year
   }

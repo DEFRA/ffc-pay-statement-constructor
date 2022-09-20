@@ -45,6 +45,7 @@ describe('get various components and transform to statement object', () => {
       paymentRequestId: 1,
       agreementNumber: retrievedPaymentRequest.agreementNumber,
       dueDate: retrievedPaymentRequest.dueDate,
+      invoiceNumber: retrievedPaymentRequest.invoiceNumber,
       marketingYear: retrievedPaymentRequest.marketingYear,
       schedule: retrievedPaymentRequest.schedule,
       value: retrievedPaymentRequest.value

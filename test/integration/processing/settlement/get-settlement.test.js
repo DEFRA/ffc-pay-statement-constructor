@@ -1,6 +1,6 @@
 const db = require('../../../../app/data')
 
-const getSettlement = require('../../../../app/processing/settlement')
+const { getSettlement } = require('../../../../app/processing/settlement')
 
 const schemes = require('../../../../app/constants/schemes')
 const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))

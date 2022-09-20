@@ -56,7 +56,8 @@ describe('process payment request', () => {
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      value: 50000,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -72,7 +73,8 @@ describe('process payment request', () => {
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      value: 50000,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -88,7 +90,8 @@ describe('process payment request', () => {
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      value: 50000,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -104,7 +107,8 @@ describe('process payment request', () => {
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      value: 50000,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -120,7 +124,8 @@ describe('process payment request', () => {
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      value: 50000,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })

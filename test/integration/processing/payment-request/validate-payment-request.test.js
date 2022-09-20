@@ -11,8 +11,9 @@ describe('validate payment request', () => {
       paymentRequestId: 1,
       agreementNumber: paymentRequest.agreementNumber,
       dueDate: new Date(paymentRequest.dueDate),
+      invoiceNumber: paymentRequest.invoiceNumber,
       marketingYear: paymentRequest.marketingYear,
-      value: 50000,
+      value: paymentRequest.value,
       schedule: paymentRequest.schedule
     }
   })

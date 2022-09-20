@@ -47,114 +47,114 @@ describe('get and transform payment request information for building a statement
     jest.clearAllMocks()
   })
 
-  test('should call getCalculationByPaymentRequestId when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getCalculation(paymentRequestId, mockTransaction)
+  test('should call getCalculationByPaymentRequestId when a paymentRequest is given', async () => {
+    const paymentRequest = { paymentRequestId: 1 }
+    await getCalculation(paymentRequest, mockTransaction)
     expect(getCalculationByPaymentRequestId).toHaveBeenCalled()
   })
 
   test('should call getCompletedPaymentRequestByPaymentRequestId once when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getCalculation(paymentRequestId)
+    const paymentRequest = { paymentRequestId: 1 }
+    await getCalculation(paymentRequest)
     expect(getCalculationByPaymentRequestId).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getCalculationByPaymentRequestId with paymentRequestId when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getCalculation(paymentRequestId, mockTransaction)
-    expect(getCalculationByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
+  test('should call getCalculationByPaymentRequestId with paymentRequestId when a paymentRequest is given', async () => {
+    const paymentRequest = { paymentRequestId: 1 }
+    await getCalculation(paymentRequest, mockTransaction)
+    expect(getCalculationByPaymentRequestId).toHaveBeenCalledWith(paymentRequest.paymentRequestId, mockTransaction)
   })
 
-  test('should call schema.validate when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getCalculation(paymentRequestId)
+  test('should call schema.validate when a paymentRequest is given', async () => {
+    const paymentRequest = { paymentRequestId: 1 }
+    await getCalculation(paymentRequest)
     expect(schema.validate).toHaveBeenCalled()
   })
 
-  test('should call schema.validate once when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getCalculation(paymentRequestId)
+  test('should call schema.validate once when a paymentRequest is given', async () => {
+    const paymentRequest = { paymentRequestId: 1 }
+    await getCalculation(paymentRequest)
     expect(schema.validate).toHaveBeenCalledTimes(1)
   })
 
-  test('should call schema.validate with rawCalculationData and { abortEarly: false } when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getCalculation(paymentRequestId)
+  test('should call schema.validate with rawCalculationData and { abortEarly: false } when a paymentRequest is given', async () => {
+    const paymentRequest = { paymentRequestId: 1 }
+    await getCalculation(paymentRequest)
     expect(schema.validate).toHaveBeenCalledWith(rawCalculationData, { abortEarly: false })
   })
 
   test('should throw when getCalculationByPaymentRequestId throws', async () => {
-    const paymentRequestId = 1
+    const paymentRequest = { paymentRequestId: 1 }
     getCalculationByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getCalculation(paymentRequestId)
+      await getCalculation(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when getCalculationByPaymentRequestId throws Error', async () => {
-    const paymentRequestId = 1
+    const paymentRequest = { paymentRequestId: 1 }
     getCalculationByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getCalculation(paymentRequestId)
+      await getCalculation(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Database retrieval issue" when getCalculationByPaymentRequestId throws error with "Database retrieval issue"', async () => {
-    const paymentRequestId = 1
+    const paymentRequest = { paymentRequestId: 1 }
     getCalculationByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getCalculation(paymentRequestId)
+      await getCalculation(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
   })
 
   test('should not call schema.validate when getCalculationByPaymentRequestId throws', async () => {
-    const paymentRequestId = 1
+    const paymentRequest = { paymentRequestId: 1 }
     getCalculationByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
-    try { await getCalculation(paymentRequestId) } catch {}
+    try { await getCalculation(paymentRequest) } catch {}
 
     expect(schema.validate).not.toHaveBeenCalled()
   })
 
   test('should throw when schema.validate returns with error key', async () => {
-    const paymentRequestId = 1
+    const paymentRequest = { paymentRequestId: 1 }
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      await getCalculation(paymentRequestId)
+      await getCalculation(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when schema.validate returns with error key', async () => {
-    const paymentRequestId = 1
+    const paymentRequest = { paymentRequestId: 1 }
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      await getCalculation(paymentRequestId)
+      await getCalculation(paymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error which starts "Payment request with paymentRequestId: 1 does not have the required Calculation data" when schema.validate returns with error key of "Joi validation issue"', async () => {
-    const paymentRequestId = 1
+  test('should throw error which starts "Payment request with paymentRequestId:" when schema.validate returns with error key of "Joi validation issue"', async () => {
+    const paymentRequest = { paymentRequestId: 1 }
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      await getCalculation(paymentRequestId)
+      await getCalculation(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId: 1 does not have the required Calculation data/)
+    expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId:/)
   })
 })

@@ -1,16 +1,17 @@
 const db = require('../../data')
-const getCompletedPaymentRequestByReversedInvoiceNumber = require('./get-completed-payment-request-by-reversed-invoice-number')
+const getCalculationByInvoiceNumber = require('./get-calculation-by-invoice-number')
+const { reverseEngineerInvoiceNumber } = require('../../utility')
 
-const updateCalculationPaymentRequestId = async (calculation, transaction) => {
-  const paymentRequest = await getCompletedPaymentRequestByReversedInvoiceNumber(calculation.invoiceNumber, transaction)
+const updateCalculationPaymentRequestId = async (invoiceNumber, paymentRequestId, transaction) => {
+  const reversedInvoiceNumber = reverseEngineerInvoiceNumber(invoiceNumber)
+  const calculation = await getCalculationByInvoiceNumber(reversedInvoiceNumber, transaction)
 
-  if (paymentRequest) {
-    const { paymentRequestId } = paymentRequest
+  if (calculation) {
     await db.calculation.update({ paymentRequestId }, {
       transaction,
       lock: true,
       where: {
-        calculationId: calculation.calculationId
+        invoiceNumber: reversedInvoiceNumber
       }
     })
 

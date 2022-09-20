@@ -10,7 +10,7 @@ const updateSettlementPaymentRequestId = async (settlement, transaction) => {
       transaction,
       lock: true,
       where: {
-        settlementId: settlement.settlementId
+        invoiceNumber: settlement.invoiceNumber
       }
     })
 

@@ -8,6 +8,7 @@ const getCompletedPaymentRequestByPaymentRequestId = async (paymentRequestId, tr
       'paymentRequestId',
       'agreementNumber',
       'dueDate',
+      'invoiceNumber',
       'marketingYear',
       'schedule',
       'value'

@@ -2,7 +2,7 @@ const db = require('../../data')
 const { getDetails, getAddress, getDetailedFunding, getScheme, getDetailedPayments } = require('./components')
 const getCalculation = require('../calculation')
 const getPaymentRequest = require('../payment-request')
-const getSettlement = require('../settlement')
+const { getSettlement } = require('../settlement')
 
 const getStatement = async (settlementId) => {
   const transaction = await db.sequelize.transaction()
@@ -10,7 +10,7 @@ const getStatement = async (settlementId) => {
     const settlement = await getSettlement(settlementId, transaction)
     const paymentRequestId = settlement.paymentRequestId
     const paymentRequest = await getPaymentRequest(paymentRequestId, transaction)
-    const calculation = await getCalculation(paymentRequestId, transaction)
+    const calculation = await getCalculation(paymentRequest, transaction)
     const sbi = calculation.sbi
     const details = await getDetails(sbi, transaction)
     const address = await getAddress(sbi, transaction)
