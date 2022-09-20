@@ -19,6 +19,9 @@ jest.mock('../../../../app/data', () => {
 jest.mock('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 const getSettledSettlementBySettlementId = require('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 
+jest.mock('../../../../app/processing/settlement/update-settlement-payment-request-id')
+const updateSettlementPaymentRequestId = require('../../../../app/processing/settlement/update-settlement-payment-request-id')
+
 jest.mock('../../../../app/processing/settlement/validate-settlement')
 const validateSettlement = require('../../../../app/processing/settlement/validate-settlement')
 
@@ -38,6 +41,7 @@ describe('get required settlement information for building a statement object', 
 
     validateSettlement.mockReturnValue(retreivedSettlement)
     getSettledSettlementBySettlementId.mockResolvedValue(retreivedSettlement)
+    updateSettlementPaymentRequestId.mockResolvedValue(retreivedSettlement)
   })
 
   afterEach(() => {
