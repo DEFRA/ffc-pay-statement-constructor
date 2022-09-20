@@ -1,20 +1,17 @@
 const { processingConfig } = require('../config')
-const db = require('../data')
 
 const schedulePendingSettlements = require('./schedule')
 const { getStatement, sendStatement } = require('./statement')
 
 const start = async () => {
   try {
-    const transaction = await db.sequelize.transaction()
-
     const pendingStatements = await schedulePendingSettlements()
     if (!pendingStatements) {
       throw new Error('No statements to be generated')
     }
 
     for (const pendingStatement of pendingStatements) {
-      const aggregatedStatement = await getStatement(pendingStatement.settlementId, transaction)
+      const aggregatedStatement = await getStatement(pendingStatement.settlementId)
       await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
     }
   } catch (err) {

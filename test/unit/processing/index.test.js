@@ -74,7 +74,7 @@ describe('start processing', () => {
 
   test('should call getStatement with schedulePendingSettlements()[0].settlementId and mockTransaction when schedulePendingSettlements returns 1 record', async () => {
     await processing.start()
-    expect(getStatement).toHaveBeenCalledWith((await schedulePendingSettlements())[0].settlementId, mockTransaction)
+    expect(getStatement).toHaveBeenCalledWith((await schedulePendingSettlements())[0].settlementId)
   })
 
   test('should call getStatement when schedulePendingSettlements returns 2 records', async () => {
@@ -94,8 +94,8 @@ describe('start processing', () => {
 
     await processing.start()
 
-    expect(getStatement).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].settlementId, mockTransaction)
-    expect(getStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].settlementId, mockTransaction)
+    expect(getStatement).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].settlementId)
+    expect(getStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].settlementId)
   })
 
   test('should not call getStatement when schedulePendingSettlements returns an empty array', async () => {
