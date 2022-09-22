@@ -4,7 +4,7 @@ const updateSettlementPaymentRequestId = require('./update-settlement-payment-re
 
 const getSettlement = async (settlementId, transaction) => {
   const settledSettlement = await getSettledSettlementBySettlementId(settlementId, transaction)
-  const settledSettlementWithPaymentRequestId = await updateSettlementPaymentRequestId(settledSettlement)
+  const settledSettlementWithPaymentRequestId = settledSettlement.paymentRequestId ? settledSettlement : await updateSettlementPaymentRequestId(settledSettlement)
 
   return validateSettlement(settledSettlementWithPaymentRequestId)
 }

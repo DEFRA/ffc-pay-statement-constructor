@@ -29,6 +29,19 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
     detailedFundings.push(detailedFunding)
   }
 
+  const total = {
+    area: detailedFundings.reduce((x, y) => x + Number(y.area), 0).toFixed(2),
+    level: '',
+    name: 'Total',
+    rate: '',
+    annualValue: detailedFundings.reduce((x, y) => x + Number(y.annualValue), 0).toFixed(2),
+    quarterlyValue: detailedFundings.reduce((x, y) => x + Number(y.quarterlyValue), 0).toFixed(2),
+    quarterlyReduction: detailedFundings.reduce((x, y) => x + Number(y.quarterlyReduction), 0).toFixed(2),
+    quarterlyPayment: detailedFundings.reduce((x, y) => x + Number(y.quarterlyPayment), 0).toFixed(2)
+  }
+
+  detailedFundings.push(total)
+
   return detailedFundings
 }
 
