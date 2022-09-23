@@ -3,7 +3,9 @@ const schedulePendingSettlements = require('./schedule')
 
 const start = async () => {
   try {
-    await schedulePendingSettlements()
+    if (processingConfig.constructionActive) {
+      await schedulePendingSettlements()
+    }
   } catch (err) {
     console.error(err)
   } finally {
