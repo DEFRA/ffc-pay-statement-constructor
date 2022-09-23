@@ -12,6 +12,7 @@ const processing = require('../../../app/processing')
 describe('start processing', () => {
   beforeEach(() => {
     processingConfig.settlementProcessingInterval = 10000
+    processingConfig.constructionActive = true
     schedulePendingSettlements.mockResolvedValue(undefined)
   })
 
@@ -24,9 +25,15 @@ describe('start processing', () => {
     expect(schedulePendingSettlements).toHaveBeenCalled()
   })
 
-  test('should call schedulePendingSettlements once', async () => {
+  test('should call schedulePendingSettlements once if construction active', async () => {
     await processing.start()
     expect(schedulePendingSettlements).toHaveBeenCalledTimes(1)
+  })
+
+  test('should not call schedulePendingSettlements if construction not active', async () => {
+    processingConfig.constructionActive = false
+    await processing.start()
+    expect(schedulePendingSettlements).not.toHaveBeenCalled()
   })
 
   test('should call setTimeout', async () => {
