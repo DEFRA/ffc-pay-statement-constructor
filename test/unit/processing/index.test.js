@@ -36,7 +36,14 @@ describe('start processing', () => {
     expect(schedulePendingSettlements).not.toHaveBeenCalled()
   })
 
-  test('should call setTimeout', async () => {
+  test('should call setTimeout if construction is active', async () => {
+    processingConfig.constructionActive = true
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalled()
+  })
+
+  test('should call setTimeout if construction is not active', async () => {
+    processingConfig.constructionActive = false
     await processing.start()
     expect(setTimeout).toHaveBeenCalled()
   })
