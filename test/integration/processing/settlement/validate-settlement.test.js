@@ -6,9 +6,11 @@ describe('validate settlement', () => {
   beforeEach(() => {
     const settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
     retreivedSettlement = {
+      invoiceNumber: settlement.invoiceNumber,
       paymentRequestId: 1,
       reference: settlement.reference,
-      settled: settlement.settled
+      settled: settlement.settled,
+      settlementDate: new Date(settlement.settlementDate)
     }
   })
 

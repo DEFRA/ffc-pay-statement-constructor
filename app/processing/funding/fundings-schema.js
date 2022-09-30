@@ -16,6 +16,9 @@ module.exports = Joi.array().items(
         otherwise: Joi.number().required()
       }
     ),
+    fundingCode: Joi.number().required(),
+    level: Joi.string().allow('').allow(null).default(''),
+    name: Joi.string().required(),
     rate: Joi.when(
       'name', {
         is: 'Moorland',
@@ -28,8 +31,6 @@ module.exports = Joi.array().items(
         ),
         otherwise: Joi.number().required()
       }
-    ),
-    name: Joi.string().required(),
-    level: Joi.string().allow('').allow(null).default('')
+    )
   })
 ).min(1).required()

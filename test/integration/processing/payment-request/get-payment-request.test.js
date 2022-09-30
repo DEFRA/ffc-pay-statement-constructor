@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const db = require('../../../../app/data')
 
 const schemes = require('../../../../app/constants/schemes')
@@ -50,9 +52,12 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(paymentRequestCompleted.dueDate),
+      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -64,9 +69,12 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(paymentRequestCompleted.dueDate),
+      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -78,9 +86,12 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(paymentRequestCompleted.dueDate),
+      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -92,9 +103,12 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(paymentRequestCompleted.dueDate),
+      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
@@ -106,9 +120,12 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
+      agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(paymentRequestCompleted.dueDate),
+      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestCompleted.invoiceNumber,
+      value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear
     })
   })
