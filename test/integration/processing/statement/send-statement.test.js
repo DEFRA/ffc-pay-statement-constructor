@@ -1,6 +1,6 @@
 const db = require('../../../../app/data')
 
-const sendStatement = require('../../../../app/processing/statement')
+const { sendStatement } = require('../../../../app/processing/statement')
 
 jest.mock('ffc-messaging', () => {
   return {

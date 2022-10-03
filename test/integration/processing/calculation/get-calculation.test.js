@@ -5,6 +5,7 @@ const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../.
 const getCalculation = require('../../../../app/processing/calculation')
 
 let rawCalculationData
+let paymentRequest
 
 describe('process get calculation object', () => {
   beforeAll(async () => {
@@ -20,11 +21,12 @@ describe('process get calculation object', () => {
     await db.scheme.bulkCreate(schemes)
     await db.organisation.create({ sbi: rawCalculationData.sbi })
     await db.invoiceNumber.create({ invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER })
-    await db.paymentRequest.create({
+    paymentRequest = {
       paymentRequestId: rawCalculationData.paymentRequestId,
       schemeId: 1,
       invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER
-    })
+    }
+    await db.paymentRequest.create(paymentRequest)
   })
 
   afterEach(async () => {
@@ -39,19 +41,22 @@ describe('process get calculation object', () => {
   })
 
   test('should throw error when no existing calculation data', async () => {
-    const wrapper = async () => { await getCalculation(rawCalculationData.paymentRequestId) }
+    const wrapper = async () => { await getCalculation(paymentRequest) }
 
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should not throw error when there is existing calculation data with sbi and calculationDate', async () => {
+  test('should not throw error when there is existing calculation data with sbi, calculationId, invoiceNumber, calculationDate and paymentRequestId', async () => {
     await db.calculation.create(rawCalculationData)
 
-    const result = await getCalculation(rawCalculationData.paymentRequestId)
+    const result = await getCalculation(paymentRequest)
 
     expect(result).toStrictEqual({
+      calculationId: rawCalculationData.calculationId,
       sbi: rawCalculationData.sbi,
-      calculated: new Date(rawCalculationData.calculationDate)
+      calculated: new Date(rawCalculationData.calculationDate),
+      invoiceNumber: rawCalculationData.invoiceNumber,
+      paymentRequestId: rawCalculationData.paymentRequestId
     })
   })
 
@@ -59,7 +64,7 @@ describe('process get calculation object', () => {
     rawCalculationData.calculationDate = null
     await db.calculation.create(rawCalculationData)
 
-    const wrapper = async () => { await getCalculation(rawCalculationData.paymentRequestId) }
+    const wrapper = async () => { await getCalculation(paymentRequest) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -68,7 +73,7 @@ describe('process get calculation object', () => {
     rawCalculationData.calculationDate = null
     await db.calculation.create(rawCalculationData)
 
-    const wrapper = async () => { await getCalculation(rawCalculationData.paymentRequestId) }
+    const wrapper = async () => { await getCalculation(paymentRequest) }
 
     expect(wrapper).rejects.toThrow()
   })

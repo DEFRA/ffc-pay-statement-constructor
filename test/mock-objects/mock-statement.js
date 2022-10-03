@@ -2,6 +2,10 @@ const { Q4: FREQUENCY_QUARTERLY } = require('../../app/constants/schedules').NAM
 const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names').SHORT_NAMES
 const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names').LONG_NAMES
 
+const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
+const EMAIL_ADDRESS = require('../mock-components/mock-email-address')
+const FRN = require('../mock-components/mock-frn')
+const SBI = require('../mock-components/mock-sbi')
 const {
   LINE_1,
   LINE_2,
@@ -10,18 +14,18 @@ const {
   COUNTY,
   POSTCODE
 } = require('../mock-components/mock-address')
-const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
-const EMAIL_ADDRESS = require('../mock-components/mock-email-address')
-const FRN = require('../mock-components/mock-frn')
 const { DAY_FORMAT: CALCULATED_DATE } = require('../mock-components/mock-dates').CALCULATED
 const { DAY_FORMAT: DUE_DATE } = require('../mock-components/mock-dates').DUE
 const { SFI_FIRST_PAYMENT: INVOICE_NUMBER } = require('../mock-components/mock-invoice-number')
 const CALCULATION_REFERENCE = require('../mock-components/mock-calculation-reference')
 const { DAY_FORMAT: SETTLED_DATE } = require('../mock-components/mock-dates').SETTLEMENT
-const SBI = require('../mock-components/mock-sbi')
 const _2022 = require('../mock-components/mock-marketing-year')
 
 module.exports = {
+  businessName: BUSINESS_NAME,
+  email: EMAIL_ADDRESS,
+  frn: FRN.toString(),
+  sbi: SBI.toString(),
   address: {
     line1: LINE_1,
     line2: LINE_2,
@@ -30,9 +34,6 @@ module.exports = {
     line5: COUNTY,
     postcode: POSTCODE
   },
-  businessName: BUSINESS_NAME,
-  email: EMAIL_ADDRESS,
-  frn: FRN.toString(),
   funding: [
     {
       annualValue: '110.00',
@@ -117,7 +118,6 @@ module.exports = {
       value: '242.15'
     }
   ],
-  sbi: SBI.toString(),
   scheme: {
     frequency: FREQUENCY_QUARTERLY,
     name: SFI_LONG_SCHEME_NAME,

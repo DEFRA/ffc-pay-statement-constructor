@@ -5,8 +5,10 @@ const getSettledSettlementBySettlementId = async (settlementId, transaction) => 
     transaction,
     attributes: [
       'paymentRequestId',
+      'invoiceNumber',
       'reference',
-      'settled'
+      'settled',
+      'settlementDate'
     ],
     where: {
       settlementId,

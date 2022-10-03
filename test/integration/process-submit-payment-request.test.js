@@ -11,7 +11,7 @@ const {
 } = require('../../app/constants/scheme-ids')
 const { COMPLETED } = require('../../app/constants/statuses')
 
-const reverseEngineerInvoiceNumber = require('../../app/processing/reverse-engineer-invoice-number')
+const { reverseEngineerInvoiceNumber } = require('../../app/utility')
 const processSubmitPaymentRequest = require('../../app/inbound/submit')
 
 let paymentRequest
