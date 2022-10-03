@@ -29,7 +29,7 @@ const { getStatement, sendStatement } = require('../../../app/processing/stateme
 
 const processing = require('../../../app/processing')
 
-let retreivedSchedule
+let retrievedSchedule
 let statement
 
 describe('start processing', () => {
@@ -37,13 +37,13 @@ describe('start processing', () => {
     processingConfig.settlementProcessingInterval = 10000
     processingConfig.constructionActive = true
     const schedule = JSON.parse(JSON.stringify(require('../../mock-schedule')))
-    retreivedSchedule = {
+    retrievedSchedule = {
       scheduleId: 1,
       settlementId: schedule.settlementId
     }
     statement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
 
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule])
     getStatement.mockResolvedValue(statement)
     sendStatement.mockResolvedValue(undefined)
   })
@@ -96,19 +96,19 @@ describe('start processing', () => {
   })
 
   test('should call getStatement when schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
     await processing.start()
     expect(getStatement).toHaveBeenCalled()
   })
 
   test('should call getStatement twice when schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
     await processing.start()
     expect(getStatement).toHaveBeenCalledTimes(2)
   })
 
   test('should call getStatement with each schedulePendingSettlements().settlementId and mockTransaction when schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
 
     await processing.start()
 
@@ -138,19 +138,19 @@ describe('start processing', () => {
   })
 
   test('should call sendStatement when schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
     await processing.start()
     expect(sendStatement).toHaveBeenCalled()
   })
 
   test('should call sendStatement twice when schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
     await processing.start()
     expect(sendStatement).toHaveBeenCalledTimes(2)
   })
 
   test('should call sendStatement with each schedulePendingSettlements().scheduleId and getStatement when schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retreivedSchedule, retreivedSchedule])
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
 
     await processing.start()
 
@@ -289,5 +289,19 @@ describe('start processing', () => {
     sendStatement.mockRejectedValue(new Error('Sending issue'))
     await processing.start()
     expect(setTimeout).toHaveBeenCalledWith(processing.start, processingConfig.settlementProcessingInterval)
+  })
+
+  test('should not block processing of subsequent statements when getStatement throws', async () => {
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    getStatement.mockRejectedValue(new Error('Processing issue'))
+    await processing.start()
+    expect(getStatement).toHaveBeenCalledTimes(2)
+  })
+
+  test('should not block processing of subsequent statements when sendStatement throws', async () => {
+    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    sendStatement.mockRejectedValue(new Error('Processing issue'))
+    await processing.start()
+    expect(getStatement).toHaveBeenCalledTimes(2)
   })
 })

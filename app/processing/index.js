@@ -12,8 +12,12 @@ const start = async () => {
       }
 
       for (const pendingStatement of pendingStatements) {
-        const aggregatedStatement = await getStatement(pendingStatement.settlementId)
-        await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
+        try {
+          const aggregatedStatement = await getStatement(pendingStatement.settlementId)
+          await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
+        } catch (err) {
+          console.error(err)
+        }
       }
     }
   } catch (err) {
