@@ -5,14 +5,20 @@ const { getStatement, sendStatement } = require('./statement')
 
 const start = async () => {
   try {
-    const pendingStatements = await schedulePendingSettlements()
-    if (!pendingStatements) {
-      throw new Error('No statements to be generated')
-    }
+    if (processingConfig.constructionActive) {
+      const pendingStatements = await schedulePendingSettlements()
+      if (!pendingStatements) {
+        throw new Error('No statements to be generated')
+      }
 
-    for (const pendingStatement of pendingStatements) {
-      const aggregatedStatement = await getStatement(pendingStatement.settlementId)
-      await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
+      for (const pendingStatement of pendingStatements) {
+        try {
+          const aggregatedStatement = await getStatement(pendingStatement.settlementId)
+          await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
+        } catch (err) {
+          console.error(err)
+        }
+      }
     }
   } catch (err) {
     console.error(err)

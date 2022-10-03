@@ -51,6 +51,7 @@ container:
   storageContainer: statements
   storageFolder: inbound
   settlementProcessingInterval: 60000
+  constructionActive: true
 
 postgresService:
   postgresDb: ffc_pay_statement_constructor
