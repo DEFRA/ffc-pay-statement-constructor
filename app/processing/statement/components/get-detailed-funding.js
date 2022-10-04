@@ -30,7 +30,7 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
   }
 
   const total = {
-    area: detailedFundings.reduce((x, y) => x + Number(y.area), 0).toFixed(2),
+    area: detailedFundings.reduce((x, y) => x + Number(y.area), 0).toFixed(4),
     level: '',
     name: 'Total',
     rate: '',
