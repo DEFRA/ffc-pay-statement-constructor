@@ -2,8 +2,8 @@ const getCompletedPaymentRequestByPaymentRequestId = require('./get-completed-pa
 const validatePaymentRequest = require('./validate-payment-request')
 const mapPaymentRequest = require('./map-payment-request')
 
-const getPaymentRequest = async (paymentRequestId) => {
-  const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId)
+const getPaymentRequest = async (paymentRequestId, transaction) => {
+  const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
   return mapPaymentRequest(validatePaymentRequest(completedPaymentRequest))
 }
 

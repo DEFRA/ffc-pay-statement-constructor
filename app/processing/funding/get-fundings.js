@@ -3,8 +3,8 @@ const mapFundings = require('./map-fundings')
 
 const getFundingsByCalculationId = require('./get-fundings-by-calculation-id')
 
-const getFundings = async (calculationId) => {
-  const rawFundings = await getFundingsByCalculationId(calculationId)
+const getFundings = async (calculationId, transaction) => {
+  const rawFundings = await getFundingsByCalculationId(calculationId, transaction)
   const fundings = await mapFundings(rawFundings)
 
   const result = schema.validate(fundings, {

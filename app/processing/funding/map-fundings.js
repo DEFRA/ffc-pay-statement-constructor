@@ -1,9 +1,10 @@
 const mapFundings = async (rawFundings) => {
   const fundings = rawFundings.map(rawFunding => ({
     area: rawFunding.areaClaimed,
-    rate: rawFunding.rate,
+    fundingCode: rawFunding.fundingCode,
+    level: getLevel(rawFunding.fundingOptions.name),
     name: getName(rawFunding.fundingOptions.name),
-    level: getLevel(rawFunding.fundingOptions.name)
+    rate: rawFunding.rate
   }))
 
   return fundings
