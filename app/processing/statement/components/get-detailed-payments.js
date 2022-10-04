@@ -11,7 +11,7 @@ const getDetailedPayments = async (calculation, paymentRequest, settlement) => {
     dueDate: formatDate(paymentRequest.dueDate),
     settled: formatDate(settlement.settlementDate),
     calculated: formatDate(calculation.calculated),
-    value: convertToPounds(paymentRequest.value)
+    value: convertToPounds(Math.trunc(paymentRequest.value / 4))
   }
   payments.push(payment)
 
