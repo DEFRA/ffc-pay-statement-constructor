@@ -69,7 +69,7 @@ describe('process get invoice line object', () => {
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should not throw error when there is existing imvoiceline data that corresponds to the fundingCode and a paymentRequestId given', async () => {
+  test('should not throw error when there is existing invoiceline data that corresponds to the fundingCode and a paymentRequestId given', async () => {
     await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
     const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
     const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
