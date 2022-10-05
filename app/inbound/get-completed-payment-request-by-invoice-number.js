@@ -1,6 +1,6 @@
-const db = require('../../data')
+const db = require('../data')
 
-const { COMPLETED } = require('../../constants/statuses')
+const { COMPLETED } = require('../constants/statuses')
 
 const getCompletedPaymentRequestByInvoiceNumber = async (invoiceNumber, transaction) => {
   return db.paymentRequest.findOne({

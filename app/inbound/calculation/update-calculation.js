@@ -1,4 +1,4 @@
-const getCompletedPaymentRequestByInvoiceNumber = require('./get-completed-payment-request-by-invoice-number')
+const getCompletedPaymentRequestByInvoiceNumber = require('../get-completed-payment-request-by-invoice-number')
 const updateCalculationPaymentRequestId = require('./update-calculation-payment-request-id')
 
 const updateCalculation = async (invoiceNumber, calculationId, transaction) => {
