@@ -22,6 +22,7 @@ describe('process return settlement', () => {
     submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').submitPaymentRequest))
     processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
 
+    // input data into db
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(submitPaymentRequest)
