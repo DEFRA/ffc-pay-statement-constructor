@@ -1,5 +1,5 @@
 const reverseEngineerInvoiceNumber = (invoiceNumber) => {
-  const firstPart = 'SFI'
+  const firstPart = 'SFI0'
   const secondPart = invoiceNumber.slice(1, 8)
   return firstPart.concat(secondPart)
 }
