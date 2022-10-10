@@ -8,7 +8,8 @@ const getSettledSettlementBySettlementId = async (settlementId, transaction) => 
       'invoiceNumber',
       'reference',
       'settled',
-      'settlementDate'
+      'settlementDate',
+      'value'
     ],
     where: {
       settlementId,
