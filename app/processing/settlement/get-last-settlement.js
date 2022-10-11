@@ -1,6 +1,6 @@
 const db = require('../../data')
 
-const getSettledSettlementBySettlementId = async (settlementId, transaction) => {
+const getLastSettlement = async (invoiceNumber, settlementDate, transaction) => {
   return db.settlement.findOne({
     transaction,
     attributes: [
@@ -12,11 +12,16 @@ const getSettledSettlementBySettlementId = async (settlementId, transaction) => 
       'value'
     ],
     where: {
-      settlementId,
-      settled: true
+      settlementDate: {
+        [db.Sequelize.Op.lt]: settlementDate
+      },
+      invoiceNumber
     },
+    order: [
+      ['settlementDate', 'DESC']
+    ],
     raw: true
   })
 }
 
-module.exports = getSettledSettlementBySettlementId
+module.exports = getLastSettlement

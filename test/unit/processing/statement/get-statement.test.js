@@ -16,6 +16,10 @@ const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/pr
 jest.mock('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 const getSettledSettlementBySettlementId = require('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 
+jest.mock('../../../../app/processing/settlement/get-last-settlement')
+
+jest.mock('../../../../app/processing/settlement/get-latest-payment')
+
 const { getStatement } = require('../../../../app/processing/statement')
 
 let calculation
@@ -28,14 +32,15 @@ describe('get various components and transform to statement object', () => {
     const retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
     const retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
     const retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-    const retreivedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    const retrievedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 
     settlement = {
-      invoiceNumber: retreivedSettlement.invoiceNumber,
+      invoiceNumber: retrievedSettlement.invoiceNumber,
       paymentRequestId: 1,
-      reference: retreivedSettlement.reference,
-      settled: retreivedSettlement.settled,
-      settlementDate: new Date(retreivedSettlement.settlementDate)
+      reference: retrievedSettlement.reference,
+      settled: retrievedSettlement.settled,
+      settlementDate: new Date(retrievedSettlement.settlementDate),
+      value: retrievedSettlement.value
 
     }
 
