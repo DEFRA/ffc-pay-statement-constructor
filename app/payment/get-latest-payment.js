@@ -6,7 +6,7 @@ const getLatestPayment = (paymentRequest, settlement, lastSettlement) => {
   const paymentValue = settlement.value - lastSettlementValue
   let period = `${moment(paymentRequest.dueDate).format('MMMM YYYY')}`
 
-  if (paymentRequest.frequency) {
+  if (paymentRequest.schedule) {
     period = getPaymentSchedule(paymentRequest.frequency, paymentRequest.dueDate, paymentValue, settlement.value, lastSettlementValue, paymentRequest.value, settlement.settlementDate)
   }
 
