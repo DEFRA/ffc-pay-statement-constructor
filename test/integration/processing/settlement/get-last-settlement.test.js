@@ -17,7 +17,7 @@ describe('process settlement', () => {
     currentSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
     currentSettlement.settlementDate = new Date(SETTLEMENT.DATE)
     previousSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-    previousSettlement.settlementDate = new Date(SETTLEMENT.DATE - 1)
+    previousSettlement.settlementDate = new Date(2022, 1, 7)
   })
 
   afterEach(async () => {
@@ -57,7 +57,7 @@ describe('process settlement', () => {
   })
 
   test('should return null if previous settlements lower value and later date', async () => {
-    previousSettlement.settledDate = new Date(SETTLEMENT.DATE + 1)
+    previousSettlement.settledDate = new Date(2022, 1, 9)
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
