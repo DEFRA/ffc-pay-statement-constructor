@@ -14,7 +14,6 @@ const getLatestPayment = (paymentRequest, settlement, lastSettlement) => {
     invoiceNumber: settlement.invoiceNumber,
     reference: settlement.reference,
     dueDate: paymentRequest.dueDate,
-    settled: settlement.settlementDate,
     value: paymentValue,
     period
   }
