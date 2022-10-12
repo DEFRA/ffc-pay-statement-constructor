@@ -18,6 +18,7 @@ describe('process settlement', () => {
     currentSettlement.settlementDate = new Date(SETTLEMENT.DATE)
     previousSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
     previousSettlement.settlementDate = new Date(2022, 1, 7)
+    await db.settlement.create(currentSettlement)
   })
 
   afterEach(async () => {
@@ -43,7 +44,7 @@ describe('process settlement', () => {
   })
 
   test('should return null if previous settlements same date', async () => {
-    previousSettlement.settledDate = currentSettlement.settledDate
+    previousSettlement.settlementDate = currentSettlement.settlementDate
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
@@ -57,7 +58,7 @@ describe('process settlement', () => {
   })
 
   test('should return null if previous settlements lower value and later date', async () => {
-    previousSettlement.settledDate = new Date(2022, 1, 9)
+    previousSettlement.settlementDate = new Date(2022, 1, 9)
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
@@ -76,6 +77,25 @@ describe('process settlement', () => {
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
-    expect(lastSettlement).toStrictEqual(previousSettlement)
+    expect(lastSettlement.value).toBe(previousSettlement.value)
+  })
+
+  test('should return latest settlement if multiple previous settlements', async () => {
+    previousSettlement.value = 40000
+    await db.settlement.create(previousSettlement)
+    previousSettlement.settlementDate = new Date(2022, 1, 6)
+    previousSettlement.value = 30000
+    await db.settlement.create(previousSettlement)
+    const lastSettlement = await getLastSettlement(currentSettlement)
+    expect(lastSettlement.value).toBe(40000)
+  })
+
+  test('should return latest lower settlement if multiple previous settlements', async () => {
+    await db.settlement.create(previousSettlement)
+    previousSettlement.settlementDate = new Date(2022, 1, 6)
+    previousSettlement.value = 30000
+    await db.settlement.create(previousSettlement)
+    const lastSettlement = await getLastSettlement(currentSettlement)
+    expect(lastSettlement.value).toBe(30000)
   })
 })
