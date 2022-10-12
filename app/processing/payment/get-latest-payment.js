@@ -43,6 +43,8 @@ const getSchedule = (scheduleDate, totalPayments, paymentValue, settledValue, pr
     const cappedSettlementValue = settledValue <= expectedSettlementValue ? settledValue : expectedSettlementValue
     scheduleDates.push({
       dueDate: scheduleDate.clone(),
+      expectedSettlementValue,
+      cappedSettlementValue,
       outstanding: cappedSettlementValue > previousSettledValue && cappedSettlementValue <= settledValue
     })
     scheduleDate = scheduleDate.add(increment, unit)
@@ -53,16 +55,11 @@ const getSchedule = (scheduleDate, totalPayments, paymentValue, settledValue, pr
   const firstPeriodIndex = scheduleDates.findIndex(x => x.outstanding)
   const firstPayment = scheduleDates[firstPeriodIndex]
   const lastPayment = scheduleDates[firstPeriodIndex + incrementsInPayment]
-  const periodFormat = getPeriodFormat(unit)
-  return `${firstPayment.dueDate.format(`${periodFormat}`)} to ${lastPayment.dueDate.add(increment - 1, unit).format(`${periodFormat} YYYY`)}`
+  return `${firstPayment.dueDate.format('MMMM')} to ${lastPayment.dueDate.add(increment - 1, unit).format('MMMM YYYY')}`
 }
 
 const getExpectedValue = (totalValue, totalPayments, segment) => {
   return Math.trunc(totalValue / totalPayments * segment)
-}
-
-const getPeriodFormat = (unit) => {
-  return unit === 'month' ? 'MMMM' : 'D MMMM'
 }
 
 module.exports = getLatestPayment
