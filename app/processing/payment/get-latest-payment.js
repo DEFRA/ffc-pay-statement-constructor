@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { DAX_CODES } = require('../constants/schedules')
+const { DAX_CODES } = require('../../constants/schedules')
 
 const getLatestPayment = (paymentRequest, settlement, lastSettlement) => {
   const lastSettlementValue = lastSettlement?.value ?? 0

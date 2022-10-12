@@ -3,7 +3,7 @@ const { getDetails, getAddress, getDetailedFunding, getScheme, getDetailedPaymen
 const getCalculation = require('../calculation')
 const getPaymentRequest = require('../payment-request')
 const { getSettlement, getLastSettlement } = require('../settlement')
-const { getLatestPayment } = require('../../payment')
+const { getLatestPayment } = require('../payment')
 
 const getStatement = async (settlementId) => {
   const transaction = await db.sequelize.transaction()
