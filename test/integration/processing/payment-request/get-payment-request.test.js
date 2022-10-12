@@ -77,7 +77,7 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear,
-      schedule: paymentRequestCompleted.schedule
+      schedule: null
     })
   })
 
@@ -95,7 +95,7 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
       year: paymentRequestCompleted.marketingYear,
-      schedule: paymentRequestCompleted.schedule
+      schedule: null
     })
   })
 

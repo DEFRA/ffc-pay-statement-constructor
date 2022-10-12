@@ -18,7 +18,7 @@ const getSettledSettlementBySettlementId = require('../../../../app/processing/s
 
 jest.mock('../../../../app/processing/settlement/get-last-settlement')
 
-jest.mock('../../../../app/processing/settlement/get-latest-payment')
+jest.mock('../../../../app/processing/payment')
 
 const { getStatement } = require('../../../../app/processing/statement')
 
