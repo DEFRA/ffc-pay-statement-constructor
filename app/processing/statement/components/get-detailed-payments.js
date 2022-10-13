@@ -19,7 +19,8 @@ const getDetailedPayments = async (calculation, paymentRequest, settlement) => {
 }
 
 const formatDate = (dateVal) => {
-  return moment(dateVal).format('D MMMM YYYY')
+  return moment(dateVal, ['DD/MM/YYYY', 'ddd MMM DD YYYY HH:mm:ss']).format('D MMMM YYYY')
 }
+// 'Tue Feb 08 2022 00:00:00 GMT+0000 (Greenwich Mean Time)' 'ddd MMM DD YYYY HH:mm:ss'
 
 module.exports = getDetailedPayments
