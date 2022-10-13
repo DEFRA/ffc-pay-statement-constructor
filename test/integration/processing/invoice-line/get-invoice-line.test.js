@@ -2,11 +2,9 @@ const db = require('../../../../app/data')
 const schemes = require('../../../../app/constants/schemes')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../../mock-components/mock-invoice-number')
 
-const getPositiveInvoiceLine = require('../../../../app/processing/invoice-line/get-invoice-line')
+const getInvoiceLine = require('../../../../app/processing/invoice-line/get-invoice-line')
 
 const QUARTER = 0.25
-const MIN_PAYMENT_VALUE = 0
-const DEFAULT_REDUCTION_VALUE = 0
 
 let rawInvoiceLinesData
 
@@ -55,7 +53,7 @@ describe('process get invoice line object', () => {
   test('should throw error when no existing invoice-line data in database', async () => {
     const fundingOptionCode = '300001'
     const paymentRequestId = 20
-    const wrapper = async () => { await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId) }
+    const wrapper = async () => { await getInvoiceLine(fundingOptionCode, paymentRequestId) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -64,29 +62,71 @@ describe('process get invoice line object', () => {
     await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
     const fundingOptionCode = '300001'
     const paymentRequestId = 20
-    const wrapper = async () => { await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId) }
+    const wrapper = async () => { await getInvoiceLine(fundingOptionCode, paymentRequestId) }
 
     expect(wrapper).rejects.toThrow()
   })
 
-  test('should not throw error when there is existing invoiceline data that corresponds to the fundingCode and a paymentRequestId given', async () => {
+  test('should return annual value that corresponds to the fundingCode and a paymentRequestId given', async () => {
     await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
     const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
     const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
-    const result = await getPositiveInvoiceLine(fundingOptionCode, paymentRequestId)
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    const annualValue = rawInvoiceLinesData[0].value
-    const quarterlyValue = annualValue > MIN_PAYMENT_VALUE ? Math.trunc(annualValue * QUARTER) : MIN_PAYMENT_VALUE
-    const quarterlyReduction = DEFAULT_REDUCTION_VALUE
-    const quarterlyPayment = quarterlyValue - quarterlyReduction
-    const reductions = []
+    expect(result.annualValue).toBe(rawInvoiceLinesData[0].value)
+  })
 
-    expect(result).toStrictEqual({
-      annualValue,
-      quarterlyValue,
-      quarterlyReduction,
-      quarterlyPayment,
-      reductions
-    })
+  test('should return quarterly value that corresponds to the fundingCode and a paymentRequestId given', async () => {
+    await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
+    const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
+    const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+
+    expect(result.quarterlyValue).toBe(rawInvoiceLinesData[0].value * QUARTER)
+  })
+
+  test('should return quarterly reduction existing invoice line data that corresponds to the fundingCode and a paymentRequestId given', async () => {
+    await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
+    const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
+    const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+
+    expect(result.quarterlyReduction).toBe(rawInvoiceLinesData[3].value * QUARTER)
+  })
+
+  test('should return quarterly payment existing invoice line data that corresponds to the fundingCode and a paymentRequestId given', async () => {
+    await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
+    const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
+    const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+
+    expect(result.quarterlyPayment).toBe((rawInvoiceLinesData[0].value * QUARTER) - (rawInvoiceLinesData[3].value * QUARTER))
+  })
+
+  test('should return reductions item for each reduction that corresponds to the fundingCode and a paymentRequestId given', async () => {
+    await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
+    const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
+    const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+
+    expect(result.reductions).toHaveLength(1)
+  })
+
+  test('should return reductions reason without prefix that corresponds to the fundingCode and a paymentRequestId given', async () => {
+    await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
+    const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
+    const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+
+    expect(result.reductions[0].reason).toBe('Over declaration reduction')
+  })
+
+  test('should return reductions value that corresponds to the fundingCode and a paymentRequestId given', async () => {
+    await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
+    const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
+    const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
+    const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
+
+    expect(result.reductions[0].value).toBe(rawInvoiceLinesData[3].value)
   })
 })

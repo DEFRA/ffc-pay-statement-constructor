@@ -1,5 +1,6 @@
 const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('./get-negative-invoice-lines-by-funding-code-and-payment-request-id')
 const schema = require('./invoice-line-schema')
+const removeDescriptionPrefix = require('./remove-description-prefix')
 
 const getReductions = async (fundingCode, paymentRequestId) => {
   const reductions = []
@@ -13,7 +14,7 @@ const getReductions = async (fundingCode, paymentRequestId) => {
       throw new Error(`Payment request with paymentRequestId: ${paymentRequestId} does not have the required reduction invoice-line data for funding code ${fundingCode} : ${result.error.message}`)
     }
     reductions.push({
-      reason: reductionInvoiceLine.description,
+      reason: removeDescriptionPrefix(reductionInvoiceLine.description),
       value: reductionInvoiceLine.value
     })
     annualReduction += reductionInvoiceLine.value
