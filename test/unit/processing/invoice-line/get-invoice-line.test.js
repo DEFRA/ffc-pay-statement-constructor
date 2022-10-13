@@ -82,7 +82,7 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when getPositiveInvoiceLineByFundingCodeAndPaymentRequestId throws Error', async () => {
@@ -94,7 +94,7 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Database retrieval issue" when getPositiveInvoiceLineByFundingCodeAndPaymentRequestId throws error with "Database retrieval issue"', async () => {
@@ -106,7 +106,7 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
+    await expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
   })
 
   test('should not call schema.validate when getPositiveInvoiceLineByFundingCodeAndPaymentRequestId throws', async () => {
@@ -128,7 +128,7 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when schema.validate returns with error key', async () => {
@@ -140,7 +140,7 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error which starts "Payment request with paymentRequestId: 1 does not have the required invoice-line data for funding code 80101" when schema.validate returns with error key of "Joi validation issue"', async () => {
@@ -152,6 +152,6 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId: 1 does not have the required invoice-line data for funding code 80101/)
+    await expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId: 1 does not have the required invoice-line data for funding code 80101/)
   })
 })
