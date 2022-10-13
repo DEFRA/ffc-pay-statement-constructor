@@ -1,6 +1,9 @@
 jest.mock('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
 const getPositiveInvoiceLineByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
 
+jest.mock('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
+const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
+
 jest.mock('../../../../app/processing/invoice-line/invoice-line-schema')
 const schema = require('../../../../app/processing/invoice-line/invoice-line-schema')
 
@@ -15,6 +18,7 @@ describe('get and transform invoice-line object for building a statement object'
 
     rawInvoiceLineData = retrievedInvoiceLineData
     getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockResolvedValue(rawInvoiceLineData)
+    getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId.mockResolvedValue([])
 
     invoiceLine = {
       value: rawInvoiceLineData.value
