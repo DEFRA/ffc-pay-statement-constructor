@@ -15,7 +15,10 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
       quarterlyValue: convertToPounds(quarterlyValue),
       quarterlyReduction: convertToPounds(quarterlyReduction),
       quarterlyPayment: convertToPounds(quarterlyPayment),
-      reductions
+      reductions: reductions.map(reduction => ({
+        ...reduction,
+        value: convertToPounds(reduction.value).toFixed(2)
+      }))
     }
 
     const detailedFunding = {
