@@ -1,6 +1,10 @@
 
 const moment = require('moment')
 const { convertToPounds } = require('../../../utility')
+const dateFormats = [
+  'DD/MM/YYYY',
+  'ddd MMM DD YYYY HH:mm:ss'
+]
 
 const getDetailedPayments = async (calculation, paymentRequest, settlement) => {
   const payments = []
@@ -19,8 +23,7 @@ const getDetailedPayments = async (calculation, paymentRequest, settlement) => {
 }
 
 const formatDate = (dateVal) => {
-  return moment(dateVal, ['DD/MM/YYYY', 'ddd MMM DD YYYY HH:mm:ss']).format('D MMMM YYYY')
+  return moment(dateVal, dateFormats).format('D MMMM YYYY')
 }
-// 'Tue Feb 08 2022 00:00:00 GMT+0000 (Greenwich Mean Time)' 'ddd MMM DD YYYY HH:mm:ss'
 
 module.exports = getDetailedPayments
