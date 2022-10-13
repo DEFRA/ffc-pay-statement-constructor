@@ -8,6 +8,6 @@ module.exports = {
     Q4: 'Quarterly',
     M12: 'Monthly',
     T4: 'Quarterly',
-    N0: 'Unknown'
+    N0: 'None'
   }
 }
