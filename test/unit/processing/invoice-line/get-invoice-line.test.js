@@ -7,7 +7,7 @@ const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('../../.
 jest.mock('../../../../app/processing/invoice-line/invoice-line-schema')
 const schema = require('../../../../app/processing/invoice-line/invoice-line-schema')
 
-const getPositiveInvoiceLine = require('../../../../app/processing/invoice-line/get-invoice-line')
+const getInvoiceLine = require('../../../../app/processing/invoice-line/get-invoice-line')
 
 let rawInvoiceLineData
 let invoiceLine
@@ -34,42 +34,42 @@ describe('get and transform invoice-line object for building a statement object'
   test('should call getPositiveInvoiceLineByFundingCodeAndPaymentRequestId when a fundingCode and a paymentRequestId are given', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+    await getInvoiceLine(fundingCode, paymentRequestId)
     expect(getPositiveInvoiceLineByFundingCodeAndPaymentRequestId).toHaveBeenCalled()
   })
 
   test('should call getPositiveInvoiceLineByFundingCodeAndPaymentRequestId once when a fundingCode and a paymentRequestId are given', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+    await getInvoiceLine(fundingCode, paymentRequestId)
     expect(getPositiveInvoiceLineByFundingCodeAndPaymentRequestId).toHaveBeenCalledTimes(1)
   })
 
   test('should call getPositiveInvoiceLineByFundingCodeAndPaymentRequestId with fundingCode and paymentRequestId when a fundingCode and a paymentRequestId are given', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+    await getInvoiceLine(fundingCode, paymentRequestId)
     expect(getPositiveInvoiceLineByFundingCodeAndPaymentRequestId).toHaveBeenCalledWith(fundingCode, paymentRequestId)
   })
 
   test('should call schema.validate  when a fundingCode and a paymentRequestId are given', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+    await getInvoiceLine(fundingCode, paymentRequestId)
     expect(schema.validate).toHaveBeenCalled()
   })
 
   test('should call schema.validate once when a fundingCode and a paymentRequestId are given', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+    await getInvoiceLine(fundingCode, paymentRequestId)
     expect(schema.validate).toHaveBeenCalledTimes(1)
   })
 
   test('should call schema.validate with rawCalculationData and { abortEarly: false } when a fundingCode and a paymentRequestId are given', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+    await getInvoiceLine(fundingCode, paymentRequestId)
     expect(schema.validate).toHaveBeenCalledWith(rawInvoiceLineData, { abortEarly: false })
   })
 
@@ -79,7 +79,7 @@ describe('get and transform invoice-line object for building a statement object'
     getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+      await getInvoiceLine(fundingCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -91,7 +91,7 @@ describe('get and transform invoice-line object for building a statement object'
     getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+      await getInvoiceLine(fundingCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -103,7 +103,7 @@ describe('get and transform invoice-line object for building a statement object'
     getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+      await getInvoiceLine(fundingCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
@@ -114,7 +114,7 @@ describe('get and transform invoice-line object for building a statement object'
     const fundingCode = rawInvoiceLineData.fundingCode
     getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
-    try { await getPositiveInvoiceLine(fundingCode, paymentRequestId) } catch {}
+    try { await getInvoiceLine(fundingCode, paymentRequestId) } catch {}
 
     expect(schema.validate).not.toHaveBeenCalled()
   })
@@ -122,10 +122,10 @@ describe('get and transform invoice-line object for building a statement object'
   test('should throw when schema.validate returns with error key', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    schema.validate.mockReturnValue({ error: 'Not a valid object' })
+    schema.validate.mockReturnValue({ error: { message: 'Not a valid object' } })
 
     const wrapper = async () => {
-      await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+      await getInvoiceLine(fundingCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -134,10 +134,10 @@ describe('get and transform invoice-line object for building a statement object'
   test('should throw Error when schema.validate returns with error key', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    schema.validate.mockReturnValue({ error: 'Not a valid object' })
+    schema.validate.mockReturnValue({ error: { message: 'Not a valid object' } })
 
     const wrapper = async () => {
-      await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+      await getInvoiceLine(fundingCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -146,10 +146,10 @@ describe('get and transform invoice-line object for building a statement object'
   test('should throw error which starts "Payment request with paymentRequestId: 1 does not have the required invoice-line data for funding code 80101" when schema.validate returns with error key of "Joi validation issue"', async () => {
     const paymentRequestId = 1
     const fundingCode = rawInvoiceLineData.fundingCode
-    schema.validate.mockReturnValue({ error: 'Not a valid object' })
+    schema.validate.mockReturnValue({ error: { message: 'Not a valid object' } })
 
     const wrapper = async () => {
-      await getPositiveInvoiceLine(fundingCode, paymentRequestId)
+      await getInvoiceLine(fundingCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId: 1 does not have the required invoice-line data for funding code 80101/)
