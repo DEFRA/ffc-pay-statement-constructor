@@ -152,6 +152,6 @@ describe('get and transform invoice-line object for building a statement object'
       await getPositiveInvoiceLine(fundingCode, paymentRequestId)
     }
 
-    await expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId: 1 does not have the required invoice-line data for funding code 80101/)
+    await expect(wrapper).rejects.toThrow(/^Payment request with paymentRequestId: 1 does not have the required gross invoice-line data for funding code 80101/)
   })
 })
