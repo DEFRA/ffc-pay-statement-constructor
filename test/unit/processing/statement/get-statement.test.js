@@ -35,7 +35,7 @@ describe('get various components and transform to statement object', () => {
     const retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
     const retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
     const retrievedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-    const retrievedLatestPayment = JSON.parse(JSON.stringify(require('../../../mock-latest-payment')))
+    const retrievedLatestPayment = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-latest-payment')))
 
     settlement = {
       invoiceNumber: retrievedSettlement.invoiceNumber,
