@@ -1,7 +1,8 @@
 const db = require('../../../../app/data')
-
+const moment = require('moment')
 const { getLastSettlement } = require('../../../../app/processing/settlement')
-const { SETTLEMENT } = require('../../../mock-components/mock-dates')
+const { DATE: SETTLEMENT_DATE } = require('../../../mock-components/mock-dates').SETTLEMENT
+
 let currentSettlement
 let previousSettlement
 
@@ -15,9 +16,9 @@ describe('process settlement', () => {
 
   beforeEach(async () => {
     currentSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-    currentSettlement.settlementDate = new Date(SETTLEMENT.DATE)
+    currentSettlement.settlementDate = SETTLEMENT_DATE
     previousSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-    previousSettlement.settlementDate = new Date(2022, 1, 7)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract(1, 'day')
     await db.settlement.create(currentSettlement)
   })
 
@@ -58,7 +59,7 @@ describe('process settlement', () => {
   })
 
   test('should return null if previous settlements lower value and later date', async () => {
-    previousSettlement.settlementDate = new Date(2022, 1, 9)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).add('days', 1)
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
@@ -83,7 +84,7 @@ describe('process settlement', () => {
   test('should return latest settlement if multiple previous settlements', async () => {
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
-    previousSettlement.settlementDate = new Date(2022, 1, 6)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract('days', 2)
     previousSettlement.value = 30000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
@@ -92,7 +93,7 @@ describe('process settlement', () => {
 
   test('should return latest lower settlement if multiple previous settlements', async () => {
     await db.settlement.create(previousSettlement)
-    previousSettlement.settlementDate = new Date(2022, 1, 6)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract('days', 2)
     previousSettlement.value = 30000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(currentSettlement)
