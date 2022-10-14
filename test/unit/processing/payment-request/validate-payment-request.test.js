@@ -3,20 +3,20 @@ const schema = require('../../../../app/processing/payment-request/schema')
 
 const validatePaymentRequest = require('../../../../app/processing/payment-request/validate-payment-request')
 
-let retreivedPaymentRequest
+let retrievedPaymentRequest
 
 describe('validate payment request', () => {
   beforeEach(() => {
     const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
 
-    retreivedPaymentRequest = {
+    retrievedPaymentRequest = {
       paymentRequestId: 1,
       dueDate: new Date(paymentRequest.dueDate),
       marketingYear: paymentRequest.marketingYear,
       schedule: paymentRequest.schedule
     }
 
-    schema.validate.mockReturnValue({ value: retreivedPaymentRequest })
+    schema.validate.mockReturnValue({ value: retrievedPaymentRequest })
   })
 
   afterEach(() => {
@@ -24,15 +24,15 @@ describe('validate payment request', () => {
   })
 
   test('should return retreivedPaymentRequest', async () => {
-    const result = validatePaymentRequest(retreivedPaymentRequest)
-    expect(result).toBe(retreivedPaymentRequest)
+    const result = validatePaymentRequest(retrievedPaymentRequest)
+    expect(result).toBe(retrievedPaymentRequest)
   })
 
   test('should throw when schema.validate throws', async () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      validatePaymentRequest(retreivedPaymentRequest)
+      validatePaymentRequest(retrievedPaymentRequest)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -42,7 +42,7 @@ describe('validate payment request', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      validatePaymentRequest(retreivedPaymentRequest)
+      validatePaymentRequest(retrievedPaymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -52,7 +52,7 @@ describe('validate payment request', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      validatePaymentRequest(retreivedPaymentRequest)
+      validatePaymentRequest(retrievedPaymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(/^Joi validation issue$/)
@@ -62,7 +62,7 @@ describe('validate payment request', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      validatePaymentRequest(retreivedPaymentRequest)
+      validatePaymentRequest(retrievedPaymentRequest)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -72,7 +72,7 @@ describe('validate payment request', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      validatePaymentRequest(retreivedPaymentRequest)
+      validatePaymentRequest(retrievedPaymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -82,7 +82,7 @@ describe('validate payment request', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      validatePaymentRequest(retreivedPaymentRequest)
+      validatePaymentRequest(retrievedPaymentRequest)
     }
 
     expect(wrapper).rejects.toThrow(/does not have the required data/)
