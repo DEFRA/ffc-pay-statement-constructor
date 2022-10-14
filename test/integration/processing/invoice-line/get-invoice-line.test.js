@@ -91,7 +91,7 @@ describe('process get invoice line object', () => {
     const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    expect(result.quarterlyReduction).toBe(rawInvoiceLinesData[3].value * QUARTER)
+    expect(result.quarterlyReduction).toBe(25)
   })
 
   test('should return quarterly payment existing invoice line data that corresponds to the fundingCode and a paymentRequestId given', async () => {
@@ -100,7 +100,7 @@ describe('process get invoice line object', () => {
     const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    expect(result.quarterlyPayment).toBe((rawInvoiceLinesData[0].value * QUARTER) - (rawInvoiceLinesData[3].value * QUARTER))
+    expect(result.quarterlyPayment).toBe(100)
   })
 
   test('should return reductions item for each reduction that corresponds to the fundingCode and a paymentRequestId given', async () => {
@@ -121,12 +121,12 @@ describe('process get invoice line object', () => {
     expect(result.reductions[0].reason).toBe('Over declaration reduction')
   })
 
-  test('should return reductions value that corresponds to the fundingCode and a paymentRequestId given', async () => {
+  test('should return inverted reductions value that corresponds to the fundingCode and a paymentRequestId given', async () => {
     await db.invoiceLine.bulkCreate(rawInvoiceLinesData)
     const fundingOptionCode = rawInvoiceLinesData[0].fundingCode
     const paymentRequestId = rawInvoiceLinesData[0].paymentRequestId
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    expect(result.reductions[0].value).toBe(rawInvoiceLinesData[3].value)
+    expect(result.reductions[0].value).toBe(100)
   })
 })

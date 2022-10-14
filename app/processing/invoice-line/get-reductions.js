@@ -15,9 +15,9 @@ const getReductions = async (fundingCode, paymentRequestId) => {
     }
     reductions.push({
       reason: removeDescriptionPrefix(reductionInvoiceLine.description),
-      value: reductionInvoiceLine.value
+      value: reductionInvoiceLine.value * -1
     })
-    annualReduction += reductionInvoiceLine.value
+    annualReduction += (reductionInvoiceLine.value * -1)
   }
   return { reductions, annualReduction }
 }
