@@ -44,7 +44,6 @@ describe('get various components and transform to statement object', () => {
       settled: retrievedSettlement.settled,
       settlementDate: new Date(retrievedSettlement.settlementDate),
       value: retrievedSettlement.value
-
     }
 
     getSettledSettlementBySettlementId.mockResolvedValue(settlement)
