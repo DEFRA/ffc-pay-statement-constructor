@@ -193,10 +193,10 @@ describe('get period from schedule', () => {
     expect(result).toBe('February to February 2022')
   })
 
-  test('returns first two instalments when only third paid and monthly', () => {
+  test('returns third instalments when only third paid and monthly', () => {
     totalValue = 1200
     totalPayments = 12
-    paymentValue = 200
+    paymentValue = 100
     schedule = [
       { outstanding: false, dueDate: moment('2022-01-01') },
       { outstanding: false, dueDate: moment('2022-02-01') },
@@ -214,6 +214,30 @@ describe('get period from schedule', () => {
     increment = 1
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('March to April 2022')
+    expect(result).toBe('March to March 2022')
+  })
+
+  test('returns first and second instalments when only first and second paid and monthly', () => {
+    totalValue = 1200
+    totalPayments = 12
+    paymentValue = 200
+    schedule = [
+      { outstanding: true, dueDate: moment('2022-01-01') },
+      { outstanding: true, dueDate: moment('2022-02-01') },
+      { outstanding: true, dueDate: moment('2022-03-01') },
+      { outstanding: true, dueDate: moment('2022-04-01') },
+      { outstanding: true, dueDate: moment('2022-05-01') },
+      { outstanding: true, dueDate: moment('2022-06-01') },
+      { outstanding: true, dueDate: moment('2022-07-01') },
+      { outstanding: true, dueDate: moment('2022-08-01') },
+      { outstanding: true, dueDate: moment('2022-09-01') },
+      { outstanding: true, dueDate: moment('2022-10-01') },
+      { outstanding: true, dueDate: moment('2022-11-01') },
+      { outstanding: true, dueDate: moment('2022-12-01') }
+    ]
+    increment = 1
+    unit = 'month'
+    const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
+    expect(result).toBe('January to February 2022')
   })
 })
