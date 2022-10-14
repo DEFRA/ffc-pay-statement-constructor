@@ -18,8 +18,6 @@ describe('get latest payment', () => {
 
   test('returns due date from payment request', () => {
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    console.log(result)
-    console.log(paymentRequest)
     expect(result.dueDate).toBe(paymentRequest.dueDate)
   })
 
