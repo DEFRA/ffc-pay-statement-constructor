@@ -79,7 +79,7 @@ describe('get various components and transform to statement object', () => {
     getCalculation.mockResolvedValue(calculation)
     getFundingsByCalculationId.mockResolvedValue(retrievedFundingsData)
     getLastSettlement.mockResolvedValue(retrievedSettlement)
-    getLatestPayment.mockResolvedValue(retrievedLatestPayment)
+    getLatestPayment.mockReturnValue(retrievedLatestPayment)
   })
 
   afterEach(() => {
@@ -98,21 +98,9 @@ describe('get various components and transform to statement object', () => {
     expect(getLastSettlement).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getLastSettlement with settlement when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getStatement(paymentRequestId)
-    expect(getLastSettlement).toHaveBeenCalledWith(settlement)
-  })
-
   test('should call getLatestPayment when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getStatement(paymentRequestId)
     expect(getLatestPayment).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call getLatestPayment with paymentRequest, settlement and lastSettlement when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getStatement(paymentRequestId)
-    expect(getLatestPayment).toHaveBeenCalledWith(retrievedPaymentRequest, retrievedSettlement, retrievedSettlement)
   })
 })
