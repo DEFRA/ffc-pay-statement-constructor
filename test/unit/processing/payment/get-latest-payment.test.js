@@ -16,11 +16,6 @@ describe('get latest payment', () => {
     expect(result.invoiceNumber).toBe(paymentRequest.invoiceNumber)
   })
 
-  test('returns reference from settlement', () => {
-    const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    expect(result.reference).toBe(settlement.reference)
-  })
-
   test('returns due date from payment request', () => {
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
     expect(result.dueDate).toBe(paymentRequest.dueDate)

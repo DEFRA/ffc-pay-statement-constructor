@@ -6,7 +6,7 @@ const getDetailedPayments = async (calculation, latestPayment, settlement) => {
   const payments = []
 
   const payment = {
-    invoiceNumber: calculation.invoiceNumber,
+    invoiceNumber: latestPayment.invoiceNumber,
     reference: settlement.reference,
     dueDate: formatDate(latestPayment.dueDate),
     settled: formatDate(settlement.settlementDate),
