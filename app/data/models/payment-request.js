@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     schemeId: DataTypes.INTEGER,
     agreementNumber: DataTypes.STRING,
     contractNumber: DataTypes.STRING,
+    paymentRequestNumber: DataTypes.INTEGER,
     correlationId: DataTypes.UUID,
     currency: DataTypes.STRING,
     deliveryBody: DataTypes.STRING,
@@ -24,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     sourceSystem: DataTypes.STRING,
     status: DataTypes.STRING,
     submitted: DataTypes.DATE,
-    value: DataTypes.INTEGER
+    value: DataTypes.INTEGER,
+    debtType: DataTypes.STRING,
+    recoveryDate: DataTypes.STRING
   },
   {
     tableName: 'paymentRequests',
