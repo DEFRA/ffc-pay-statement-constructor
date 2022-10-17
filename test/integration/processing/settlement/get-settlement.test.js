@@ -36,7 +36,8 @@ describe('process settlement', () => {
       paymentRequestId: 1,
       reference: settlement.reference,
       settled: settlement.settled,
-      settlementDate: new Date(settlement.settlementDate)
+      settlementDate: new Date(settlement.settlementDate),
+      value: settlement.value
     }
   })
 

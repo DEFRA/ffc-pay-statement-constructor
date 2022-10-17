@@ -2,16 +2,17 @@
 const moment = require('moment')
 const { convertToPounds } = require('../../../utility')
 
-const getDetailedPayments = async (calculation, paymentRequest, settlement) => {
+const getDetailedPayments = async (calculation, latestPayment, settlement) => {
   const payments = []
 
   const payment = {
-    invoiceNumber: calculation.invoiceNumber,
+    invoiceNumber: latestPayment.invoiceNumber,
     reference: settlement.reference,
-    dueDate: formatDate(paymentRequest.dueDate),
+    dueDate: formatDate(latestPayment.dueDate),
     settled: formatDate(settlement.settlementDate),
     calculated: formatDate(calculation.calculated),
-    value: convertToPounds(Math.trunc(paymentRequest.value / 4))
+    value: convertToPounds(latestPayment.value),
+    period: latestPayment.period
   }
   payments.push(payment)
 

@@ -58,7 +58,8 @@ describe('process payment request', () => {
       frequency: SCHEDULE_NAMES.Q4,
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear
+      year: paymentRequestCompleted.marketingYear,
+      schedule: paymentRequestCompleted.schedule
     })
   })
 
@@ -72,10 +73,11 @@ describe('process payment request', () => {
       agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
-      frequency: SCHEDULE_NAMES.Q4,
+      frequency: SCHEDULE_NAMES.N0,
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear
+      year: paymentRequestCompleted.marketingYear,
+      schedule: null
     })
   })
 
@@ -89,10 +91,11 @@ describe('process payment request', () => {
       agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
-      frequency: SCHEDULE_NAMES.Q4,
+      frequency: SCHEDULE_NAMES.N0,
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear
+      year: paymentRequestCompleted.marketingYear,
+      schedule: null
     })
   })
 
@@ -106,10 +109,11 @@ describe('process payment request', () => {
       agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
-      frequency: SCHEDULE_NAMES.Q4,
+      frequency: SCHEDULE_NAMES.N0,
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear
+      year: paymentRequestCompleted.marketingYear,
+      schedule: paymentRequestCompleted.schedule
     })
   })
 
@@ -123,10 +127,11 @@ describe('process payment request', () => {
       agreementNumber: paymentRequestCompleted.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
       dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
-      frequency: SCHEDULE_NAMES.Q4,
+      frequency: SCHEDULE_NAMES.N0,
       invoiceNumber: paymentRequestCompleted.invoiceNumber,
       value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear
+      year: paymentRequestCompleted.marketingYear,
+      schedule: paymentRequestCompleted.schedule
     })
   })
 
