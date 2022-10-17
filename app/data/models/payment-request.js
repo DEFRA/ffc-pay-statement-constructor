@@ -10,10 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     paymentRequestNumber: DataTypes.INTEGER,
     correlationId: DataTypes.UUID,
     currency: DataTypes.STRING,
+    debtType: DataTypes.STRING,
     deliveryBody: DataTypes.STRING,
     dueDate: DataTypes.STRING,
     marketingYear: DataTypes.INTEGER,
     received: DataTypes.DATE,
+    recoveryDate: DataTypes.STRING,
     referenceId: DataTypes.UUID,
     reversedInvoiceNumber: {
       type: DataTypes.VIRTUAL,
@@ -25,9 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     sourceSystem: DataTypes.STRING,
     status: DataTypes.STRING,
     submitted: DataTypes.DATE,
-    value: DataTypes.INTEGER,
-    debtType: DataTypes.STRING,
-    recoveryDate: DataTypes.STRING
+    value: DataTypes.INTEGER
   },
   {
     tableName: 'paymentRequests',
