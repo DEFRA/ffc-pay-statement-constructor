@@ -4,6 +4,9 @@ const getOrganisation = require('../../../../app/processing/organisation/get-org
 jest.mock('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
 const getPositiveInvoiceLineByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
 
+jest.mock('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
+const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
+
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
 
@@ -75,6 +78,7 @@ describe('get various components and transform to statement object', () => {
 
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(paymentRequest)
     getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockResolvedValue(retrievedInvoiceLine)
+    getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId.mockResolvedValue([])
     getOrganisation.mockResolvedValue(retrievedOrganisationData)
     getCalculation.mockResolvedValue(calculation)
     getFundingsByCalculationId.mockResolvedValue(retrievedFundingsData)
