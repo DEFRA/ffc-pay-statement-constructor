@@ -159,4 +159,22 @@ describe('get latest payment', () => {
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
     expect(result.period).toBe('December to November 2023')
   })
+
+  test('returns period as dueDate month if schedule null', () => {
+    paymentRequest.schedule = null
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
+    expect(result.period).toBe('January 2022')
+  })
+
+  test('returns period as dueDate month if schedule undefined', () => {
+    paymentRequest.schedule = undefined
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
+    expect(result.period).toBe('January 2022')
+  })
+
+  test('returns period as dueDate month if schedule false', () => {
+    paymentRequest.schedule = false
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
+    expect(result.period).toBe('January 2022')
+  })
 })
