@@ -1,5 +1,5 @@
 const getFundings = require('../../funding')
-const getPositiveInvoiceLine = require('../../invoice-line')
+const getInvoiceLine = require('../../invoice-line')
 const { convertToPounds } = require('../../../utility')
 
 const getDetailedFunding = async (calculationId, paymentRequestId, transaction) => {
@@ -7,7 +7,7 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
   const detailedFundings = []
 
   for (const funding of fundings) {
-    const invoiceLine = await getPositiveInvoiceLine(funding.fundingCode, paymentRequestId, transaction)
+    const invoiceLine = await getInvoiceLine(funding.fundingCode, paymentRequestId, transaction)
     const { annualValue, quarterlyValue, quarterlyReduction, quarterlyPayment, reductions } = invoiceLine
 
     const invoiceLineInPounds = {
@@ -15,7 +15,10 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
       quarterlyValue: convertToPounds(quarterlyValue),
       quarterlyReduction: convertToPounds(quarterlyReduction),
       quarterlyPayment: convertToPounds(quarterlyPayment),
-      reductions
+      reductions: reductions.map(reduction => ({
+        ...reduction,
+        value: convertToPounds(reduction.value)
+      }))
     }
 
     const detailedFunding = {

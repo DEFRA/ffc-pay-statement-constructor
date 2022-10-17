@@ -20,6 +20,7 @@ module.exports = {
   },
   DUE: {
     DATE_FORMAT: '01/12/2022',
-    DAY_FORMAT: '1 December 2022'
+    DAY_FORMAT: '1 December 2022',
+    DATE: new Date(2022, 11, 1)
   }
 }

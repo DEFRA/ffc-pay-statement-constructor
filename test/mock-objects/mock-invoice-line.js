@@ -48,6 +48,12 @@ const rawInvoiceLines = [
     fundingCode: fundingCode.ARABLE_SOIL_INTERMEDIATE,
     paymentRequestId: 1,
     value: 800
+  },
+  {
+    fundingCode: fundingCode.ARABLE_SOIL_INTRODUCTORY,
+    paymentRequestId: 1,
+    value: -100,
+    description: 'P02 - Over declaration reduction'
   }
 ]
 
