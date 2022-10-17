@@ -358,11 +358,27 @@ describe('process submit payment request', () => {
     expect(result.invoiceLines).toBeUndefined()
   })
 
-  test('should not save paymentRequest.paymentRequestNumber into entry where paymentRequest.referenceId', async () => {
+  test('should save paymentRequest.paymentRequestNumber into entry where referenceId', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.paymentRequestNumber).toBeUndefined()
+    expect(result.paymentRequestNumber).toBe(paymentRequest.paymentRequestNumber)
+  })
+
+  test('should save paymentRequest.recoveryDate into entry where referenceId', async () => {
+    paymentRequest.recoveryDate = '01/09/2022'
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.recoveryDate).toBe(paymentRequest.recoveryDate)
+  })
+
+  test('should save paymentRequest.debtType into entry where referenceId', async () => {
+    paymentRequest.debtType = 'irr'
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
+    expect(result.debtType).toBe(paymentRequest.debtType)
   })
 
   test('should save entry into invoiceLine where paymentRequestId is 1', async () => {
