@@ -1,4 +1,5 @@
 const getLatestPayment = require('../../../../app/processing/payment/get-latest-payment')
+const { DATE } = require('../../../mock-components/mock-dates').DUE
 let paymentRequest
 let settlement
 let lastSettlement
@@ -7,6 +8,7 @@ let instalmentValue
 describe('get latest payment', () => {
   beforeEach(() => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
+    paymentRequest.dueDate = DATE
     settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
     instalmentValue = Math.trunc(paymentRequest.value / 4)
   })
@@ -18,7 +20,7 @@ describe('get latest payment', () => {
 
   test('returns due date from payment request', () => {
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    expect(result.dueDate).toBe(new Date(paymentRequest.dueDate))
+    expect(result.dueDate).toBe(paymentRequest.dueDate)
   })
 
   test('returns value from settlement if last settlement undefined', () => {
@@ -163,18 +165,18 @@ describe('get latest payment', () => {
   test('returns period as dueDate month if schedule null', () => {
     paymentRequest.schedule = null
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    expect(result.period).toBe('January 2022')
+    expect(result.period).toBe('December 2022')
   })
 
   test('returns period as dueDate month if schedule undefined', () => {
     paymentRequest.schedule = undefined
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    expect(result.period).toBe('January 2022')
+    expect(result.period).toBe('December 2022')
   })
 
   test('returns period as dueDate month if schedule false', () => {
     paymentRequest.schedule = false
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    expect(result.period).toBe('January 2022')
+    expect(result.period).toBe('December 2022')
   })
 })
