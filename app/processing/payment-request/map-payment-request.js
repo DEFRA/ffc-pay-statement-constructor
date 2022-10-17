@@ -2,7 +2,7 @@ const { NAMES } = require('../../constants/schedules')
 
 const mapPaymentRequest = async (paymentRequest) => {
   const year = paymentRequest.marketingYear
-  const frequency = NAMES[paymentRequest.schedule] ?? NAMES.Q4
+  const frequency = NAMES[paymentRequest.schedule] ?? NAMES.N0
 
   return {
     paymentRequestId: paymentRequest.paymentRequestId,
@@ -11,7 +11,8 @@ const mapPaymentRequest = async (paymentRequest) => {
     frequency,
     invoiceNumber: paymentRequest.invoiceNumber,
     value: paymentRequest.value,
-    year
+    year,
+    schedule: paymentRequest.schedule
   }
 }
 

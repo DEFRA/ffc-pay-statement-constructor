@@ -16,27 +16,41 @@ const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/pr
 jest.mock('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 const getSettledSettlementBySettlementId = require('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
 
+jest.mock('../../../../app/processing/settlement/get-last-settlement')
+const getLastSettlement = require('../../../../app/processing/settlement/get-last-settlement')
+
+jest.mock('../../../../app/processing/payment/get-latest-payment')
+const getLatestPayment = require('../../../../app/processing/payment/get-latest-payment')
+
 const { getStatement } = require('../../../../app/processing/statement')
 
 let calculation
 let paymentRequest
 let settlement
 
+let retrievedOrganisationData
+let retrievedCalculationData
+let retrievedFundingsData
+let retrievedPaymentRequest
+let retrievedSettlement
+let retrievedLatestPayment
+
 describe('get various components and transform to statement object', () => {
   beforeEach(() => {
-    const retrievedOrganisationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation').rawOrganisationData))
-    const retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
-    const retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
-    const retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-    const retreivedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    retrievedOrganisationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation').rawOrganisationData))
+    retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
+    retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
+    retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
+    retrievedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    retrievedLatestPayment = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-latest-payment')))
 
     settlement = {
-      invoiceNumber: retreivedSettlement.invoiceNumber,
+      invoiceNumber: retrievedSettlement.invoiceNumber,
       paymentRequestId: 1,
-      reference: retreivedSettlement.reference,
-      settled: retreivedSettlement.settled,
-      settlementDate: new Date(retreivedSettlement.settlementDate)
-
+      reference: retrievedSettlement.reference,
+      settled: retrievedSettlement.settled,
+      settlementDate: new Date(retrievedSettlement.settlementDate),
+      value: retrievedSettlement.value
     }
 
     getSettledSettlementBySettlementId.mockResolvedValue(settlement)
@@ -64,6 +78,8 @@ describe('get various components and transform to statement object', () => {
     getOrganisation.mockResolvedValue(retrievedOrganisationData)
     getCalculation.mockResolvedValue(calculation)
     getFundingsByCalculationId.mockResolvedValue(retrievedFundingsData)
+    getLastSettlement.mockResolvedValue(retrievedSettlement)
+    getLatestPayment.mockReturnValue(retrievedLatestPayment)
   })
 
   afterEach(() => {
@@ -72,8 +88,19 @@ describe('get various components and transform to statement object', () => {
 
   test('should call getCalculation when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    const statement = await getStatement(paymentRequestId)
-    console.log(statement)
+    await getStatement(paymentRequestId)
     expect(getCalculation).toHaveBeenCalled()
+  })
+
+  test('should call getLastSettlement once when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getStatement(paymentRequestId)
+    expect(getLastSettlement).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call getLatestPayment when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getStatement(paymentRequestId)
+    expect(getLatestPayment).toHaveBeenCalledTimes(1)
   })
 })

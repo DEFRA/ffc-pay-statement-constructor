@@ -3,35 +3,35 @@ const schema = require('../../../../app/processing/settlement/schema')
 
 const validateSettlement = require('../../../../app/processing/settlement/validate-settlement')
 
-let retreivedSettlement
+let retrievedSettlement
 
 describe('validate settlement', () => {
   beforeEach(() => {
     const settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 
-    retreivedSettlement = {
+    retrievedSettlement = {
       paymentRequestId: 1,
       reference: settlement.reference,
       settled: settlement.settled
     }
 
-    schema.validate.mockReturnValue({ value: retreivedSettlement })
+    schema.validate.mockReturnValue({ value: retrievedSettlement })
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('should return retreivedSettlement', async () => {
-    const result = validateSettlement(retreivedSettlement)
-    expect(result).toBe(retreivedSettlement)
+  test('should return retrievedSettlement', async () => {
+    const result = validateSettlement(retrievedSettlement)
+    expect(result).toBe(retrievedSettlement)
   })
 
   test('should throw when schema.validate throws', async () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      validateSettlement(retreivedSettlement)
+      validateSettlement(retrievedSettlement)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -41,7 +41,7 @@ describe('validate settlement', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      validateSettlement(retreivedSettlement)
+      validateSettlement(retrievedSettlement)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -51,7 +51,7 @@ describe('validate settlement', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
     const wrapper = async () => {
-      validateSettlement(retreivedSettlement)
+      validateSettlement(retrievedSettlement)
     }
 
     expect(wrapper).rejects.toThrow(/^Joi validation issue$/)
@@ -61,7 +61,7 @@ describe('validate settlement', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      validateSettlement(retreivedSettlement)
+      validateSettlement(retrievedSettlement)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -71,7 +71,7 @@ describe('validate settlement', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      validateSettlement(retreivedSettlement)
+      validateSettlement(retrievedSettlement)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -81,7 +81,7 @@ describe('validate settlement', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
     const wrapper = async () => {
-      validateSettlement(retreivedSettlement)
+      validateSettlement(retrievedSettlement)
     }
 
     expect(wrapper).rejects.toThrow(/does not have the required data/)

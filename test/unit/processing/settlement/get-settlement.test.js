@@ -27,21 +27,21 @@ const validateSettlement = require('../../../../app/processing/settlement/valida
 
 const getSettlement = require('../../../../app/processing/settlement/get-settlement')
 
-let retreivedSettlement
+let retrievedSettlement
 
 describe('get required settlement information for building a statement object', () => {
   beforeEach(() => {
     const settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
 
-    retreivedSettlement = {
+    retrievedSettlement = {
       paymentRequestId: 1,
       reference: settlement.reference,
       settled: settlement.settled
     }
 
-    validateSettlement.mockReturnValue(retreivedSettlement)
-    getSettledSettlementBySettlementId.mockResolvedValue(retreivedSettlement)
-    updateSettlementPaymentRequestId.mockResolvedValue(retreivedSettlement)
+    validateSettlement.mockReturnValue(retrievedSettlement)
+    getSettledSettlementBySettlementId.mockResolvedValue(retrievedSettlement)
+    updateSettlementPaymentRequestId.mockResolvedValue(retrievedSettlement)
   })
 
   afterEach(() => {
@@ -81,13 +81,13 @@ describe('get required settlement information for building a statement object', 
   test('should call validateSettlement with retreivedSettlement when a settlementId is given', async () => {
     const settlementId = 1
     await getSettlement(settlementId)
-    expect(validateSettlement).toHaveBeenCalledWith(retreivedSettlement)
+    expect(validateSettlement).toHaveBeenCalledWith(retrievedSettlement)
   })
 
   test('should return retreivedSettlement when a settlementId is given', async () => {
     const settlementId = 1
     const result = await getSettlement(settlementId)
-    expect(result).toStrictEqual(retreivedSettlement)
+    expect(result).toStrictEqual(retrievedSettlement)
   })
 
   test('should throw when getSettledSettlementBySettlementId throws', async () => {

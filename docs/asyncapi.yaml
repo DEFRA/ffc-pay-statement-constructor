@@ -23,7 +23,11 @@ channels:
   return/message:
     subscribe:
       message:
-        $ref: '#/components/messages/ReturnMessage'      
+        $ref: '#/components/messages/ReturnMessage'
+  payment/statement:
+    publish:
+      message:
+        $ref: '#/components/messages/PaymentStatement'
 components:
   messages:
     DWHCalculation:
@@ -50,7 +54,12 @@ components:
       name: Return Message
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/ReturnMessage'    
+        $ref: '#/components/schemas/ReturnMessage'
+    PaymentStatement:
+      name: Payment statement
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/PaymentStatement'
   schemas:
     DWHCalculation:
         type: object
@@ -72,6 +81,8 @@ components:
     DWHOrganisation:
       type: object
       properties:
+        businessName:
+          $ref: '#/components/schemas/BusinessName'
         addressLine1:
           $ref: '#/components/schemas/AddressLine1'
         addressLine2:
@@ -186,7 +197,165 @@ components:
         settled:
           $ref: '#/components/schemas/Settled'
         detail:
-          $ref: '#/components/schemas/Detail'      
+          $ref: '#/components/schemas/Detail'
+    PaymentStatement:
+      type: object
+      required:
+      - businessName
+      - sbi
+      - frn
+      - email
+      - address
+      - scheme
+      - payments
+      - funding
+      properties:
+        businessName:
+          $ref: '#/components/schemas/BusinessName'
+        sbi:
+          $ref: '#/components/schemas/SBI'
+        frn:
+          $ref: '#/components/schemas/FRN'
+        email:
+          $ref: '#/components/schemas/EmailAddress'
+        address:
+          $ref: '#/components/schemas/Address'
+        scheme:
+          $ref: '#/components/schemas/Scheme'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+        funding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Funding'
+    Address:
+      type: object
+      required:
+      - postcode
+      properties:
+        line1:
+          $ref: '#/components/schemas/AddressLine1'
+        line2:
+          $ref: '#/components/schemas/AddressLine2'
+        line3:
+          $ref: '#/components/schemas/AddressLine3'
+        line4:
+          $ref: '#/components/schemas/City'
+        line5:
+          $ref: '#/components/schemas/County'
+        postcode:
+          $ref: '#/components/schemas/Postcode'
+    Scheme:
+      type: object
+      required:
+      - name
+      - shortName
+      - year
+      - frequency
+      properties:
+        name:
+          type: string
+          description: The name of the scheme
+          example: Sustainable Farming Incentive
+        shortName:
+          type: string
+          description: The short name of the scheme
+          example: SFI
+        year:
+          type: string
+          description: The marketing year
+          example: 2022
+        frequency:
+          type: string
+          description: The frequency of payments
+          example: Quarterly
+    Payment:
+      type: object
+      required:
+      - invoiceNumber
+      - reference
+      - dueDate
+      - settled
+      - calculated
+      - value
+      - period
+      properties:
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        reference:
+          $ref: '#/components/schemas/Reference'
+        dueDate:
+          $ref: '#/components/schemas/DueDate'
+        settled:
+          $ref: '#/components/schemas/Settled'
+        calculated:
+          $ref: '#/components/schemas/CalculationDate'
+        value:
+          $ref: '#/components/schemas/ValueInteger'
+        period:
+          $ref: '#/components/schemas/Period'
+    Funding:
+      type: object
+      required:
+      - name
+      - area
+      - annualValue
+      - quarterlyValue
+      - quarterlyReduction
+      - quarterlyPayment
+      properties:
+        name:
+          type: string
+          description: The funding option name
+          example: Arable and horticultural soils
+        level:
+          type: string
+          description: The funding option level
+          example: Intermediate
+        area:
+          type: string
+          description: The funding option area in hectares
+          example: 10.00
+        rate:
+          type: string
+          description: The funding option rate in pounds per hectare
+          example: 40.00
+        annualValue:
+          type: string
+          description: The funding option annual value in pounds
+          example: 400.00
+        quarterlyValue:
+          type: string
+          description: The funding option quarterly value in pounds
+          example: 100.00
+        quarterlyReduction:
+          type: string
+          description: The funding option quarterly reduction in pounds
+          example: 75.00
+        quarterlyPayment:
+          type: string
+          description: The funding option quarterly payment in pounds
+          example: 25.00
+        reductions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reduction'
+    Reduction:
+      type: object
+      required:
+      - reason
+      - value
+      properties:
+        reason:
+          type: string
+          description: The reduction name
+          example: Over declaration reduction
+        value:
+          type: string
+          description: The reduction level
+          example: 75.00
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -300,7 +469,7 @@ components:
           schemeCode:
             $ref: '#/components/schemas/SchemeCode'
           value:
-            $ref: '#/components/schemas/ValueInteger'
+            $ref: '#/components/schemas/ValueString'
     InvoiceLinesSubmit:
       type: array
       description: List of invoice lines that make up payment request after PPA
@@ -417,3 +586,15 @@ components:
       minimum: 0
       maximum: 999999999999
       example: 50000
+    ValueString:
+      type: string
+      description: Value of request as string decimal
+      example: 500.00
+    BusinessName:
+      type: string
+      description: The business name
+      example: 'FFC Ltd'
+    Period:
+      type: string
+      description: Period of payment request
+      example: December to February 2023

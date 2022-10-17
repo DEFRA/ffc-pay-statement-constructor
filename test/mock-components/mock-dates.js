@@ -12,7 +12,8 @@ module.exports = {
   },
   SETTLEMENT: {
     DAY_FORMAT: '8 February 2022',
-    STRING_FORMAT: 'Tue Feb 08 2022 00:00:00 GMT+0000 (Greenwich Mean Time)'
+    STRING_FORMAT: 'Tue Feb 08 2022 00:00:00 GMT+0000 (Greenwich Mean Time)',
+    DATE: new Date(2022, 1, 8)
   },
   SCHEDULED: {
     DATE: new Date(2022, 1, 20)
