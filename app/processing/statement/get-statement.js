@@ -19,7 +19,7 @@ const getStatement = async (settlementId) => {
     const scheme = await getScheme(paymentRequest)
     const lastSettlement = await getLastSettlement(settlement, transaction)
     const latestPayment = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    const payments = await getDetailedPayments(calculation, latestPayment, settlement, lastSettlement)
+    const payments = await getDetailedPayments(calculation, latestPayment, settlement)
 
     await transaction.commit()
     return {
