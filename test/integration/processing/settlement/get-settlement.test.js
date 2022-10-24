@@ -3,7 +3,7 @@ const db = require('../../../../app/data')
 const { getSettlement } = require('../../../../app/processing/settlement')
 
 const schemes = require('../../../../app/constants/schemes')
-const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
+const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
 
 const SETTLEMENT_ID_NOT_SETTLED = 1
 const SETTLEMENT_ID_SETTLED = 2
@@ -28,7 +28,7 @@ describe('process settlement', () => {
 
     await db.paymentRequest.create(paymentRequest)
 
-    settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false })
 
     mappedSettlement = {

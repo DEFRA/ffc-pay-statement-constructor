@@ -36,7 +36,7 @@ let paymentRequest
 
 describe('process processing payment request', () => {
   beforeEach(() => {
-    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').processingPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     getInProgressPaymentRequestByInvoiceNumber.mockResolvedValue(null)
     saveInvoiceNumber.mockResolvedValue(undefined)

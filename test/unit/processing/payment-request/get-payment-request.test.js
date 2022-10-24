@@ -34,7 +34,7 @@ const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 describe('get and map required payment request information for building a statement object', () => {
   beforeEach(() => {
-    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     retreivedPaymentRequest = {
       paymentRequestId: 1,

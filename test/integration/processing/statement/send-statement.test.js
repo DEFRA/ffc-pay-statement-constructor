@@ -16,8 +16,8 @@ jest.mock('ffc-messaging', () => {
 const { DATE: COMPLETED_DATE } = require('../../../mock-components/mock-dates').SCHEDULED
 
 const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
-const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
+const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))
 
 let scheduleId
 

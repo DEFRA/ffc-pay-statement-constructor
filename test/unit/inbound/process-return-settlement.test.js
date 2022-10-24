@@ -28,7 +28,7 @@ let settlement
 
 describe('process return settlement request', () => {
   beforeEach(() => {
-    settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
     saveSettlement.mockResolvedValue(undefined)
   })

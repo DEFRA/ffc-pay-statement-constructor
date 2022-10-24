@@ -7,9 +7,9 @@ let instalmentValue
 
 describe('get latest payment', () => {
   beforeEach(() => {
-    paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
     paymentRequest.dueDate = DATE
-    settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     instalmentValue = Math.trunc(paymentRequest.value / 4)
   })
 

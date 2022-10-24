@@ -28,11 +28,11 @@ describe('process messages off Topics', () => {
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
 
-    calculation = JSON.parse(JSON.stringify(require('../../mock-calculation')))
-    organisation = JSON.parse(JSON.stringify(require('../../mock-organisation')))
-    paymentRequestInProgress = require('../../mock-payment-request').processingPaymentRequest
-    paymentRequestCompleted = require('../../mock-payment-request').submitPaymentRequest
-    settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+    calculation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-calculation')))
+    organisation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-organisation')))
+    paymentRequestInProgress = require('../../mock-objects/mock-payment-request').processingPaymentRequest
+    paymentRequestCompleted = require('../../mock-objects/mock-payment-request').submitPaymentRequest
+    settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
   })
 
   afterEach(async () => {

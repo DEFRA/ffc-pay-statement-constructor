@@ -32,7 +32,7 @@ describe('process get calculation object', () => {
   })
 
   beforeEach(async () => {
-    organisationData = JSON.parse(JSON.stringify(require('../../../mock-organisation')))
+    organisationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
     retrievedOrganisationData = {
       addressLine1: organisationData.line1,
       addressLine2: organisationData.line2,

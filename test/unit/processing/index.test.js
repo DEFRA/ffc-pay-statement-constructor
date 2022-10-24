@@ -36,7 +36,7 @@ describe('start processing', () => {
   beforeEach(() => {
     processingConfig.settlementProcessingInterval = 10000
     processingConfig.constructionActive = true
-    const schedule = JSON.parse(JSON.stringify(require('../../mock-schedule')))
+    const schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule')))
     retrievedSchedule = {
       scheduleId: 1,
       settlementId: schedule.settlementId

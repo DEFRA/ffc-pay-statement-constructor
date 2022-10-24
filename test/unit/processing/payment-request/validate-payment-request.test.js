@@ -7,7 +7,7 @@ let retrievedPaymentRequest
 
 describe('validate payment request', () => {
   beforeEach(() => {
-    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     retrievedPaymentRequest = {
       paymentRequestId: 1,

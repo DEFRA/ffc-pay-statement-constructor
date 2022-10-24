@@ -6,13 +6,13 @@ let retreivedPaymentRequest
 
 describe('validate payment request', () => {
   beforeEach(() => {
-    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
     retreivedPaymentRequest = {
-      paymentRequestId: 1,
       agreementNumber: paymentRequest.agreementNumber,
       dueDate: new Date(paymentRequest.dueDate),
       invoiceNumber: paymentRequest.invoiceNumber,
       marketingYear: paymentRequest.marketingYear,
+      paymentRequestId: paymentRequest.paymentRequestId,
       value: paymentRequest.value,
       schedule: paymentRequest.schedule
     }

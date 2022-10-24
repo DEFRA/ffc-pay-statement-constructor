@@ -30,7 +30,7 @@ describe('process processing payment request', () => {
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
 
-    paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
+    paymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
   })
 
   afterEach(async () => {

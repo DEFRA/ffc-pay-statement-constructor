@@ -23,9 +23,9 @@ describe('batch schedule', () => {
   })
 
   beforeEach(async () => {
-    const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
-    const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
-    schedule = JSON.parse(JSON.stringify(require('../../mock-schedule')))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
+    const settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
+    schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule')))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({

@@ -13,7 +13,7 @@ describe('process statement data message', () => {
   beforeEach(() => {
     processStatementData.mockReturnValue(undefined)
 
-    organisation = JSON.parse(JSON.stringify(require('../../mock-organisation')))
+    organisation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-organisation')))
 
     receiver = {
       completeMessage: jest.fn()

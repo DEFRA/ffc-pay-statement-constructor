@@ -29,7 +29,7 @@ let rawCalculationData
 
 describe('get and transform payment request information for building a statement object', () => {
   beforeEach(() => {
-    const retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
+    const retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
 
     rawCalculationData = retrievedCalculationData
     calculation = {

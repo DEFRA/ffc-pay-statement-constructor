@@ -25,7 +25,7 @@ let organisation
 
 describe('process organisation', () => {
   beforeEach(() => {
-    organisation = JSON.parse(JSON.stringify(require('../../mock-organisation')))
+    organisation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-organisation')))
     saveOrganisation.mockResolvedValue(undefined)
   })
 

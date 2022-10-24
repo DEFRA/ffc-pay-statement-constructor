@@ -36,7 +36,7 @@ describe('batch schedule', () => {
     mockCommit.mockResolvedValue(undefined)
     mockRollback.mockResolvedValue(undefined)
 
-    const schedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
+    const schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))
 
     const retreivedSchedule = {
       scheduleId: 1,

@@ -40,11 +40,11 @@ let retrievedLatestPayment
 
 describe('get various components and transform to statement object', () => {
   beforeEach(() => {
-    retrievedOrganisationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation').rawOrganisationData))
-    retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
+    retrievedOrganisationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
+    retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
-    retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-    retrievedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
+    retrievedSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     retrievedLatestPayment = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-latest-payment')))
 
     settlement = {

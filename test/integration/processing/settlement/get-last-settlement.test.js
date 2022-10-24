@@ -15,9 +15,9 @@ describe('process settlement', () => {
   })
 
   beforeEach(async () => {
-    currentSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    currentSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     currentSettlement.settlementDate = SETTLEMENT_DATE
-    previousSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    previousSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract(1, 'day')
     await db.settlement.create(currentSettlement)
   })

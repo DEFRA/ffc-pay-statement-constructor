@@ -31,7 +31,7 @@ let retrievedSettlement
 
 describe('get required settlement information for building a statement object', () => {
   beforeEach(() => {
-    const settlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
+    const settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
 
     retrievedSettlement = {
       paymentRequestId: 1,

@@ -16,7 +16,7 @@ describe('get and transform fundings object for building a statement object', ()
 
   beforeEach(async () => {
     rawFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
-    const rawCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
+    const rawCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     await db.scheme.bulkCreate(schemes)
     await db.organisation.create({ sbi: rawCalculationData.sbi })
     await db.invoiceNumber.create({ invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER })

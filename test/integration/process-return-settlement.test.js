@@ -18,9 +18,9 @@ describe('process return settlement', () => {
   })
 
   beforeEach(async () => {
-    settlement = JSON.parse(JSON.stringify(require('../mock-settlement')))
-    submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').submitPaymentRequest))
-    processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
+    settlement = JSON.parse(JSON.stringify(require('../mock-objects/mock-settlement')))
+    submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').submitPaymentRequest))
+    processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
 
     // input data into db
     await db.scheme.bulkCreate(schemes)

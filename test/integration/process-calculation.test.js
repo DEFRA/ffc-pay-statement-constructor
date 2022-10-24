@@ -21,9 +21,9 @@ describe('process calculation', () => {
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
 
-    calculation = JSON.parse(JSON.stringify(require('../mock-calculation')))
-    paymentRequestInProgress = require('../mock-payment-request').processingPaymentRequest
-    paymentRequestCompleted = require('../mock-payment-request').submitPaymentRequest
+    calculation = JSON.parse(JSON.stringify(require('../mock-objects/mock-calculation')))
+    paymentRequestInProgress = require('../mock-objects/mock-payment-request').processingPaymentRequest
+    paymentRequestCompleted = require('../mock-objects/mock-payment-request').submitPaymentRequest
   })
 
   afterEach(async () => {

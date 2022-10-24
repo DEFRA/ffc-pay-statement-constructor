@@ -22,8 +22,8 @@ describe('process payment request', () => {
   })
 
   beforeEach(async () => {
-    paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-    paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
+    paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
+    paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({

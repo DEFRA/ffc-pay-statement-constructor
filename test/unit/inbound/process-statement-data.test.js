@@ -12,8 +12,8 @@ let organisationData
 
 describe('process statement data', () => {
   beforeEach(() => {
-    calculationData = JSON.parse(JSON.stringify(require('../../mock-calculation')))
-    organisationData = JSON.parse(JSON.stringify(require('../../mock-organisation')))
+    calculationData = JSON.parse(JSON.stringify(require('../../mock-objects/mock-calculation')))
+    organisationData = JSON.parse(JSON.stringify(require('../../mock-objects/mock-organisation')))
 
     processCalculation.mockResolvedValue(undefined)
     processOrganisation.mockResolvedValue(undefined)
