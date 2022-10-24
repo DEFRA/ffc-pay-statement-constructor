@@ -25,7 +25,7 @@ describe('process get calculation object', () => {
     await db.organisation.create(organisation)
     await db.invoiceNumber.create({ invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER })
     await db.paymentRequest.create(paymentRequest)
-    
+
     retreivedCalculation = {
       calculationId: 1,
       paymentRequestId: paymentRequest.paymentRequestId,
