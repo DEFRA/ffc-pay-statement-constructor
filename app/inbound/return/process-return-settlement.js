@@ -1,5 +1,6 @@
 const db = require('../../data')
 const saveSettlement = require('./save-settlement')
+const saveSchedule = require('./save-schedule')
 const getSettlementByInvoiceNumberAndValue = require('./get-settlement-by-invoice-number-and-value')
 
 const processReturnSettlement = async (settlement) => {
@@ -11,7 +12,8 @@ const processReturnSettlement = async (settlement) => {
       console.info(`Duplicate settlement received, skipping ${existingSettlement.reference}`)
       await transaction.rollback()
     } else {
-      await saveSettlement(settlement, transaction)
+      const savedSettlement = await saveSettlement(settlement, transaction)
+      await saveSchedule(savedSettlement, transaction)
       await transaction.commit()
     }
   } catch (error) {

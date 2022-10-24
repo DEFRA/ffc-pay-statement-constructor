@@ -22,6 +22,9 @@ const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/retur
 jest.mock('../../../app/inbound/return/save-settlement')
 const saveSettlement = require('../../../app/inbound/return/save-settlement')
 
+jest.mock('../../../app/inbound/return/save-schedule')
+const saveSchedule = require('../../../app/inbound/return/save-schedule')
+
 const processReturnSettlement = require('../../../app/inbound/return')
 
 let settlement
@@ -31,6 +34,7 @@ describe('process return settlement request', () => {
     settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
     saveSettlement.mockResolvedValue(undefined)
+    saveSchedule.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
