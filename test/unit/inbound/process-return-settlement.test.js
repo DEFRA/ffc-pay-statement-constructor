@@ -33,7 +33,7 @@ let savedSettlement
 describe('process return settlement request', () => {
   beforeEach(() => {
     settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
-    savedSettlement = { settlementId: 1 }
+    savedSettlement = { ...settlement, settlementId: 1 }
 
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
     saveSettlement.mockResolvedValue(savedSettlement)
@@ -154,7 +154,7 @@ describe('process return settlement request', () => {
     expect(saveSchedule).toHaveBeenCalledTimes(1)
   })
 
-  test('should call saveSchedule with "settlement" and "mocktransaction"', async () => {
+  test('should call saveSchedule with "savedSettlement" and "mocktransaction"', async () => {
     await processReturnSettlement(settlement)
     expect(saveSchedule).toHaveBeenCalledWith(savedSettlement, mockTransaction)
   })
