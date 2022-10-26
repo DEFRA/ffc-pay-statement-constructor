@@ -22,15 +22,22 @@ const getSettlementByInvoiceNumberAndValue = require('../../../app/inbound/retur
 jest.mock('../../../app/inbound/return/save-settlement')
 const saveSettlement = require('../../../app/inbound/return/save-settlement')
 
+jest.mock('../../../app/inbound/return/save-schedule')
+const saveSchedule = require('../../../app/inbound/return/save-schedule')
+
 const processReturnSettlement = require('../../../app/inbound/return')
 
 let settlement
+let savedSettlement
 
 describe('process return settlement request', () => {
   beforeEach(() => {
     settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+    savedSettlement = { ...settlement, settlementId: 1 }
+
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
-    saveSettlement.mockResolvedValue(undefined)
+    saveSettlement.mockResolvedValue(savedSettlement)
+    saveSchedule.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -131,6 +138,45 @@ describe('process return settlement request', () => {
 
   test('should throw error "Database save down issue" when saveSettlement throws error with "Database save down issue"', async () => {
     saveSettlement.mockRejectedValue(new Error('Database save down issue'))
+    const wrapper = async () => {
+      await processReturnSettlement(settlement)
+    }
+    expect(wrapper).rejects.toThrow(Error('Database save down issue'))
+  })
+
+  test('should call saveSchedule when a valid settlement is given', async () => {
+    await processReturnSettlement(settlement)
+    expect(saveSchedule).toHaveBeenCalled()
+  })
+
+  test('should call saveSchedule once when a valid settlement is given', async () => {
+    await processReturnSettlement(settlement)
+    expect(saveSchedule).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call saveSchedule with "savedSettlement" and "mocktransaction"', async () => {
+    await processReturnSettlement(settlement)
+    expect(saveSchedule).toHaveBeenCalledWith(savedSettlement, mockTransaction)
+  })
+
+  test('should throw when saveSchedule throws', async () => {
+    saveSchedule.mockRejectedValue(new Error('Database save down issue'))
+    const wrapper = async () => {
+      await processReturnSettlement(settlement)
+    }
+    expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw Error when saveSchedule throws', async () => {
+    saveSchedule.mockRejectedValue(new Error('Database save down issue'))
+    const wrapper = async () => {
+      await processReturnSettlement(settlement)
+    }
+    expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw error "Database save down issue" when saveSchedule throws error with "Database save down issue"', async () => {
+    saveSchedule.mockRejectedValue(new Error('Database save down issue'))
     const wrapper = async () => {
       await processReturnSettlement(settlement)
     }
