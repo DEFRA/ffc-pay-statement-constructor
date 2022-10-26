@@ -28,12 +28,15 @@ const saveSchedule = require('../../../app/inbound/return/save-schedule')
 const processReturnSettlement = require('../../../app/inbound/return')
 
 let settlement
+let savedSettlement
 
 describe('process return settlement request', () => {
   beforeEach(() => {
     settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+    savedSettlement = { settlementId: 1 }
+
     getSettlementByInvoiceNumberAndValue.mockResolvedValue(undefined)
-    saveSettlement.mockResolvedValue(undefined)
+    saveSettlement.mockResolvedValue(savedSettlement)
     saveSchedule.mockResolvedValue(undefined)
   })
 
@@ -152,8 +155,6 @@ describe('process return settlement request', () => {
   })
 
   test('should call saveSchedule with "settlement" and "mocktransaction"', async () => {
-    const savedSettlement = { settlementId: 1 }
-    saveSettlement.mockResolvedValue(savedSettlement)
     await processReturnSettlement(settlement)
     expect(saveSchedule).toHaveBeenCalledWith(savedSettlement, mockTransaction)
   })
