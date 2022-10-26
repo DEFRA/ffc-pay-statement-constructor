@@ -26,6 +26,12 @@ describe('process save settlement', () => {
     expect(getCompletedPaymentRequestbyInvoiceNumber).toBeCalledTimes(1)
   })
 
+  test('should call getCompletedPaymentRequestbyInvoiceNumber with "settlement.invoiceNumber" and "transaction" when valid settlement is given', async () => {
+    const transaction = null
+    await saveSettlement(settlement, transaction)
+    expect(getCompletedPaymentRequestbyInvoiceNumber).toHaveBeenCalledWith(settlement.invoiceNumber, transaction)
+  })
+
   test('should throw when getCompletedPaymentRequestbyInvoiceNumber throws', async () => {
     getCompletedPaymentRequestbyInvoiceNumber.mockRejectedValue(new Error('Database retrieval issue'))
     const wrapper = async () => {
