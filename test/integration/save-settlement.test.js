@@ -1,6 +1,4 @@
 const db = require('../../app/data')
-
-jest.mock('../../app/inbound/get-completed-payment-request-by-invoice-number')
 const saveSettlement = require('../../app/inbound/return/save-settlement')
 
 let settlement
@@ -24,13 +22,21 @@ describe('process save settlement', () => {
     expect(result).not.toBeNull()
   })
 
-  test('confirm error is thrown and settlement is not saved in the database when invalid settlement is given', async () => {
+  test('confirm error is thrown when invalid settlement is given', async () => {
     const emptySettlement = null
     const wrapper = async () => {
       await saveSettlement(emptySettlement)
     }
     expect(wrapper).rejects.toThrow()
+  })
 
+  test('confirm settlement is not saved in the database when invalid settlement is given', async () => {
+    const emptySettlement = null
+    try {
+      await saveSettlement(emptySettlement)
+    } catch (err) {
+
+    }
     const result = await db.settlement.findOne()
     expect(result).toBeNull()
   })
