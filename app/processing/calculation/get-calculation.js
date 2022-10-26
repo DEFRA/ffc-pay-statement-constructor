@@ -4,7 +4,6 @@ const getCalculationByPaymentRequestId = require('./get-calculation-by-payment-r
 const updateCalculationPaymentRequestId = require('./update-calculation-payment-request-id')
 
 const getCalculation = async (paymentRequestId, invoiceNumber, transaction) => {
-  // const paymentRequestId = paymentRequest.paymentRequestId
   const rawCalculation = await getCalculationByPaymentRequestId(paymentRequestId, transaction)
   const calculation = rawCalculation || await updateCalculationPaymentRequestId(invoiceNumber, paymentRequestId, transaction)
 

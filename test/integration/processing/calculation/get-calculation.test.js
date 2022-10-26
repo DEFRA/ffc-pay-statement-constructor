@@ -64,7 +64,7 @@ describe('process get calculation object', () => {
     rawCalculationData.calculationDate = null
     await db.calculation.create(rawCalculationData)
 
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -73,7 +73,7 @@ describe('process get calculation object', () => {
     rawCalculationData.calculationDate = null
     await db.calculation.create(rawCalculationData)
 
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
 
     expect(wrapper).rejects.toThrow()
   })
