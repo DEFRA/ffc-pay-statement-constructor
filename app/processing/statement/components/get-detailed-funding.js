@@ -22,10 +22,10 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
     }
 
     const detailedFunding = {
-      area: funding.area !== 0 ? funding.area : '',
+      area: funding.area,
       level: funding.level,
       name: funding.name,
-      rate: funding.rate !== 0 ? funding.rate : '',
+      rate: funding.rate,
       ...invoiceLineInPounds
     }
 
