@@ -24,23 +24,22 @@ const getCalculationByPaymentRequestId = require('../../../../app/processing/cal
 
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
 
-let calculation
-let rawCalculationData
+let retreivedCalculation
 
 describe('get and transform payment request information for building a statement object', () => {
   beforeEach(() => {
-    const retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
+    const calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
 
-    rawCalculationData = retrievedCalculationData
-    calculation = {
-      sbi: rawCalculationData.sbi,
-      calculated: new Date(rawCalculationData.calculationDate),
-      invoiceNumber: rawCalculationData.invoiceNumber,
-      paymentRequestId: rawCalculationData.paymentRequestId
+    retreivedCalculation = {
+      calculationId: 1,
+      paymentRequestId: 1,
+      calculationDate: calculation.calculationDate,
+      invoiceNumber: calculation.invoiceNumber,
+      sbi: calculation.sbi
     }
 
-    schema.validate.mockReturnValue({ value: calculation })
-    getCalculationByPaymentRequestId.mockResolvedValue(rawCalculationData)
+    schema.validate.mockReturnValue({ value: retreivedCalculation })
+    getCalculationByPaymentRequestId.mockResolvedValue(retreivedCalculation)
   })
 
   afterEach(() => {
@@ -77,10 +76,10 @@ describe('get and transform payment request information for building a statement
     expect(schema.validate).toHaveBeenCalledTimes(1)
   })
 
-  test('should call schema.validate with rawCalculationData and { abortEarly: false } when a paymentRequest is given', async () => {
+  test('should call schema.validate with retreivedCalculation and { abortEarly: false } when a paymentRequest is given', async () => {
     const paymentRequest = { paymentRequestId: 1 }
     await getCalculation(paymentRequest)
-    expect(schema.validate).toHaveBeenCalledWith(rawCalculationData, { abortEarly: false })
+    expect(schema.validate).toHaveBeenCalledWith(retreivedCalculation, { abortEarly: false })
   })
 
   test('should throw when getCalculationByPaymentRequestId throws', async () => {
