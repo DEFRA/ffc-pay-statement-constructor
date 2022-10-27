@@ -28,23 +28,31 @@ const mapFundings = require('../../../../app/processing/funding/map-fundings')
 
 const getFundings = require('../../../../app/processing/funding/get-fundings')
 
-let rawFundingsData
+let fundings
 let mappedFundings
 
 describe('get and transform fundings object for building a statement object', () => {
   beforeEach(() => {
-    const retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
-    const mappedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').mappedFundingsData))
-    rawFundingsData = retrievedFundingsData
-    getFundingsByCalculationId.mockResolvedValue(rawFundingsData)
+    fundings = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings')))
 
-    rawFundingsData = retrievedFundingsData
-    getFundingsByCalculationId.mockResolvedValue(rawFundingsData)
+    mappedFundings = [
+      {
+        area: fundings[0].areaClaimed,
+        level: 'Introductory',
+        name: 'Arable and horticultural soils',
+        rate: fundings[0].rate
+      },
+      {
+        area: fundings[1].areaClaimed,
+        level: '',
+        name: 'Hedgerow',
+        rate: fundings[1].rate
+      }
+    ]
 
-    mappedFundings = mappedFundingsData
+    getFundingsByCalculationId.mockResolvedValue(fundings)
+    schema.validate.mockReturnValue({ value: fundings })
     mapFundings.mockResolvedValue(mappedFundings)
-
-    schema.validate.mockReturnValue({ value: rawFundingsData })
   })
 
   afterEach(() => {
@@ -63,7 +71,7 @@ describe('get and transform fundings object for building a statement object', ()
     expect(getFundingsByCalculationId).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getFundingsByCalculationId with calculationId when a calculationId is given', async () => {
+  test('should call getFundingsByCalculationId with calculationId and mockTransaction when a calculationId is given', async () => {
     const calculationId = 1
     await getFundings(calculationId, mockTransaction)
     expect(getFundingsByCalculationId).toHaveBeenCalledWith(calculationId, mockTransaction)
@@ -81,17 +89,15 @@ describe('get and transform fundings object for building a statement object', ()
     expect(schema.validate).toHaveBeenCalledTimes(1)
   })
 
-  test('should call mapFundings with rawFundingsData when a calculationId is given', async () => {
+  test('should call mapFundings with fundings when a calculationId is given', async () => {
     const calculationId = 1
     await getFundings(calculationId)
-
-    expect(mapFundings).toHaveBeenCalledWith(rawFundingsData)
+    expect(mapFundings).toHaveBeenCalledWith(fundings)
   })
 
   test('should call schema.validate with mappedFundings and { abortEarly: false } when a calculationId is given', async () => {
     const calculationId = 1
     await getFundings(calculationId)
-
     expect(schema.validate).toHaveBeenCalledWith(mappedFundings, { abortEarly: false })
   })
 
@@ -148,7 +154,7 @@ describe('get and transform fundings object for building a statement object', ()
     expect(wrapper).rejects.toThrow(Error)
   })
 
-  test('should throw error which starts "Calculation with calculationId: 1 does not have valid funding(s)" when schema.validate returns with error key of "Joi validation issue"', async () => {
+  test('should throw error which starts "Calculation with calculationId: 1 does not have valid funding(s)" when schema.validate returns with error key of "Not a valid object"', async () => {
     const calculationId = 1
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
@@ -162,21 +168,21 @@ describe('get and transform fundings object for building a statement object', ()
   test('should return all records retrieved from database when getFundingsByCalculationId and all retrieved records are valid', async () => {
     const calculationId = 1
     const fundings = await getFundings(calculationId)
-    expect(fundings.length).toBe(rawFundingsData.length)
+    expect(fundings.length).toBe(fundings.length)
   })
 
   test('should return areas attribute for all records retrieved from database when getFundingsByCalculationId and all retrieved records are valid', async () => {
     const calculationId = 1
     const fundings = await getFundings(calculationId)
     const areas = fundings.filter(funding => funding.area !== undefined).map(funding => funding.area)
-    expect(areas.length).toBe(rawFundingsData.length)
+    expect(areas.length).toBe(fundings.length)
   })
 
   test('should return rate attribute for all records retrieved from database when getFundingsByCalculationId and all retrieved records are valid', async () => {
     const calculationId = 1
     const fundings = await getFundings(calculationId)
     const rates = fundings.filter(funding => funding.rate !== undefined).map(funding => funding.rate)
-    expect(rates.length).toBe(rawFundingsData.length)
+    expect(rates.length).toBe(fundings.length)
   })
 
   test('should not return areaClaimed as attribute for any record retrieved from database when getFundingsByCalculationId and all retrieved records are valid', async () => {
