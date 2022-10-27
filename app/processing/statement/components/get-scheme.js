@@ -1,10 +1,10 @@
-const getScheme = async (paymentRequest) => {
+const getScheme = async (year, frequency, agreementNumber) => {
   return {
     name: 'Sustainable Farming Incentive',
     shortName: 'SFI',
-    year: String(paymentRequest.year),
-    frequency: paymentRequest.frequency,
-    agreementNumber: paymentRequest.agreementNumber
+    year: String(year),
+    frequency,
+    agreementNumber
   }
 }
 

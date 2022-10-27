@@ -41,7 +41,7 @@ describe('process get calculation object', () => {
   })
 
   test('should throw error when no existing calculation data', async () => {
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -49,7 +49,7 @@ describe('process get calculation object', () => {
   test('should not throw error when there is existing calculation data with sbi, calculationId, invoiceNumber, calculationDate and paymentRequestId', async () => {
     await db.calculation.create(rawCalculationData)
 
-    const result = await getCalculation(paymentRequest)
+    const result = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber)
 
     expect(result).toStrictEqual({
       calculationId: rawCalculationData.calculationId,
@@ -64,7 +64,7 @@ describe('process get calculation object', () => {
     rawCalculationData.calculationDate = null
     await db.calculation.create(rawCalculationData)
 
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -73,7 +73,7 @@ describe('process get calculation object', () => {
     rawCalculationData.calculationDate = null
     await db.calculation.create(rawCalculationData)
 
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
 
     expect(wrapper).rejects.toThrow()
   })
