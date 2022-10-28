@@ -27,19 +27,19 @@ const rawFundingsData = [
 
 const mappedFundingsData = [
   {
-    area: 5,
+    area: '5.0000',
     level: 'braid',
     name: 'local',
     rate: 28.55
   },
   {
-    area: 6,
+    area: '6.0000',
     level: '',
     name: 'my test now',
     rate: 38.55
   },
   {
-    area: 9,
+    area: '9.0000',
     level: '',
     name: 'last row',
     rate: 48.55
