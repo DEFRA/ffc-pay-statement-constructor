@@ -8,10 +8,10 @@ let invoiceLines
 
 describe('process get invoice line object', () => {
   beforeEach(async () => {
-    invoiceLines = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-invoice-line')))
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
     const fundingOptions = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-funding-options')))
-    
+    invoiceLines = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-invoice-line')))
+
     const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../../mock-components/mock-invoice-number')
 
     await db.scheme.bulkCreate(schemes)
@@ -49,20 +49,20 @@ describe('process get invoice line object', () => {
     const fundingOptionCode = '300001'
     const paymentRequestId = 20
 
-    const wrapper = async () => { 
+    const wrapper = async () => {
       await getInvoiceLine(fundingOptionCode, paymentRequestId)
-     }
+    }
 
     expect(wrapper).rejects.toThrow()
   })
 
   test('should throw error when no existing invoice-line data in database that corresponds to the fundingCode and a paymentRequestId given', async () => {
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId: 1}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId: 1 } }))
     const fundingOptionCode = '300001'
     const paymentRequestId = 20
 
-    const wrapper = async () => { 
-      await getInvoiceLine(fundingOptionCode, paymentRequestId) 
+    const wrapper = async () => {
+      await getInvoiceLine(fundingOptionCode, paymentRequestId)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -70,7 +70,7 @@ describe('process get invoice line object', () => {
 
   test('should return annual value to be invoiceLine value when only 1 gross value line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[0].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -80,7 +80,7 @@ describe('process get invoice line object', () => {
 
   test('should return quarterly value to be invoiceLine value using Math.trunc when only 1 gross value line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[0].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -90,7 +90,7 @@ describe('process get invoice line object', () => {
 
   test('should return 0 quarterly reduction when only 1 gross value line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[0].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -100,7 +100,7 @@ describe('process get invoice line object', () => {
 
   test('should return quarterly payment as quarterly value when only 1 gross value line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[0].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -110,7 +110,7 @@ describe('process get invoice line object', () => {
 
   test('should return annual value to be invoiceLine gross value when 1 gross value and 1 penalty line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[1].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -120,7 +120,7 @@ describe('process get invoice line object', () => {
 
   test('should return quarterly value to be invoiceLine value using Math.trunc when 1 gross value and 1 penalty line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[1].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -130,7 +130,7 @@ describe('process get invoice line object', () => {
 
   test('should return absolute quarterly reduction as penalty invoiceLine value using Math.trunc when 1 gross value and 1 penalty line', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[1].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -140,7 +140,7 @@ describe('process get invoice line object', () => {
 
   test('should return 1 reduction item for the fundingCode and a paymentRequestId given', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[1].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -150,7 +150,7 @@ describe('process get invoice line object', () => {
 
   test('should return reductions reason without prefix that corresponds to the fundingCode and a paymentRequestId given', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[1].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
@@ -160,7 +160,7 @@ describe('process get invoice line object', () => {
 
   test('should return inverted reductions value that corresponds to the fundingCode and a paymentRequestId given', async () => {
     const paymentRequestId = 1
-    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return {...x, paymentRequestId}}))
+    await db.invoiceLine.bulkCreate(invoiceLines.map(x => { return { ...x, paymentRequestId } }))
     const fundingOptionCode = invoiceLines[1].fundingCode
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)

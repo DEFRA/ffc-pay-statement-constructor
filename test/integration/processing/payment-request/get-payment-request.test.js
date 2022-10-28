@@ -2,7 +2,6 @@ const moment = require('moment')
 
 const db = require('../../../../app/data')
 
-const schemes = require('../../../../app/constants/schemes')
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 const getPaymentRequest = require('../../../../app/processing/payment-request')
@@ -15,6 +14,7 @@ let paymentRequestCompleted
 
 describe('process payment request', () => {
   beforeEach(async () => {
+    const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
     paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
     paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
 

@@ -9,7 +9,7 @@ let retreivedCalculation
 
 describe('process get calculation object', () => {
   beforeEach(async () => {
-    const schemes = require('../../../../app/constants/schemes')
+    const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
     calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))

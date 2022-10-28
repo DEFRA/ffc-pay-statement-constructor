@@ -1,11 +1,15 @@
-const db = require('../../../../app/data')
 const moment = require('moment')
+
+const db = require('../../../../app/data')
+
 const { getLastSettlement } = require('../../../../app/processing/settlement')
 const { DATE: SETTLEMENT_DATE } = require('../../../mock-components/mock-dates').SETTLEMENT
 
 let currentSettlement
 let previousSettlement
-let settlementDate, value, invoiceNumber
+let settlementDate
+let value
+let invoiceNumber
 
 describe('process settlement', () => {
   beforeEach(async () => {

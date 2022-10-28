@@ -2,9 +2,6 @@ const db = require('../../../../app/data')
 
 const { getSettlement } = require('../../../../app/processing/settlement')
 
-const schemes = require('../../../../app/constants/schemes')
-const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
-
 const SETTLEMENT_ID_NOT_SETTLED = 1
 const SETTLEMENT_ID_SETTLED = 2
 
@@ -13,15 +10,16 @@ let mappedSettlement
 
 describe('process settlement', () => {
   beforeEach(async () => {
+    const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
+    settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({
       invoiceNumber: paymentRequest.invoiceNumber,
       originalInvoiceNumber: paymentRequest.invoiceNumber.slice(0, 5)
     })
-
     await db.paymentRequest.create(paymentRequest)
-
-    settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false })
 
     mappedSettlement = {
