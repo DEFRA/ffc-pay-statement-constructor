@@ -1,5 +1,5 @@
 const convertToPounds = (valueInPence) => {
-  return (valueInPence / 100).toFixed(2)
+  return (Math.ceil(valueInPence) / 100).toFixed(2)
 }
 
 module.exports = convertToPounds
