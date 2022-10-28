@@ -10,19 +10,11 @@ let settlement
 let submitPaymentRequest, processingPaymentRequest
 
 describe('process return settlement', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     settlement = JSON.parse(JSON.stringify(require('../mock-objects/mock-settlement')))
     submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').submitPaymentRequest))
     processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
 
-    // input data into db
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(submitPaymentRequest)

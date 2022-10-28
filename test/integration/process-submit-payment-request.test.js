@@ -17,13 +17,6 @@ const processSubmitPaymentRequest = require('../../app/inbound/submit')
 let paymentRequest
 
 describe('process submit payment request', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 

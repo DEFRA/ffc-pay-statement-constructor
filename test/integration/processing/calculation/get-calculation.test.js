@@ -8,13 +8,6 @@ let calculation
 let retreivedCalculation
 
 describe('process get calculation object', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     const schemes = require('../../../../app/constants/schemes')
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))

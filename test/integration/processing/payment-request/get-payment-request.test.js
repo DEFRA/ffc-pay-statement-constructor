@@ -14,13 +14,6 @@ let paymentRequestInProgress
 let paymentRequestCompleted
 
 describe('process payment request', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
     paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))

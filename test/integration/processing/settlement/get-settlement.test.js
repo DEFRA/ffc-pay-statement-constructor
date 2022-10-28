@@ -12,13 +12,6 @@ let settlement
 let mappedSettlement
 
 describe('process settlement', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({

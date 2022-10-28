@@ -10,13 +10,6 @@ let paymentRequestInProgress
 let paymentRequestCompleted
 
 describe('process calculation', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)

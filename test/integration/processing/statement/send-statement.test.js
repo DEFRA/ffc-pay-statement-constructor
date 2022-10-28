@@ -22,13 +22,6 @@ const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mo
 let scheduleId
 
 describe('send statement', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     jest.useFakeTimers().setSystemTime(COMPLETED_DATE)
     await db.settlement.create(mockSettlement)

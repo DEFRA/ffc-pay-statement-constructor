@@ -15,13 +15,6 @@ const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.schedulePr
 let schedule
 
 describe('batch schedule', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
     const settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))

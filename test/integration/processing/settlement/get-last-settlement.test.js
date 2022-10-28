@@ -8,13 +8,6 @@ let previousSettlement
 let settlementDate, value, invoiceNumber
 
 describe('process settlement', () => {
-  beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
-  })
-
   beforeEach(async () => {
     currentSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     currentSettlement.settlementDate = SETTLEMENT_DATE
