@@ -18,6 +18,7 @@ describe('process get calculation object', () => {
   beforeEach(async () => {
     const schemes = require('../../../../app/constants/schemes')
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
+
     calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
 
@@ -47,13 +48,14 @@ describe('process get calculation object', () => {
   })
 
   test('should throw error when no existing calculation data', async () => {
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
+
     expect(wrapper).rejects.toThrow()
   })
 
   test('should not throw error when there is existing calculation data with sbi, calculationId, invoiceNumber, calculationDate and paymentRequestId', async () => {
     await db.calculation.create({ ...calculation, paymentRequestId: paymentRequest.paymentRequestId })
-    const result = await getCalculation(paymentRequest)
+    const result = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber)
     expect(result).toStrictEqual(retreivedCalculation)
   })
 
@@ -61,16 +63,7 @@ describe('process get calculation object', () => {
     delete calculation.calculationDate
     await db.calculation.create({ ...calculation, paymentRequestId: paymentRequest.paymentRequestId })
 
-    const wrapper = async () => { await getCalculation(paymentRequest) }
-
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw error when there is existing calculation data with calculationDate but no sbi', async () => {
-    delete calculation.calculationDate
-    await db.calculation.create({ ...calculation, paymentRequestId: paymentRequest.paymentRequestId })
-
-    const wrapper = async () => { await getCalculation(paymentRequest) }
+    const wrapper = async () => { await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber) }
 
     expect(wrapper).rejects.toThrow()
   })

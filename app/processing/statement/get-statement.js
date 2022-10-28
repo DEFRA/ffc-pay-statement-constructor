@@ -11,13 +11,13 @@ const getStatement = async (settlementId) => {
     const settlement = await getSettlement(settlementId, transaction)
     const paymentRequestId = settlement.paymentRequestId
     const paymentRequest = await getPaymentRequest(paymentRequestId, transaction)
-    const calculation = await getCalculation(paymentRequest, transaction)
+    const calculation = await getCalculation(paymentRequestId, paymentRequest.invoiceNumber, transaction)
     const sbi = calculation.sbi
     const details = await getDetails(sbi, transaction)
     const address = await getAddress(sbi, transaction)
     const detailedFunding = await getDetailedFunding(calculation.calculationId, paymentRequestId, transaction)
-    const scheme = await getScheme(paymentRequest)
-    const lastSettlement = await getLastSettlement(settlement, transaction)
+    const scheme = await getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
+    const lastSettlement = await getLastSettlement(settlement.settlementDate, settlement.value, settlement.invoiceNumber, transaction)
     const latestPayment = getLatestPayment(paymentRequest, settlement, lastSettlement)
     const payments = await getDetailedPayments(calculation, latestPayment, settlement)
 

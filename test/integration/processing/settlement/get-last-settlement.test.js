@@ -5,6 +5,7 @@ const { DATE: SETTLEMENT_DATE } = require('../../../mock-components/mock-dates')
 
 let currentSettlement
 let previousSettlement
+let settlementDate, value, invoiceNumber
 
 describe('process settlement', () => {
   beforeAll(async () => {
@@ -19,6 +20,9 @@ describe('process settlement', () => {
     currentSettlement.settlementDate = SETTLEMENT_DATE
     previousSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract(1, 'day')
+    settlementDate = currentSettlement.settlementDate
+    value = currentSettlement.value
+    invoiceNumber = currentSettlement.invoiceNumber
     await db.settlement.create(currentSettlement)
   })
 
@@ -34,13 +38,13 @@ describe('process settlement', () => {
   })
 
   test('should return null if no previous settlements', async () => {
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement).toBeNull()
   })
 
   test('should return null if previous settlements same date and value', async () => {
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement).toBeNull()
   })
 
@@ -48,13 +52,13 @@ describe('process settlement', () => {
     previousSettlement.settlementDate = currentSettlement.settlementDate
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement).toBeNull()
   })
 
   test('should return null if previous settlements same value and earlier date', async () => {
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement).toBeNull()
   })
 
@@ -62,7 +66,7 @@ describe('process settlement', () => {
     previousSettlement.settlementDate = moment(currentSettlement.settlementDate).add('days', 1)
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement).toBeNull()
   })
 
@@ -70,14 +74,14 @@ describe('process settlement', () => {
     previousSettlement.value = 40000
     previousSettlement.settled = false
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement).toBeNull()
   })
 
   test('should return settlement if previous settlements lower value and earlier date', async () => {
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement.value).toBe(previousSettlement.value)
   })
 
@@ -87,7 +91,7 @@ describe('process settlement', () => {
     previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract('days', 2)
     previousSettlement.value = 30000
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement.value).toBe(40000)
   })
 
@@ -96,7 +100,7 @@ describe('process settlement', () => {
     previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract('days', 2)
     previousSettlement.value = 30000
     await db.settlement.create(previousSettlement)
-    const lastSettlement = await getLastSettlement(currentSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement.value).toBe(30000)
   })
 })

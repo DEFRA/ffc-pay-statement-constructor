@@ -3,10 +3,9 @@ const schema = require('./calculation-schema')
 const getCalculationByPaymentRequestId = require('./get-calculation-by-payment-request-id')
 const updateCalculationPaymentRequestId = require('./update-calculation-payment-request-id')
 
-const getCalculation = async (paymentRequest, transaction) => {
-  const paymentRequestId = paymentRequest.paymentRequestId
+const getCalculation = async (paymentRequestId, invoiceNumber, transaction) => {
   const rawCalculation = await getCalculationByPaymentRequestId(paymentRequestId, transaction)
-  const calculation = rawCalculation || await updateCalculationPaymentRequestId(paymentRequest.invoiceNumber, paymentRequestId, transaction)
+  const calculation = rawCalculation || await updateCalculationPaymentRequestId(invoiceNumber, paymentRequestId, transaction)
 
   const result = schema.validate(calculation, {
     abortEarly: false
