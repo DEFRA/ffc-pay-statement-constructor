@@ -1,7 +1,5 @@
 const db = require('../../../../app/data')
 
-const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../../mock-components/mock-invoice-number')
-
 const getFundings = require('../../../../app/processing/funding/get-fundings')
 
 let fundings
@@ -9,6 +7,10 @@ let fundings
 describe('get and transform fundings object for building a statement object', () => {
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
     const fundingOptions = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-funding-options')))
     const calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
@@ -18,7 +20,7 @@ describe('get and transform fundings object for building a statement object', ()
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
     await db.organisation.create({ ...organisation, sbi: calculation.sbi })
-    await db.invoiceNumber.create({ invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(paymentRequest)
     await db.calculation.create(calculation)
   })

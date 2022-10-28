@@ -1,5 +1,4 @@
 const db = require('../../../../app/data')
-const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../../mock-components/mock-invoice-number')
 
 const getCalculation = require('../../../../app/processing/calculation')
 
@@ -10,6 +9,10 @@ let retreivedCalculation
 describe('process get calculation object', () => {
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
     calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
@@ -17,7 +20,7 @@ describe('process get calculation object', () => {
 
     await db.scheme.bulkCreate(schemes)
     await db.organisation.create(organisation)
-    await db.invoiceNumber.create({ invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(paymentRequest)
 
     retreivedCalculation = {

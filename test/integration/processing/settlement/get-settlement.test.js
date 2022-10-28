@@ -11,14 +11,15 @@ let mappedSettlement
 describe('process settlement', () => {
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
     const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
     settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
 
     await db.scheme.bulkCreate(schemes)
-    await db.invoiceNumber.create({
-      invoiceNumber: paymentRequest.invoiceNumber,
-      originalInvoiceNumber: paymentRequest.invoiceNumber.slice(0, 5)
-    })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(paymentRequest)
     await db.settlement.create({ ...settlement, paymentRequestId: 1, settled: false })
 

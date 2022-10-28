@@ -1,8 +1,5 @@
 const db = require('../../app/data')
 
-const schemes = require('../../app/constants/schemes')
-const fundingOptions = require('../../app/constants/funding-options')
-
 const processCalculation = require('../../app/inbound/calculation')
 
 let calculation
@@ -11,8 +8,16 @@ let paymentRequestCompleted
 
 describe('process calculation', () => {
   beforeEach(async () => {
+    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../app/constants/funding-options')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
 
     calculation = JSON.parse(JSON.stringify(require('../mock-objects/mock-calculation')))
     paymentRequestInProgress = require('../mock-objects/mock-payment-request').processingPaymentRequest
@@ -73,7 +78,6 @@ describe('process calculation', () => {
   })
 
   test('should save entry into calculation with paymentRequestId as 1 when matching completed paymentRequest record has paymentRequestId 1 where calculation.invoiceNumber', async () => {
-    await db.invoiceNumber.create({ invoiceNumber: paymentRequestCompleted.invoiceNumber, originalInvoiceNumber: paymentRequestCompleted.invoiceNumber.slice(0, 5) })
     await db.paymentRequest.create(paymentRequestCompleted)
     await processCalculation(calculation)
 
@@ -82,7 +86,6 @@ describe('process calculation', () => {
   })
 
   test('should save entry into calculation with paymentRequestId as null when no matching completed paymentRequest records where calculation.invoiceNumber', async () => {
-    await db.invoiceNumber.create({ invoiceNumber: paymentRequestInProgress.invoiceNumber, originalInvoiceNumber: paymentRequestInProgress.invoiceNumber.slice(0, 5) })
     try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { }
     await processCalculation(calculation)
 

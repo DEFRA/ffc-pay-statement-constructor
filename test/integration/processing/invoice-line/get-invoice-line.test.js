@@ -9,29 +9,18 @@ let invoiceLines
 describe('process get invoice line object', () => {
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
     const fundingOptions = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-funding-options')))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
     invoiceLines = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-invoice-line')))
-
-    const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../../../mock-components/mock-invoice-number')
 
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
-    await db.invoiceNumber.create({ invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER })
-    await db.paymentRequest.bulkCreate(
-      [
-        {
-          paymentRequestId: 1,
-          schemeId: 1,
-          invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER
-        },
-        {
-          paymentRequestId: 2,
-          schemeId: 1,
-          invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER
-        }
-      ]
-
-    )
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
+    await db.paymentRequest.create(paymentRequest)
   })
 
   afterEach(async () => {
