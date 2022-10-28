@@ -1,3 +1,5 @@
+jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+
 const mockCommit = jest.fn()
 const mockRollback = jest.fn()
 const mockTransaction = {
@@ -31,8 +33,6 @@ let retreivedSchedules
 
 describe('batch schedule', () => {
   beforeEach(() => {
-    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
-
     mockCommit.mockResolvedValue(undefined)
     mockRollback.mockResolvedValue(undefined)
 

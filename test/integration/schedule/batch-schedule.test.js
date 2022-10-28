@@ -1,3 +1,5 @@
+jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+
 const moment = require('moment')
 
 const db = require('../../../app/data')
@@ -5,7 +7,6 @@ const config = require('../../../app/config').processingConfig
 
 const schedulePendingSettlements = require('../../../app/processing/schedule')
 
-jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
 const LESS_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
 const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()

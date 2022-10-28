@@ -1,8 +1,5 @@
 const db = require('../../../app/data')
 
-const schemes = require('../../../app/constants/schemes')
-const fundingOptions = require('../../../app/constants/funding-options')
-
 const {
   processProcessingPaymentRequest,
   processStatementData,
@@ -18,14 +15,16 @@ let settlement
 
 describe('process messages off Topics', () => {
   beforeEach(async () => {
-    await db.scheme.bulkCreate(schemes)
-    await db.fundingOption.bulkCreate(fundingOptions)
-
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../../app/constants/funding-options')))
     calculation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-calculation')))
     organisation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-organisation')))
     paymentRequestInProgress = require('../../mock-objects/mock-payment-request').processingPaymentRequest
     paymentRequestCompleted = require('../../mock-objects/mock-payment-request').submitPaymentRequest
     settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
+
+    await db.scheme.bulkCreate(schemes)
+    await db.fundingOption.bulkCreate(fundingOptions)
   })
 
   afterEach(async () => {
