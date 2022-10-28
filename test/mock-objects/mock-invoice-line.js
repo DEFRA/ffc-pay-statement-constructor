@@ -1,64 +1,57 @@
-const fundingCode = require('../../app/constants/funding-codes')
-const FundingCodeName = require('../../app/constants/funding-code-names')
+const {
+  ARABLE_SOIL_INTRODUCTORY,
+  COMMON_LAND_ADDITIONAL,
+  HEDGEROW,
+  MOORLAND_ADDITIONAL,
+  MOORLAND_INTRODUCTORY
+} = require('../../app/constants/funding-codes')
 
-const mappedFundingsData = [
-  {
-    area: 5,
-    level: 'braid',
-    name: 'local',
-    rate: 28.55
-  },
-  {
-    area: 6,
-    level: '',
-    name: 'my test now',
-    rate: 38.55
-  },
-  {
-    area: 9,
-    level: '',
-    name: 'last row',
-    rate: 48.55
-  }
-]
+const {
+  GROSS_VALUE,
+  OVER_DECLARATION_PENALTY
+} = require('../../app/constants/descriptions')
 
-const rawFundingOptions = [
-  {
-    fundingCode: fundingCode.ARABLE_SOIL_INTRODUCTORY,
-    name: FundingCodeName.ARABLE_SOIL_INTRODUCTORY
-  },
-  {
-    fundingCode: fundingCode.ARABLE_SOIL_INTERMEDIATE,
-    name: FundingCodeName.ARABLE_SOIL_INTERMEDIATE
-  }
-]
-
-const rawInvoiceLines = [
-  {
-    fundingCode: fundingCode.ARABLE_SOIL_INTRODUCTORY,
-    paymentRequestId: 1,
-    value: 500
-  },
-  {
-    fundingCode: fundingCode.ARABLE_SOIL_INTERMEDIATE,
-    paymentRequestId: 2,
-    value: 600
-  },
-  {
-    fundingCode: fundingCode.ARABLE_SOIL_INTERMEDIATE,
-    paymentRequestId: 1,
-    value: 800
-  },
-  {
-    fundingCode: fundingCode.ARABLE_SOIL_INTRODUCTORY,
-    paymentRequestId: 1,
-    value: -100,
-    description: 'P02 - Over declaration reduction'
-  }
-]
-
-module.exports = {
-  rawFundingOptions,
-  mappedFundingsData,
-  rawInvoiceLines
+const invoiceLineArableSoilIntroductoryGross = {
+  description: GROSS_VALUE,
+  fundingCode: ARABLE_SOIL_INTRODUCTORY,
+  value: 82321
 }
+
+const invoiceLineArableSoilIntroductoryOverDeclaration = {
+  description: OVER_DECLARATION_PENALTY,
+  fundingCode: ARABLE_SOIL_INTRODUCTORY,
+  value: -3209
+}
+
+const invoiceLineCommonLandAdditionalGross = {
+  description: GROSS_VALUE,
+  fundingCode: COMMON_LAND_ADDITIONAL,
+  value: 1902
+}
+
+const invoiceLineHedgerowGross = {
+  description: GROSS_VALUE,
+  fundingCode: HEDGEROW,
+  value: 6
+}
+
+const invoiceLineMoorlandAdditionalGross = {
+  description: GROSS_VALUE,
+  fundingCode: MOORLAND_ADDITIONAL,
+  value: 3298
+}
+
+const invoiceLineMoorlandIntroductoryGross = {
+  description: GROSS_VALUE,
+  fundingCode: MOORLAND_INTRODUCTORY,
+  value: 20000
+}
+
+module.exports = [
+  invoiceLineMoorlandAdditionalGross,
+  invoiceLineArableSoilIntroductoryGross,
+  invoiceLineArableSoilIntroductoryOverDeclaration,
+  invoiceLineCommonLandAdditionalGross,
+  invoiceLineHedgerowGross,
+  invoiceLineMoorlandIntroductoryGross
+]
