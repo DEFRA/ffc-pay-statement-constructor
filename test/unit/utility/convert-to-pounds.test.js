@@ -84,4 +84,14 @@ describe('convert integer pence to string decimal pounds', () => {
     const result = await convertToPounds(1101.1)
     expect(result).toBe('11.02')
   })
+
+  test('should return "0.00" when undefined', async () => {
+    const result = await convertToPounds(undefined)
+    expect(result).toBe('0.00')
+  })
+
+  test('should return "0.00" when null', async () => {
+    const result = await convertToPounds(null)
+    expect(result).toBe('0.00')
+  })
 })
