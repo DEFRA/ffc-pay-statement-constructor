@@ -26,7 +26,7 @@ const getCalculation = require('../../../../app/processing/calculation/get-calcu
 
 let paymentRequestId
 let invoiceNumber
-let retreivedCalculation
+let retrievedCalculation
 
 describe('get and transform payment request information for building a statement object', () => {
   beforeEach(() => {
@@ -36,7 +36,7 @@ describe('get and transform payment request information for building a statement
     paymentRequestId = paymentRequest.paymentRequestId
     invoiceNumber = paymentRequest.invoiceNumber
 
-    retreivedCalculation = {
+    retrievedCalculation = {
       calculationId: 1,
       paymentRequestId: 1,
       calculationDate: calculation.calculationDate,
@@ -44,8 +44,8 @@ describe('get and transform payment request information for building a statement
       sbi: calculation.sbi
     }
 
-    schema.validate.mockReturnValue({ value: retreivedCalculation })
-    getCalculationByPaymentRequestId.mockResolvedValue(retreivedCalculation)
+    schema.validate.mockReturnValue({ value: retrievedCalculation })
+    getCalculationByPaymentRequestId.mockResolvedValue(retrievedCalculation)
   })
 
   afterEach(() => {
@@ -77,9 +77,9 @@ describe('get and transform payment request information for building a statement
     expect(schema.validate).toHaveBeenCalledTimes(1)
   })
 
-  test('should call schema.validate with retreivedCalculation and { abortEarly: false } when a paymentRequest is given', async () => {
+  test('should call schema.validate with retrievedCalculation and { abortEarly: false } when a paymentRequest is given', async () => {
     await getCalculation(paymentRequestId, invoiceNumber)
-    expect(schema.validate).toHaveBeenCalledWith(retreivedCalculation, { abortEarly: false })
+    expect(schema.validate).toHaveBeenCalledWith(retrievedCalculation, { abortEarly: false })
   })
 
   test('should throw when getCalculationByPaymentRequestId throws', async () => {

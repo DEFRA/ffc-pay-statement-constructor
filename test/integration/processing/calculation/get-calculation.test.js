@@ -4,7 +4,7 @@ const getCalculation = require('../../../../app/processing/calculation')
 
 let paymentRequest
 let calculation
-let retreivedCalculation
+let retrievedCalculation
 
 describe('process get calculation object', () => {
   beforeEach(async () => {
@@ -23,7 +23,7 @@ describe('process get calculation object', () => {
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(paymentRequest)
 
-    retreivedCalculation = {
+    retrievedCalculation = {
       calculationId: 1,
       paymentRequestId: paymentRequest.paymentRequestId,
       sbi: calculation.sbi,
@@ -52,7 +52,7 @@ describe('process get calculation object', () => {
   test('should not throw error when there is existing calculation data with sbi, calculationId, invoiceNumber, calculationDate and paymentRequestId', async () => {
     await db.calculation.create({ ...calculation, paymentRequestId: paymentRequest.paymentRequestId })
     const result = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber)
-    expect(result).toStrictEqual(retreivedCalculation)
+    expect(result).toStrictEqual(retrievedCalculation)
   })
 
   test('should throw error when there is existing calculation data with sbi but no calculationDate', async () => {

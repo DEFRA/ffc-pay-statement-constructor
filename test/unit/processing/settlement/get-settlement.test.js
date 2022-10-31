@@ -78,13 +78,13 @@ describe('get required settlement information for building a statement object', 
     expect(validateSettlement).toHaveBeenCalledTimes(1)
   })
 
-  test('should call validateSettlement with retreivedSettlement when a settlementId is given', async () => {
+  test('should call validateSettlement with retrievedSettlement when a settlementId is given', async () => {
     const settlementId = 1
     await getSettlement(settlementId)
     expect(validateSettlement).toHaveBeenCalledWith(retrievedSettlement)
   })
 
-  test('should return retreivedSettlement when a settlementId is given', async () => {
+  test('should return retrievedSettlement when a settlementId is given', async () => {
     const settlementId = 1
     const result = await getSettlement(settlementId)
     expect(result).toStrictEqual(retrievedSettlement)

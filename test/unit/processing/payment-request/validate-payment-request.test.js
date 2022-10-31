@@ -23,7 +23,7 @@ describe('validate payment request', () => {
     jest.clearAllMocks()
   })
 
-  test('should return retreivedPaymentRequest', async () => {
+  test('should return retrievedPaymentRequest', async () => {
     const result = validatePaymentRequest(retrievedPaymentRequest)
     expect(result).toBe(retrievedPaymentRequest)
   })
