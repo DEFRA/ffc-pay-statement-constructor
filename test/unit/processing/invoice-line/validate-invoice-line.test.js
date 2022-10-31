@@ -1,4 +1,4 @@
-const schema = require('../../../../app/processing/invoice-line/invoice-line-schema')
+const schema = require('../../../../app/processing/invoice-line/schema')
 let grossInvoiceLine
 let reductionInvoiceLine
 

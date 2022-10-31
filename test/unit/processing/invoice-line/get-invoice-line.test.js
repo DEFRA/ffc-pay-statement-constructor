@@ -4,8 +4,8 @@ const getPositiveInvoiceLineByFundingCodeAndPaymentRequestId = require('../../..
 jest.mock('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
 const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
 
-jest.mock('../../../../app/processing/invoice-line/invoice-line-schema')
-const schema = require('../../../../app/processing/invoice-line/invoice-line-schema')
+jest.mock('../../../../app/processing/invoice-line/schema')
+const schema = require('../../../../app/processing/invoice-line/schema')
 
 const getPositiveInvoiceLine = require('../../../../app/processing/invoice-line/get-invoice-line')
 
