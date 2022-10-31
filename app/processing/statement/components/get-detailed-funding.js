@@ -5,9 +5,12 @@ const { convertToPounds } = require('../../../utility')
 const getDetailedFunding = async (calculationId, paymentRequestId, transaction) => {
   const fundings = await getFundings(calculationId, transaction)
   const detailedFundings = []
+  const rawDetailedFundings = []
 
   for (const funding of fundings) {
     const invoiceLine = await getInvoiceLine(funding.fundingCode, paymentRequestId, transaction)
+    rawDetailedFundings.push({ area: funding.area, ...invoiceLine })
+
     const { annualValue, quarterlyValue, quarterlyReduction, quarterlyPayment, reductions } = invoiceLine
 
     const invoiceLineInPounds = {
@@ -33,14 +36,14 @@ const getDetailedFunding = async (calculationId, paymentRequestId, transaction) 
   }
 
   const total = {
-    area: detailedFundings.reduce((x, y) => x + Number(y.area), 0).toFixed(4),
+    area: rawDetailedFundings.reduce((x, y) => x + Number(y.area), 0).toFixed(4),
     level: '',
     name: 'Total',
     rate: '',
-    annualValue: detailedFundings.reduce((x, y) => x + Number(y.annualValue), 0).toFixed(2),
-    quarterlyValue: detailedFundings.reduce((x, y) => x + Number(y.quarterlyValue), 0).toFixed(2),
-    quarterlyReduction: detailedFundings.reduce((x, y) => x + Number(y.quarterlyReduction), 0).toFixed(2),
-    quarterlyPayment: detailedFundings.reduce((x, y) => x + Number(y.quarterlyPayment), 0).toFixed(2)
+    annualValue: convertToPounds(rawDetailedFundings.reduce((x, y) => x + y.annualValue, 0)),
+    quarterlyValue: convertToPounds(rawDetailedFundings.reduce((x, y) => x + y.quarterlyValue, 0)),
+    quarterlyReduction: convertToPounds(rawDetailedFundings.reduce((x, y) => x + y.quarterlyReduction, 0)),
+    quarterlyPayment: convertToPounds(rawDetailedFundings.reduce((x, y) => x + y.quarterlyPayment, 0))
   }
 
   detailedFundings.push(total)

@@ -7,7 +7,6 @@ const config = require('../../../app/config').processingConfig
 
 const schedulePendingSettlements = require('../../../app/processing/schedule')
 
-
 const LESS_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
 const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()
 

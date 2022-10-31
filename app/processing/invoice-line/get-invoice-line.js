@@ -18,8 +18,8 @@ const getInvoiceLine = async (fundingCode, paymentRequestId) => {
 
   const { reductions, annualReduction } = await getReductions(fundingCode, paymentRequestId)
   const annualValue = grossValueInvoiceLine.value
-  const quarterlyValue = annualValue > MIN_PAYMENT_VALUE ? Math.trunc(annualValue * QUARTER) : MIN_PAYMENT_VALUE
-  const quarterlyReduction = Math.trunc(annualReduction * QUARTER)
+  const quarterlyValue = annualValue > MIN_PAYMENT_VALUE ? annualValue * QUARTER : MIN_PAYMENT_VALUE
+  const quarterlyReduction = annualReduction * QUARTER
   const quarterlyPayment = quarterlyValue - quarterlyReduction
 
   return {

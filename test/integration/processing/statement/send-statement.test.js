@@ -1,6 +1,6 @@
 const { DATE: COMPLETED_DATE } = require('../../../mock-components/mock-dates').SCHEDULED
 jest.useFakeTimers().setSystemTime(COMPLETED_DATE)
-    
+
 const db = require('../../../../app/data')
 
 const { sendStatement } = require('../../../../app/processing/statement')

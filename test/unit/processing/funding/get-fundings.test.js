@@ -21,7 +21,7 @@ jest.mock('../../../../app/processing/funding/get-fundings-by-calculation-id')
 const getFundingsByCalculationId = require('../../../../app/processing/funding/get-fundings-by-calculation-id')
 
 jest.mock('../../../../app/processing/funding/fundings-schema')
-const schema = require('../../../../app/processing/funding/fundings-schema')
+const schema = require('../../../../app/processing/funding/fundings-schema') // remove
 
 jest.mock('../../../../app/processing/funding/map-fundings')
 const mapFundings = require('../../../../app/processing/funding/map-fundings')
@@ -38,14 +38,14 @@ describe('get and transform fundings object for building a statement object', ()
     mappedFundings = [
       {
         area: fundings[0].areaClaimed,
-        level: 'Introductory',
-        name: 'Arable and horticultural soils',
+        level: '',
+        name: 'Moorland',
         rate: fundings[0].rate
       },
       {
         area: fundings[1].areaClaimed,
-        level: '',
-        name: 'Hedgerow',
+        level: 'Introductory',
+        name: 'Arable and horticultural soils',
         rate: fundings[1].rate
       }
     ]

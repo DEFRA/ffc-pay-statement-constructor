@@ -74,7 +74,7 @@ describe('process get invoice line object', () => {
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    expect(result.quarterlyValue).toBe(Math.trunc(invoiceLines[0].value * QUARTER))
+    expect(result.quarterlyValue).toBe(invoiceLines[0].value * QUARTER)
   })
 
   test('should return 0 quarterly reduction when only 1 gross value line', async () => {
@@ -114,7 +114,7 @@ describe('process get invoice line object', () => {
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    expect(result.quarterlyValue).toBe(Math.trunc(invoiceLines[1].value * QUARTER))
+    expect(result.quarterlyValue).toBe(invoiceLines[1].value * QUARTER)
   })
 
   test('should return absolute quarterly reduction as penalty invoiceLine value using Math.trunc when 1 gross value and 1 penalty line', async () => {
@@ -124,7 +124,7 @@ describe('process get invoice line object', () => {
 
     const result = await getInvoiceLine(fundingOptionCode, paymentRequestId)
 
-    expect(result.quarterlyReduction).toBe(Math.abs(Math.trunc(invoiceLines[2].value * QUARTER)))
+    expect(result.quarterlyReduction).toBe(Math.abs(invoiceLines[2].value * QUARTER))
   })
 
   test('should return 1 reduction item for the fundingCode and a paymentRequestId given', async () => {

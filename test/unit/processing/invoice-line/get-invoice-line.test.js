@@ -13,6 +13,8 @@ let invoiceLine
 let fundingCode
 let paymentRequestId
 
+const QUARTER = 0.25
+
 describe('get and transform invoice-line object for building a statement object', () => {
   beforeEach(() => {
     invoiceLine = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-invoice-line')))[0]
@@ -78,9 +80,9 @@ describe('get and transform invoice-line object for building a statement object'
 
     expect(result).toStrictEqual({
       annualValue: invoiceLine.value,
-      quarterlyValue: Math.trunc(invoiceLine.value * 0.25),
+      quarterlyValue: invoiceLine.value * QUARTER,
       quarterlyReduction: 0,
-      quarterlyPayment: Math.trunc(invoiceLine.value * 0.25),
+      quarterlyPayment: invoiceLine.value * QUARTER,
       reductions: []
     })
   })
@@ -92,9 +94,9 @@ describe('get and transform invoice-line object for building a statement object'
 
     expect(result).toStrictEqual({
       annualValue: invoiceLine.value,
-      quarterlyValue: Math.trunc(invoiceLine.value * 0.25),
-      quarterlyReduction: Math.trunc((await getReductions()).annualReduction * 0.25),
-      quarterlyPayment: Math.trunc(invoiceLine.value * 0.25) - Math.trunc((await getReductions()).annualReduction * 0.25),
+      quarterlyValue: invoiceLine.value * QUARTER,
+      quarterlyReduction: (await getReductions()).annualReduction * QUARTER,
+      quarterlyPayment: (invoiceLine.value * QUARTER) - ((await getReductions()).annualReduction * QUARTER),
       reductions: (await getReductions()).reductions
     })
   })
