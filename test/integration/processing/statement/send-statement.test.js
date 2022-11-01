@@ -1,3 +1,6 @@
+const { DATE: COMPLETED_DATE } = require('../../../mock-components/mock-dates').SCHEDULED
+jest.useFakeTimers().setSystemTime(COMPLETED_DATE)
+
 const db = require('../../../../app/data')
 
 const { sendStatement } = require('../../../../app/processing/statement')
@@ -13,12 +16,7 @@ jest.mock('ffc-messaging', () => {
   }
 })
 
-const { DATE: COMPLETED_DATE } = require('../../../mock-components/mock-dates').SCHEDULED
-
-const statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
-const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
-
+let statement
 let scheduleId
 
 describe('send statement', () => {
@@ -30,10 +28,13 @@ describe('send statement', () => {
   })
 
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(COMPLETED_DATE)
+    const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+    const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))
+    statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
+    scheduleId = 1
+
     await db.settlement.create(mockSettlement)
     await db.schedule.create(mockSchedule)
-    scheduleId = 1
   })
 
   afterEach(async () => {

@@ -1,3 +1,5 @@
+jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+
 const mockCommit = jest.fn()
 const mockRollback = jest.fn()
 const mockTransaction = {
@@ -27,30 +29,28 @@ const getUpdatedScheduledSettlements = require('../../../../app/processing/sched
 
 const schedulePendingSettlements = require('../../../../app/processing/schedule/schedule-pending-settlements')
 
-let retreivedSchedules
+let retrievedSchedules
 
 describe('batch schedule', () => {
   beforeEach(() => {
-    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
-
     mockCommit.mockResolvedValue(undefined)
     mockRollback.mockResolvedValue(undefined)
 
-    const schedule = JSON.parse(JSON.stringify(require('../../../mock-schedule')))
+    const schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))
 
-    const retreivedSchedule = {
+    const retrievedSchedule = {
       scheduleId: 1,
       settlementId: schedule.settlementId
     }
 
-    retreivedSchedules = [
-      { ...retreivedSchedule },
-      { ...retreivedSchedule, scheduleId: 2 }
+    retrievedSchedules = [
+      { ...retrievedSchedule },
+      { ...retrievedSchedule, scheduleId: 2 }
     ]
 
-    getScheduledSettlements.mockResolvedValue(retreivedSchedules)
-    getValidScheduledSettlements.mockReturnValue(retreivedSchedules)
-    getUpdatedScheduledSettlements.mockResolvedValue(retreivedSchedules)
+    getScheduledSettlements.mockResolvedValue(retrievedSchedules)
+    getValidScheduledSettlements.mockReturnValue(retrievedSchedules)
+    getUpdatedScheduledSettlements.mockResolvedValue(retrievedSchedules)
   })
 
   afterEach(() => {
@@ -82,9 +82,9 @@ describe('batch schedule', () => {
     expect(getValidScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getValidScheduledSettlements with each retreivedSchedules when getScheduledSettlements returns 2 schedule records', async () => {
+  test('should call getValidScheduledSettlements with each retrievedSchedules when getScheduledSettlements returns 2 schedule records', async () => {
     await schedulePendingSettlements()
-    expect(getValidScheduledSettlements).toHaveBeenCalledWith(retreivedSchedules)
+    expect(getValidScheduledSettlements).toHaveBeenCalledWith(retrievedSchedules)
   })
 
   test('should call getUpdatedScheduledSettlements', async () => {
@@ -97,9 +97,9 @@ describe('batch schedule', () => {
     expect(getUpdatedScheduledSettlements).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getUpdatedScheduledSettlements with retreivedSchedules, new Date() and mockTransaction when getValidScheduledSettlements returns 2 valid schedule records', async () => {
+  test('should call getUpdatedScheduledSettlements with retrievedSchedules, new Date() and mockTransaction when getValidScheduledSettlements returns 2 valid schedule records', async () => {
     await schedulePendingSettlements()
-    expect(getUpdatedScheduledSettlements).toHaveBeenCalledWith(retreivedSchedules, new Date(), mockTransaction)
+    expect(getUpdatedScheduledSettlements).toHaveBeenCalledWith(retrievedSchedules, new Date(), mockTransaction)
   })
 
   test('should call mockTransaction.commit', async () => {
@@ -112,9 +112,9 @@ describe('batch schedule', () => {
     expect(mockTransaction.commit).toHaveBeenCalledTimes(1)
   })
 
-  test('should return retreivedSchedules', async () => {
+  test('should return retrievedSchedules', async () => {
     const result = await schedulePendingSettlements()
-    expect(result).toStrictEqual(retreivedSchedules)
+    expect(result).toStrictEqual(retrievedSchedules)
   })
 
   test('should not call mockTransaction.rollback', async () => {
@@ -221,22 +221,22 @@ describe('batch schedule', () => {
   test('should not return the corresponding thrown schedule when getUpdatedScheduledSettlements throws then resolves', async () => {
     getUpdatedScheduledSettlements.mockReset()
       .mockRejectedValueOnce(new Error('Database update issue'))
-      .mockResolvedValueOnce(retreivedSchedules[1])
+      .mockResolvedValueOnce(retrievedSchedules[1])
 
     const result = await schedulePendingSettlements()
 
-    expect(result).not.toStrictEqual([retreivedSchedules[0]])
+    expect(result).not.toStrictEqual([retrievedSchedules[0]])
   })
 
   test('should return the corresponding resolved schedule when getUpdatedScheduledSettlements throws then resolves', async () => {
     getUpdatedScheduledSettlements.mockReset()
       .mockRejectedValueOnce(new Error('Database update issue'))
-      .mockResolvedValueOnce([retreivedSchedules[1]])
+      .mockResolvedValueOnce([retrievedSchedules[1]])
 
     await schedulePendingSettlements()
     const result = await schedulePendingSettlements()
 
-    expect(result).toStrictEqual([retreivedSchedules[1]])
+    expect(result).toStrictEqual([retrievedSchedules[1]])
   })
 
   test('should return an empty array if both schedules passed to getUpdatedScheduledSettlements throw', async () => {

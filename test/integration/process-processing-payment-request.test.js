@@ -1,7 +1,6 @@
-const db = require('../../app/data')
+jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
-const schemes = require('../../app/constants/schemes')
-const fundingOptions = require('../../app/constants/funding-options')
+const db = require('../../app/data')
 
 const {
   SFI_PILOT: SFI_PILOT_SCHEME_ID,
@@ -25,12 +24,12 @@ describe('process processing payment request', () => {
   })
 
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../app/constants/funding-options')))
+    paymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
-
-    paymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
   })
 
   afterEach(async () => {

@@ -13,7 +13,7 @@ describe('process processing payment request', () => {
   })
 
   beforeEach(async () => {
-    organisation = JSON.parse(JSON.stringify(require('../mock-organisation')))
+    organisation = JSON.parse(JSON.stringify(require('../mock-objects/mock-organisation')))
   })
 
   afterEach(async () => {

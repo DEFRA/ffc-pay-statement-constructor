@@ -1,23 +1,22 @@
-jest.mock('../../../../app/processing/organisation/get-organisation')
-const getOrganisation = require('../../../../app/processing/organisation/get-organisation')
+const { NAMES } = require('../../../../app/constants/schedules')
 
-jest.mock('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
-const getPositiveInvoiceLineByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
+jest.mock('../../../../app/processing/settlement/get-settlement')
+const getSettlement = require('../../../../app/processing/settlement/get-settlement')
 
-jest.mock('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
-const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-negative-invoice-lines-by-funding-code-and-payment-request-id')
+jest.mock('../../../../app/processing/payment-request/get-payment-request')
+const getPaymentRequest = require('../../../../app/processing/payment-request/get-payment-request')
 
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
 
-jest.mock('../../../../app/processing/funding/get-fundings-by-calculation-id')
-const getFundingsByCalculationId = require('../../../../app/processing/funding/get-fundings-by-calculation-id')
-
-jest.mock('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
-const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
-
-jest.mock('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
-const getSettledSettlementBySettlementId = require('../../../../app/processing/settlement/get-settled-settlement-by-settlement-id')
+jest.mock('../../../../app/processing/statement/components')
+const {
+  getAddress,
+  getDetailedFunding,
+  getDetails,
+  getDetailedPayments,
+  getScheme
+} = require('../../../../app/processing/statement/components')
 
 jest.mock('../../../../app/processing/settlement/get-last-settlement')
 const getLastSettlement = require('../../../../app/processing/settlement/get-last-settlement')
@@ -27,84 +26,109 @@ const getLatestPayment = require('../../../../app/processing/payment/get-latest-
 
 const { getStatement } = require('../../../../app/processing/statement')
 
-let calculation
-let paymentRequest
-let settlement
-
-let retrievedOrganisationData
-let retrievedCalculationData
-let retrievedFundingsData
-let retrievedPaymentRequest
-let retrievedSettlement
-let retrievedLatestPayment
-
 describe('get various components and transform to statement object', () => {
   beforeEach(() => {
-    retrievedOrganisationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation').rawOrganisationData))
-    retrievedCalculationData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation').rawCalculationData))
-    retrievedFundingsData = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings').rawFundingsData))
-    retrievedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-    retrievedSettlement = JSON.parse(JSON.stringify(require('../../../mock-settlement')))
-    retrievedLatestPayment = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-latest-payment')))
+    const settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
+    const calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
+    const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
+    const detailedFunding = {}
+    const lastSettlement = {}
+    const latestPayment = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-latest-payment')))
 
-    settlement = {
-      invoiceNumber: retrievedSettlement.invoiceNumber,
+    const mappedSettlement = {
       paymentRequestId: 1,
-      reference: retrievedSettlement.reference,
-      settled: retrievedSettlement.settled,
-      settlementDate: new Date(retrievedSettlement.settlementDate),
-      value: retrievedSettlement.value
+      invoiceNumber: settlement.invoiceNumber,
+      reference: settlement.reference,
+      settled: settlement.settled,
+      settlementDate: new Date(settlement.settlementDate),
+      value: settlement.value
     }
 
-    getSettledSettlementBySettlementId.mockResolvedValue(settlement)
-
-    paymentRequest = {
+    const mappedPaymentRequest = {
       paymentRequestId: 1,
-      agreementNumber: retrievedPaymentRequest.agreementNumber,
-      dueDate: retrievedPaymentRequest.dueDate,
-      invoiceNumber: retrievedPaymentRequest.invoiceNumber,
-      marketingYear: retrievedPaymentRequest.marketingYear,
-      schedule: retrievedPaymentRequest.schedule,
-      value: retrievedPaymentRequest.value
+      agreementNumber: paymentRequest.agreementNumber,
+      dueDate: paymentRequest.dueDate,
+      frequency: NAMES[paymentRequest.schedule],
+      invoiceNumber: paymentRequest.invoiceNumber,
+      schedule: paymentRequest.schedule,
+      value: paymentRequest.value,
+      year: paymentRequest.year
     }
 
-    calculation = {
-      sbi: retrievedCalculationData.sbi,
-      calculated: new Date(retrievedCalculationData.calculationDate),
-      invoiceNumber: retrievedCalculationData.invoiceNumber
+    const mappedCalculation = {
+      calculationId: 1,
+      paymentRequestId: 1,
+      calculated: calculation.calculationDate,
+      invoiceNumber: calculation.invoiceNumber,
+      sbi: calculation.sbi
     }
 
-    const retrievedInvoiceLine = { value: 600 }
+    const details = {
+      businessName: organisation.businessName,
+      email: organisation.email,
+      frn: Number(organisation.frn),
+      sbi: Number(organisation.sbi)
+    }
 
-    getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(paymentRequest)
-    getPositiveInvoiceLineByFundingCodeAndPaymentRequestId.mockResolvedValue(retrievedInvoiceLine)
-    getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId.mockResolvedValue([])
-    getOrganisation.mockResolvedValue(retrievedOrganisationData)
-    getCalculation.mockResolvedValue(calculation)
-    getFundingsByCalculationId.mockResolvedValue(retrievedFundingsData)
-    getLastSettlement.mockResolvedValue(retrievedSettlement)
-    getLatestPayment.mockReturnValue(retrievedLatestPayment)
+    const address = {
+      line1: organisation.line1,
+      line2: organisation.line2,
+      line3: organisation.line3,
+      line4: organisation.line4,
+      line5: organisation.line5,
+      postcode: organisation.postcode
+    }
+
+    const scheme = {
+      name: 'Sustainable Farming Incentive',
+      shortName: 'SFI',
+      year: String(paymentRequest.year),
+      frequency: paymentRequest.frequency,
+      agreementNumber: paymentRequest.agreementNumber
+    }
+
+    const detailedPayments = [{
+      invoiceNumber: latestPayment.invoiceNumber,
+      reference: settlement.reference,
+      dueDate: latestPayment.dueDate,
+      settled: settlement.settlementDate,
+      calculated: calculation.calculated,
+      value: latestPayment.value,
+      period: latestPayment.period
+    }]
+
+    getSettlement.mockResolvedValue(mappedSettlement)
+    getPaymentRequest.mockResolvedValue(mappedPaymentRequest)
+    getCalculation.mockResolvedValue(mappedCalculation)
+    getDetails.mockResolvedValue(details)
+    getAddress.mockResolvedValue(address)
+    getDetailedFunding.mockResolvedValue(detailedFunding)
+    getScheme.mockResolvedValue(scheme)
+    getLastSettlement.mockResolvedValue(lastSettlement)
+    getLatestPayment.mockReturnValue(latestPayment)
+    getDetailedPayments.mockResolvedValue(detailedPayments)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('should call getCalculation when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getStatement(paymentRequestId)
+  test('should call getCalculation when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
     expect(getCalculation).toHaveBeenCalled()
   })
 
-  test('should call getLastSettlement once when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getStatement(paymentRequestId)
+  test('should call getLastSettlement once when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
     expect(getLastSettlement).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getLatestPayment when a paymentRequestId is given', async () => {
-    const paymentRequestId = 1
-    await getStatement(paymentRequestId)
+  test('should call getLatestPayment when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
     expect(getLatestPayment).toHaveBeenCalledTimes(1)
   })
 })

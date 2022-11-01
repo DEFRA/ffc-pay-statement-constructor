@@ -2,7 +2,6 @@ const moment = require('moment')
 
 const db = require('../../../../app/data')
 
-const schemes = require('../../../../app/constants/schemes')
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 const getPaymentRequest = require('../../../../app/processing/payment-request')
@@ -22,14 +21,16 @@ describe('process payment request', () => {
   })
 
   beforeEach(async () => {
-    paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
-    paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-payment-request').submitPaymentRequest))
+    const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
+    paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
+    paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
-    await db.invoiceNumber.create({
-      invoiceNumber: paymentRequestInProgress.invoiceNumber,
-      originalInvoiceNumber: paymentRequestInProgress.invoiceNumber.slice(0, 5)
-    })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     delete paymentRequestInProgress.paymentRequestId
     delete paymentRequestCompleted.paymentRequestId
     await db.paymentRequest.create(paymentRequestInProgress)

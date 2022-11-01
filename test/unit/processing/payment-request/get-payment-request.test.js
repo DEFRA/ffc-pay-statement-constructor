@@ -27,16 +27,16 @@ const mapPaymentRequest = require('../../../../app/processing/payment-request/ma
 
 const getPaymentRequest = require('../../../../app/processing/payment-request/get-payment-request')
 
-let retreivedPaymentRequest
+let retrievedPaymentRequest
 let mappedPaymentRequest
 
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 describe('get and map required payment request information for building a statement object', () => {
   beforeEach(() => {
-    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-payment-request').processingPaymentRequest))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
 
-    retreivedPaymentRequest = {
+    retrievedPaymentRequest = {
       paymentRequestId: 1,
       dueDate: paymentRequest.dueDate,
       marketingYear: paymentRequest.marketingYear,
@@ -44,14 +44,14 @@ describe('get and map required payment request information for building a statem
     }
 
     mappedPaymentRequest = {
-      paymentRequestId: retreivedPaymentRequest.paymentRequestId,
-      dueDate: retreivedPaymentRequest.dueDate,
-      frequency: SCHEDULE_NAMES[retreivedPaymentRequest.schedule],
-      year: retreivedPaymentRequest.marketingYear
+      paymentRequestId: retrievedPaymentRequest.paymentRequestId,
+      dueDate: retrievedPaymentRequest.dueDate,
+      frequency: SCHEDULE_NAMES[retrievedPaymentRequest.schedule],
+      year: retrievedPaymentRequest.marketingYear
     }
 
-    getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(retreivedPaymentRequest)
-    validatePaymentRequest.mockReturnValue(retreivedPaymentRequest)
+    getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(retrievedPaymentRequest)
+    validatePaymentRequest.mockReturnValue(retrievedPaymentRequest)
     mapPaymentRequest.mockResolvedValue(mappedPaymentRequest)
   })
 
@@ -89,10 +89,10 @@ describe('get and map required payment request information for building a statem
     expect(validatePaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call validatePaymentRequest with retreivedPaymentRequest when a paymentRequestId is given', async () => {
+  test('should call validatePaymentRequest with retrievedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId)
-    expect(validatePaymentRequest).toHaveBeenCalledWith(retreivedPaymentRequest)
+    expect(validatePaymentRequest).toHaveBeenCalledWith(retrievedPaymentRequest)
   })
 
   test('should call mapPaymentRequest when a paymentRequestId is given', async () => {
@@ -107,10 +107,10 @@ describe('get and map required payment request information for building a statem
     expect(mapPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call mapPaymentRequest with retreivedPaymentRequest when a paymentRequestId is given', async () => {
+  test('should call mapPaymentRequest with retrievedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId)
-    expect(mapPaymentRequest).toHaveBeenCalledWith(retreivedPaymentRequest)
+    expect(mapPaymentRequest).toHaveBeenCalledWith(retrievedPaymentRequest)
   })
 
   test('should return mappedPaymentRequest when a paymentRequestId is given', async () => {

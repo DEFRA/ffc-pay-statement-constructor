@@ -7,7 +7,7 @@ let retrievedOrganisation
 
 describe('validate payment request', () => {
   beforeEach(() => {
-    retrievedOrganisation = JSON.parse(JSON.stringify(require('../../../mock-organisation')))
+    retrievedOrganisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
     schema.validate.mockReturnValue({ value: retrievedOrganisation })
   })

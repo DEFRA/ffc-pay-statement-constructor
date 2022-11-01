@@ -12,7 +12,7 @@ let message
 describe('process return message', () => {
   beforeEach(() => {
     processReturnSettlement.mockReturnValue(undefined)
-    settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
     receiver = {
       completeMessage: jest.fn()
     }

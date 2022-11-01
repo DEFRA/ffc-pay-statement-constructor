@@ -1,13 +1,10 @@
 const db = require('../../app/data')
-const schemes = require('../../app/constants/schemes')
-
-const { SFI_FIRST_PAYMENT: invoiceNumber } = require('../mock-components/mock-invoice-number')
-const { SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber } = require('../mock-components/mock-invoice-number')
 
 const processReturnSettlement = require('../../app/inbound/return')
 
 let settlement
-let submitPaymentRequest, processingPaymentRequest
+let submitPaymentRequest
+let processingPaymentRequest
 
 describe('process return settlement', () => {
   beforeAll(async () => {
@@ -18,11 +15,15 @@ describe('process return settlement', () => {
   })
 
   beforeEach(async () => {
-    settlement = JSON.parse(JSON.stringify(require('../mock-settlement')))
-    submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').submitPaymentRequest))
-    processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-payment-request').processingPaymentRequest))
+    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+    settlement = JSON.parse(JSON.stringify(require('../mock-objects/mock-settlement')))
+    submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').submitPaymentRequest))
+    processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
 
-    // input data into db
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(submitPaymentRequest)
@@ -100,18 +101,25 @@ describe('process return settlement', () => {
     await paymentRequestToRemove.destroy()
 
     await processReturnSettlement(settlement)
+
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.paymentRequestId).toBeNull()
   })
 
   test('should save settlement with paymentRequestId of null when no matching paymentRequest found', async () => {
+    const {
+      SFI_SECOND_PAYMENT: invoiceNumber,
+      SFI_SECOND_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+
     const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
     await paymentRequestToRemove.destroy()
-    await db.invoiceNumber.create({ invoiceNumber: 'S0000001SFIP000001V002', originalInvoiceNumber })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     submitPaymentRequest.invoiceNumber = 'S0000001SFIP000001V002'
     await db.paymentRequest.create(submitPaymentRequest)
 
     await processReturnSettlement(settlement)
+
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.paymentRequestId).toBeNull()
   })
@@ -122,6 +130,7 @@ describe('process return settlement', () => {
     await db.paymentRequest.create(processingPaymentRequest)
 
     await processReturnSettlement(settlement)
+
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.paymentRequestId).toBeNull()
   })

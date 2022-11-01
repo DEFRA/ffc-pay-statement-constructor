@@ -37,7 +37,7 @@ let calculation
 
 describe('process calculation', () => {
   beforeEach(() => {
-    calculation = JSON.parse(JSON.stringify(require('../../mock-calculation')))
+    calculation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-calculation')))
 
     getCalculationByCalculationReference.mockResolvedValue(null)
     savePlaceholderOrganisation.mockResolvedValue(undefined)

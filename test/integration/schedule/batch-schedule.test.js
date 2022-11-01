@@ -1,13 +1,11 @@
+jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
+
 const moment = require('moment')
 
 const db = require('../../../app/data')
 const config = require('../../../app/config').processingConfig
 
-const schemes = require('../../../app/constants/schemes')
-
 const schedulePendingSettlements = require('../../../app/processing/schedule')
-
-jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
 const LESS_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
 const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()
@@ -23,15 +21,17 @@ describe('batch schedule', () => {
   })
 
   beforeEach(async () => {
-    const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-payment-request').submitPaymentRequest))
-    const settlement = JSON.parse(JSON.stringify(require('../../mock-settlement')))
-    schedule = JSON.parse(JSON.stringify(require('../../mock-schedule')))
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
+    const {
+      SFI_FIRST_PAYMENT: invoiceNumber,
+      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
+    const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
+    const settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
+    schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule')))
 
     await db.scheme.bulkCreate(schemes)
-    await db.invoiceNumber.create({
-      invoiceNumber: paymentRequest.invoiceNumber,
-      originalInvoiceNumber: paymentRequest.invoiceNumber.slice(0, 5)
-    })
+    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(paymentRequest)
     await db.settlement.create({ ...settlement, paymentRequestId: 1 })
   })
