@@ -1,5 +1,5 @@
 const getNegativeInvoiceLinesByFundingCodeAndPaymentRequestId = require('./get-negative-invoice-lines-by-funding-code-and-payment-request-id')
-const schema = require('./invoice-line-schema')
+const schema = require('./schema')
 const removeDescriptionPrefix = require('./remove-description-prefix')
 
 const getReductions = async (fundingCode, paymentRequestId) => {

@@ -16,8 +16,8 @@ jest.mock('../../../../app/data', () => {
   }
 })
 
-jest.mock('../../../../app/processing/calculation/calculation-schema')
-const schema = require('../../../../app/processing/calculation/calculation-schema')
+jest.mock('../../../../app/processing/calculation/schema')
+const schema = require('../../../../app/processing/calculation/schema')
 
 jest.mock('../../../../app/processing/calculation/get-calculation-by-payment-request-id')
 const getCalculationByPaymentRequestId = require('../../../../app/processing/calculation/get-calculation-by-payment-request-id')
