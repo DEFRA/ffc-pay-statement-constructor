@@ -1,4 +1,4 @@
-const mapFundings = async (rawFundings) => {
+const mapFundings = (rawFundings) => {
   const fundings = rawFundings.map(rawFunding => ({
     area: rawFunding.areaClaimed,
     fundingCode: rawFunding.fundingCode,

@@ -26,7 +26,7 @@ describe('map organisation information for building a statement object', () => {
   })
 
   test('should return mappedOrganisation when a valid organisation is given', async () => {
-    const result = await mapOrganisation(retrievedOrganisation)
+    const result = mapOrganisation(retrievedOrganisation)
     expect(result).toStrictEqual(mappedOrganisation)
   })
 })

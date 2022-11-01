@@ -21,7 +21,7 @@ describe('map calculation information for building a statement object', () => {
   })
 
   test('should return mappedCalculation when a valid calculation is given', async () => {
-    const result = await mapCalculation(retrievedCalculation)
+    const result = mapCalculation(retrievedCalculation)
     expect(result).toStrictEqual(mappedCalculation)
   })
 })

@@ -1,4 +1,4 @@
-const mapOrganisation = async (organisation) => {
+const mapOrganisation = (organisation) => {
   return {
     line1: organisation.addressLine1,
     line2: organisation.addressLine2,

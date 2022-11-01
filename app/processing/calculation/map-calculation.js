@@ -1,4 +1,4 @@
-const mapCalculation = async (calculation) => {
+const mapCalculation = (calculation) => {
   return {
     calculationId: calculation.calculationId,
     sbi: calculation.sbi,

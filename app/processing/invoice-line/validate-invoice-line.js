@@ -1,7 +1,7 @@
 const schema = require('./schema')
 
-const validateInvoiceLine = (grossValueInvoiceLine, fundingCode, paymentRequestId) => {
-  const result = schema.validate(grossValueInvoiceLine, {
+const validateInvoiceLine = (invoiceLine, fundingCode, paymentRequestId) => {
+  const result = schema.validate(invoiceLine, {
     abortEarly: false
   })
 
