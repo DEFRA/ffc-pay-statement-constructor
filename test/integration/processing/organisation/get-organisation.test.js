@@ -76,7 +76,7 @@ describe('process get calculation object', () => {
       postcode: retrievedOrganisation.postcode,
       businessName: retrievedOrganisation.name,
       email: retrievedOrganisation.emailAddress,
-      frn: String(retrievedOrganisation.frn),
+      frn: retrievedOrganisation.frn,
       sbi: retrievedOrganisation.sbi
     })
   })

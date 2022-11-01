@@ -16,8 +16,8 @@ jest.mock('../../../../app/data', () => {
   }
 })
 
-jest.mock('../../../../app/processing/organisation/organisation-schema')
-const schema = require('../../../../app/processing/organisation/organisation-schema')
+jest.mock('../../../../app/processing/organisation/schema')
+const schema = require('../../../../app/processing/organisation/schema')
 jest.mock('../../../../app/processing/organisation/get-organisation-by-sbi')
 const getOrganisationBySbi = require('../../../../app/processing/organisation/get-organisation-by-sbi')
 

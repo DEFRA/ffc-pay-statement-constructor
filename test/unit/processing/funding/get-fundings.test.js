@@ -20,8 +20,8 @@ jest.mock('../../../../app/data', () => {
 jest.mock('../../../../app/processing/funding/get-fundings-by-calculation-id')
 const getFundingsByCalculationId = require('../../../../app/processing/funding/get-fundings-by-calculation-id')
 
-jest.mock('../../../../app/processing/funding/fundings-schema')
-const schema = require('../../../../app/processing/funding/fundings-schema')
+jest.mock('../../../../app/processing/funding/schema')
+const schema = require('../../../../app/processing/funding/schema')
 
 jest.mock('../../../../app/processing/funding/map-fundings')
 const mapFundings = require('../../../../app/processing/funding/map-fundings')

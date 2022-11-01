@@ -1,5 +1,5 @@
-jest.mock('../../../../app/processing/invoice-line/invoice-line-schema')
-const schema = require('../../../../app/processing/invoice-line/invoice-line-schema')
+jest.mock('../../../../app/processing/invoice-line/schema')
+const schema = require('../../../../app/processing/invoice-line/schema')
 
 jest.mock('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
 const getPositiveInvoiceLineByFundingCodeAndPaymentRequestId = require('../../../../app/processing/invoice-line/get-positive-invoice-line-by-funding-code-and-payment-request-id')
