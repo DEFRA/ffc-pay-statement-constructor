@@ -16,6 +16,13 @@ const processSubmitPaymentRequest = require('../../app/inbound/submit')
 let paymentRequest
 
 describe('process submit payment request', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
     const fundingOptions = JSON.parse(JSON.stringify(require('../../app/constants/funding-options')))

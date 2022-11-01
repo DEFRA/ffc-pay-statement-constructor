@@ -20,6 +20,13 @@ let statement
 let scheduleId
 
 describe('send statement', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     const mockSettlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     const mockSchedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))

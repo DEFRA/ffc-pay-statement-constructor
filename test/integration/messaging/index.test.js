@@ -14,6 +14,13 @@ let paymentRequestCompleted
 let settlement
 
 describe('process messages off Topics', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
     const fundingOptions = JSON.parse(JSON.stringify(require('../../../app/constants/funding-options')))

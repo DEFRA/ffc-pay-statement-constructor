@@ -7,6 +7,13 @@ let submitPaymentRequest
 let processingPaymentRequest
 
 describe('process return settlement', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
     const {

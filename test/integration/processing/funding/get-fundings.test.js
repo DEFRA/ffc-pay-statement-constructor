@@ -5,6 +5,13 @@ const getFundings = require('../../../../app/processing/funding/get-fundings')
 let fundings
 
 describe('get and transform fundings object for building a statement object', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
     const {

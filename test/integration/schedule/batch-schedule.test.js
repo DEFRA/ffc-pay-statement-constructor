@@ -13,6 +13,13 @@ const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.schedulePr
 let schedule
 
 describe('batch schedule', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
     const {

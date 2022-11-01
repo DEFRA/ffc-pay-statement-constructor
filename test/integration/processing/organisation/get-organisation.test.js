@@ -7,6 +7,13 @@ let retrievedOrganisation
 let sbi
 
 describe('process get calculation object', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
+
   beforeEach(async () => {
     organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
