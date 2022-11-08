@@ -1,6 +1,7 @@
 const moment = require('moment')
 const db = require('../../data')
 const config = require('../../config').processingConfig
+const { DAX: SOURCE_SYSTEM } = require('../../constants/source-systems')
 
 const getScheduledSettlements = async (started, transaction) => {
   return db.schedule.findAll({
@@ -12,8 +13,14 @@ const getScheduledSettlements = async (started, transaction) => {
       'scheduleId',
       'settlementId'
     ],
+    include: [{
+      model: db.settlement,
+      as: 'settlements',
+      attributes: []
+    }],
     where: {
       completed: null,
+      '$settlements.sourceSystem$': SOURCE_SYSTEM.SFI,
       [db.Sequelize.Op.or]: [{
         started: null
       }, {

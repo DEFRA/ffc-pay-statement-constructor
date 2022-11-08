@@ -75,18 +75,18 @@ describe('process return settlement', () => {
     expect(result.settlementDate).toStrictEqual(new Date(settlement.settlementDate))
   })
 
-  test('should not save sourceSystem in the table when valid settlement received ', async () => {
+  test('should save sourceSystem in the table when valid settlement received ', async () => {
     await processReturnSettlement(settlement)
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.sourceSystem).toBeUndefined()
+    expect(result.sourceSystem).toBe(settlement.sourceSystem)
   })
 
-  test('should not save frn in the table when valid settlement received ', async () => {
+  test('should save frn in the table when valid settlement received ', async () => {
     await processReturnSettlement(settlement)
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.frn).toBeUndefined()
+    expect(result.frn).toBe(settlement.frn.toString())
   })
 
   test('should save settlement with paymentRequestId of paymentRequest.PaymentRequestId when matching paymentRequest with status of "Completed" is found ', async () => {

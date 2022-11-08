@@ -4,12 +4,14 @@ module.exports = (sequelize, DataTypes) => {
     paymentRequestId: DataTypes.INTEGER,
     detail: DataTypes.STRING,
     invalid: DataTypes.BOOLEAN,
+    frn: DataTypes.BIGINT,
     generated: DataTypes.BOOLEAN,
     invoiceNumber: DataTypes.STRING,
     ledger: DataTypes.STRING,
     reference: DataTypes.STRING,
     settled: DataTypes.BOOLEAN,
     settlementDate: DataTypes.DATE,
+    sourceSystem: DataTypes.STRING,
     value: DataTypes.INTEGER
   },
   {
