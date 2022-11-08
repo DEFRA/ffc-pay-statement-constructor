@@ -200,8 +200,8 @@ describe('batch schedule', () => {
     const result = await schedulePendingSettlements()
 
     expect(result).toStrictEqual([{
-      scheduleId: 2,
-      settlementId: 2
+      scheduleId: 1,
+      settlementId: 1
     }])
   })
 })
