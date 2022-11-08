@@ -7,8 +7,8 @@ const config = require('../../../app/config').processingConfig
 
 const schedulePendingSettlements = require('../../../app/processing/schedule')
 
-const LESS_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
-const MORE_TIME_THAN_ELASPED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()
+const LESS_TIME_THAN_ELAPSED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
+const MORE_TIME_THAN_ELAPSED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()
 
 let schedule
 
@@ -69,8 +69,8 @@ describe('batch schedule', () => {
     expect(result).toStrictEqual([])
   })
 
-  test('should return mapped schedule array when existing schedule with null completed and started is MORE_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = MORE_TIME_THAN_ELASPED_MAX
+  test('should return mapped schedule array when existing schedule with null completed and started is MORE_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = MORE_TIME_THAN_ELAPSED_MAX
     await db.schedule.create(schedule)
 
     const result = await schedulePendingSettlements()
@@ -81,8 +81,8 @@ describe('batch schedule', () => {
     }])
   })
 
-  test('should return empty array when existing schedule with null completed and started is LESS_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = LESS_TIME_THAN_ELASPED_MAX
+  test('should return empty array when existing schedule with null completed and started is LESS_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = LESS_TIME_THAN_ELAPSED_MAX
     await db.schedule.create(schedule)
 
     const result = await schedulePendingSettlements()
@@ -99,8 +99,8 @@ describe('batch schedule', () => {
     expect(result).toStrictEqual([])
   })
 
-  test('should return empty array when existing schedule with not null completed and started is MORE_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = MORE_TIME_THAN_ELASPED_MAX
+  test('should return empty array when existing schedule with not null completed and started is MORE_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = MORE_TIME_THAN_ELAPSED_MAX
     schedule.completed = new Date()
     await db.schedule.create(schedule)
 
@@ -109,8 +109,8 @@ describe('batch schedule', () => {
     expect(result).toStrictEqual([])
   })
 
-  test('should return empty array when existing schedule with not null completed and started is LESS_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = LESS_TIME_THAN_ELASPED_MAX
+  test('should return empty array when existing schedule with not null completed and started is LESS_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = LESS_TIME_THAN_ELAPSED_MAX
     schedule.completed = new Date()
     await db.schedule.create(schedule)
 
@@ -130,16 +130,16 @@ describe('batch schedule', () => {
     expect(startedTimeAfter).toStrictEqual(new Date())
   })
 
-  test('should not update started when existing schedule with null completed and started is LESS_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = LESS_TIME_THAN_ELASPED_MAX
+  test('should not update started when existing schedule with null completed and started is LESS_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = LESS_TIME_THAN_ELAPSED_MAX
     await db.schedule.create(schedule)
     const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
 
     await schedulePendingSettlements()
 
     const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
-    expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
-    expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
+    expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELAPSED_MAX)
+    expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELAPSED_MAX)
   })
 
   test('should not update started when existing schedule with not null completed and null started exists', async () => {
@@ -154,8 +154,8 @@ describe('batch schedule', () => {
     expect(startedTimeAfter).toBeNull()
   })
 
-  test('should not update started when existing schedule with not null completed and started is MORE_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = MORE_TIME_THAN_ELASPED_MAX
+  test('should not update started when existing schedule with not null completed and started is MORE_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = MORE_TIME_THAN_ELAPSED_MAX
     schedule.completed = new Date()
     await db.schedule.create(schedule)
     const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
@@ -163,12 +163,12 @@ describe('batch schedule', () => {
     await schedulePendingSettlements()
 
     const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
-    expect(startedTimeBefore).toStrictEqual(MORE_TIME_THAN_ELASPED_MAX)
-    expect(startedTimeAfter).toStrictEqual(MORE_TIME_THAN_ELASPED_MAX)
+    expect(startedTimeBefore).toStrictEqual(MORE_TIME_THAN_ELAPSED_MAX)
+    expect(startedTimeAfter).toStrictEqual(MORE_TIME_THAN_ELAPSED_MAX)
   })
 
-  test('should not update started when existing schedule with not null completed and started is LESS_TIME_THAN_ELASPED_MAX exists', async () => {
-    schedule.started = LESS_TIME_THAN_ELASPED_MAX
+  test('should not update started when existing schedule with not null completed and started is LESS_TIME_THAN_ELAPSED_MAX exists', async () => {
+    schedule.started = LESS_TIME_THAN_ELAPSED_MAX
     schedule.completed = new Date()
     await db.schedule.create(schedule)
     const startedTimeBefore = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
@@ -176,7 +176,7 @@ describe('batch schedule', () => {
     await schedulePendingSettlements()
 
     const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
-    expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
-    expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELASPED_MAX)
+    expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELAPSED_MAX)
+    expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELAPSED_MAX)
   })
 })

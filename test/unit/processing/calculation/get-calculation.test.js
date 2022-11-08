@@ -57,7 +57,7 @@ describe('get and transform payment request information for building a statement
     expect(getCalculationByPaymentRequestId).toHaveBeenCalled()
   })
 
-  test('should call getCompletedPaymentRequestByPaymentRequestId once when a paymentRequestId is given', async () => {
+  test('should call getCalculationByPaymentRequestId once when a paymentRequestId is given', async () => {
     await getCalculation(paymentRequestId, invoiceNumber)
     expect(getCalculationByPaymentRequestId).toHaveBeenCalledTimes(1)
   })

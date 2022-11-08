@@ -33,7 +33,6 @@ describe('process payment request', () => {
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     delete paymentRequestInProgress.paymentRequestId
     delete paymentRequestCompleted.paymentRequestId
-    await db.paymentRequest.create(paymentRequestInProgress)
   })
 
   afterEach(async () => {
@@ -48,91 +47,96 @@ describe('process payment request', () => {
   })
 
   test('should return mapped payment request object when existing completed payment request with required information exists', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestCompleted.agreementNumber,
-      paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      invoiceNumber: paymentRequestCompleted.invoiceNumber,
-      value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear,
-      schedule: paymentRequestCompleted.schedule
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
     })
   })
 
   test('should return mapped payment request object with default frequency when existing completed payment request with required information exists and no optional schedule', async () => {
-    delete paymentRequestCompleted.schedule
+    delete paymentRequestInProgress.schedule
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestCompleted.agreementNumber,
-      paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.N0,
-      invoiceNumber: paymentRequestCompleted.invoiceNumber,
-      value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
       schedule: null
     })
   })
 
   test('should return mapped payment request object with default frequency when existing completed payment request with required information exists and undefined optional schedule', async () => {
-    paymentRequestCompleted.schedule = undefined
+    paymentRequestInProgress.schedule = undefined
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestCompleted.agreementNumber,
-      paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.N0,
-      invoiceNumber: paymentRequestCompleted.invoiceNumber,
-      value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
       schedule: null
     })
   })
 
   test('should return mapped payment request object with default frequency when existing completed payment request with required information exists and null optional schedule', async () => {
-    paymentRequestCompleted.schedule = null
+    paymentRequestInProgress.schedule = null
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestCompleted.agreementNumber,
-      paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.N0,
-      invoiceNumber: paymentRequestCompleted.invoiceNumber,
-      value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear,
-      schedule: paymentRequestCompleted.schedule
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
     })
   })
 
   test('should return mapped payment request object with default frequency when existing completed payment request with required information exists and unrecognised optional schedule', async () => {
-    paymentRequestCompleted.schedule = 'NR'
+    paymentRequestInProgress.schedule = 'NR'
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestCompleted.agreementNumber,
-      paymentRequestId: PAYMENT_REQUEST_ID_COMPLETED,
-      dueDate: new Date(moment(paymentRequestCompleted.dueDate, 'DD/MM/YYYY')),
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.N0,
-      invoiceNumber: paymentRequestCompleted.invoiceNumber,
-      value: paymentRequestCompleted.value,
-      year: paymentRequestCompleted.marketingYear,
-      schedule: paymentRequestCompleted.schedule
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
     })
   })
 
@@ -170,12 +174,14 @@ describe('process payment request', () => {
   })
 
   test('should throw when existing in progress payment request with required information exists', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
     const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_IN_PROGRESS) }
     expect(wrapper).rejects.toThrow()
   })
 
   test('should throw when existing completed payment request with missing required dueDate does not exist', async () => {
-    delete paymentRequestCompleted.dueDate
+    delete paymentRequestInProgress.dueDate
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED) }
@@ -183,7 +189,8 @@ describe('process payment request', () => {
   })
 
   test('should throw when existing completed payment request with missing required marketingYear does not exist', async () => {
-    delete paymentRequestCompleted.marketingYear
+    delete paymentRequestInProgress.marketingYear
+    await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
 
     const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED) }

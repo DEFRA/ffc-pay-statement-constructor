@@ -19,9 +19,6 @@ containerSecret:
   type: Opaque
 
 deployment:
-  restartPolicy: Always
-  priorityClassName: default
-  replicas: 1
   minReplicas: 1
   maxReplicas: 1
   cpuThreshold: 80
@@ -29,7 +26,6 @@ deployment:
   minReadySeconds: 0
 
 container:
-  imagePullPolicy: Always
   requestMemory: 180Mi
   requestCpu: 100m
   limitMemory: 500Mi

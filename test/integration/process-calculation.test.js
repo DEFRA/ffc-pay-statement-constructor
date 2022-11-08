@@ -80,24 +80,6 @@ describe('process calculation', () => {
     expect(result.paymentRequestId).toBe(null)
   })
 
-  test('should save entry into calculation with paymentRequestId as 1 when matching completed paymentRequest record has paymentRequestId 1 where calculation.invoiceNumber', async () => {
-    await db.paymentRequest.create(paymentRequestCompleted)
-    await processCalculation(calculation)
-
-    const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
-
-    expect(result.paymentRequestId).toBe(1)
-  })
-
-  test('should save entry into calculation with paymentRequestId as null when no matching completed paymentRequest records where calculation.invoiceNumber', async () => {
-    try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { }
-    await processCalculation(calculation)
-
-    const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
-
-    expect(result.paymentRequestId).toBe(null)
-  })
-
   test('should save entry into calculation with sbi as calculation.sbi where calculation.invoiceNumber', async () => {
     await processCalculation(calculation)
     const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })

@@ -4,6 +4,7 @@ const { DAX_CODES } = require('../../constants/schedules')
 
 module.exports = Joi.object({
   paymentRequestId: Joi.number().integer().required(),
+  referenceId: Joi.string().required(),
   agreementNumber: Joi.string().required(),
   dueDate: Joi.date().format('D/M/YYYY').required(),
   invoiceNumber: Joi.string().required(),

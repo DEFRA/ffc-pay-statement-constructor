@@ -19,6 +19,9 @@ jest.mock('../../../../app/data', () => {
 jest.mock('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 
+jest.mock('../../../../app/processing/payment-request/get-in-progress-payment-request-by-reference-id')
+const getInProgressPaymentRequestByReferenceId = require('../../../../app/processing/payment-request/get-in-progress-payment-request-by-reference-id')
+
 jest.mock('../../../../app/processing/payment-request/validate-payment-request')
 const validatePaymentRequest = require('../../../../app/processing/payment-request/validate-payment-request')
 
@@ -40,17 +43,20 @@ describe('get and map required payment request information for building a statem
       paymentRequestId: 1,
       dueDate: paymentRequest.dueDate,
       marketingYear: paymentRequest.marketingYear,
-      schedule: paymentRequest.schedule
+      schedule: paymentRequest.schedule,
+      referenceId: paymentRequest.referenceId,
     }
 
     mappedPaymentRequest = {
       paymentRequestId: retrievedPaymentRequest.paymentRequestId,
       dueDate: retrievedPaymentRequest.dueDate,
       frequency: SCHEDULE_NAMES[retrievedPaymentRequest.schedule],
-      year: retrievedPaymentRequest.marketingYear
+      year: retrievedPaymentRequest.marketingYear,
+      referenceId: retrievedPaymentRequest.referenceId
     }
 
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(retrievedPaymentRequest)
+    getInProgressPaymentRequestByReferenceId.mockResolvedValue(retrievedPaymentRequest)
     validatePaymentRequest.mockReturnValue(retrievedPaymentRequest)
     mapPaymentRequest.mockResolvedValue(mappedPaymentRequest)
   })
@@ -75,6 +81,24 @@ describe('get and map required payment request information for building a statem
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId, mockTransaction)
     expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
+  })
+
+  test('should call getInProgressPaymentRequestByReferenceId when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentRequest(paymentRequestId)
+    expect(getInProgressPaymentRequestByReferenceId).toHaveBeenCalled()
+  })
+
+  test('should call getInProgressPaymentRequestByReferenceId once when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentRequest(paymentRequestId)
+    expect(getInProgressPaymentRequestByReferenceId).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call getInProgressPaymentRequestByReferenceId with paymentRequestId when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentRequest(paymentRequestId, mockTransaction)
+    expect(getInProgressPaymentRequestByReferenceId).toHaveBeenCalledWith(retrievedPaymentRequest.referenceId, mockTransaction)
   })
 
   test('should call validatePaymentRequest when a paymentRequestId is given', async () => {

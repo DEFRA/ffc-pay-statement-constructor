@@ -6,7 +6,7 @@ const dateFormats = [
   'ddd MMM DD YYYY HH:mm:ss'
 ]
 
-const getDetailedPayments = async (calculation, latestPayment, settlement) => {
+const getDetailedPayments = (calculation, latestPayment, settlement) => {
   const payments = []
 
   const payment = {

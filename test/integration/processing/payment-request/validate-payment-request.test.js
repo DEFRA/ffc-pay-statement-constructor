@@ -13,6 +13,7 @@ describe('validate payment request', () => {
       invoiceNumber: paymentRequest.invoiceNumber,
       marketingYear: paymentRequest.marketingYear,
       paymentRequestId: paymentRequest.paymentRequestId,
+      referenceId: paymentRequest.referenceId,
       value: paymentRequest.value,
       schedule: paymentRequest.schedule
     }

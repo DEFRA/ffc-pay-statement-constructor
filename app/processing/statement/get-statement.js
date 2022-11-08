@@ -9,23 +9,22 @@ const getStatement = async (settlementId) => {
   const transaction = await db.sequelize.transaction()
   try {
     const settlement = await getSettlement(settlementId, transaction)
-    const paymentRequestId = settlement.paymentRequestId
-    const paymentRequest = await getPaymentRequest(paymentRequestId, transaction)
-    const calculation = await getCalculation(paymentRequestId, paymentRequest.invoiceNumber, transaction)
+    const paymentRequest = await getPaymentRequest(settlement.paymentRequestId, transaction)
+    const calculation = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber, transaction)
     const sbi = calculation.sbi
     const details = await getDetails(sbi, transaction)
     const address = await getAddress(sbi, transaction)
-    const detailedFunding = await getDetailedFunding(calculation.calculationId, paymentRequestId, transaction)
-    const scheme = await getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
+    const funding = await getDetailedFunding(calculation.calculationId, paymentRequest.paymentRequestId, transaction)
+    const scheme = getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
     const lastSettlement = await getLastSettlement(settlement.settlementDate, settlement.value, settlement.invoiceNumber, transaction)
     const latestPayment = getLatestPayment(paymentRequest, settlement, lastSettlement)
-    const payments = await getDetailedPayments(calculation, latestPayment, settlement)
+    const payments = getDetailedPayments(calculation, latestPayment, settlement)
 
     await transaction.commit()
     return {
       ...details,
       address,
-      funding: detailedFunding,
+      funding,
       payments,
       scheme
     }
