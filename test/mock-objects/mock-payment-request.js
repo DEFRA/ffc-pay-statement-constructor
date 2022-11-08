@@ -40,12 +40,12 @@ const paymentRequest = {
   invoiceNumber: SFI_FIRST_PAYMENT_INVOICE_NUMBER,
   ledger: AP,
   marketingYear: _2022,
-  paymentRequestNumber: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER,  
+  paymentRequestNumber: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER,
   referenceId: REFERENCE_ID,
   schedule: DAX_CODES.QUARTERLY,
   schemeId: SFI_SCHEME_ID,
   sourceSystem: SFI_SOURCE_SYSTEM,
-  value: FIVE_HUNDRED_POUNDS,
+  value: FIVE_HUNDRED_POUNDS
 }
 
 const processingPaymentRequest = {

@@ -3,8 +3,6 @@ const db = require('../../app/data')
 const processCalculation = require('../../app/inbound/calculation')
 
 let calculation
-let paymentRequestInProgress
-let paymentRequestCompleted
 
 describe('process calculation', () => {
   beforeAll(async () => {
@@ -27,8 +25,6 @@ describe('process calculation', () => {
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
 
     calculation = JSON.parse(JSON.stringify(require('../mock-objects/mock-calculation')))
-    paymentRequestInProgress = require('../mock-objects/mock-payment-request').processingPaymentRequest
-    paymentRequestCompleted = require('../mock-objects/mock-payment-request').submitPaymentRequest
   })
 
   afterEach(async () => {
