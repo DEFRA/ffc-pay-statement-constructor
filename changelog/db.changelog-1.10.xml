@@ -29,8 +29,8 @@
                   WHEN p."sourceSystem" = 'AHWR' THEN 'AHWR'
               END AS "source",
               s."invoiceNumber"
-          FROM public.settlements s
-          INNER JOIN public."paymentRequests" p
+          FROM settlements s
+          INNER JOIN "paymentRequests" p
           ON s."invoiceNumber" = p."invoiceNumber"
           WHERE p.status = 'Completed'
       ) q
