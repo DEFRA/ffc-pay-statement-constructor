@@ -18,7 +18,7 @@
   </changeSet>
   <changeSet author="John Watson" id="4">
     <sql>
-      UPDATE public.settlements s
+      UPDATE settlements s
       SET "sourceSystem" = q.source
       FROM (
           SELECT 
