@@ -44,7 +44,7 @@ describe('get and map required payment request information for building a statem
       dueDate: paymentRequest.dueDate,
       marketingYear: paymentRequest.marketingYear,
       schedule: paymentRequest.schedule,
-      referenceId: paymentRequest.referenceId,
+      referenceId: paymentRequest.referenceId
     }
 
     mappedPaymentRequest = {
