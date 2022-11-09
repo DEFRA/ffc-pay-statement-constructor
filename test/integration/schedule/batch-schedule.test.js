@@ -3,6 +3,7 @@ jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 const moment = require('moment')
 
 const db = require('../../../app/data')
+const settlement = require('../../../app/data/models/settlement')
 const config = require('../../../app/config').processingConfig
 
 const schedulePendingSettlements = require('../../../app/processing/schedule')
@@ -178,5 +179,29 @@ describe('batch schedule', () => {
     const startedTimeAfter = (await db.schedule.findOne({ where: { scheduleId: 1 } })).started
     expect(startedTimeBefore).toStrictEqual(LESS_TIME_THAN_ELAPSED_MAX)
     expect(startedTimeAfter).toStrictEqual(LESS_TIME_THAN_ELAPSED_MAX)
+  })
+
+  test('should return empty array when no SFI settlements exist', async () => {
+    await db.settlement.update({ sourceSystem: 'Not SFI' }, { where: { settlementId: 1 } })
+    await db.schedule.create(schedule)
+
+    const result = await schedulePendingSettlements()
+
+    expect(result).toStrictEqual([])
+  })
+
+  test('should only include SFI schedule when both SFI and non-SFI settlements exist', async () => {
+    await db.schedule.create(schedule)
+    settlement.sourceSystem = 'Not SFI'
+    await db.settlement.create(settlement)
+    schedule.settlementId = 2
+    await db.schedule.create(schedule)
+
+    const result = await schedulePendingSettlements()
+
+    expect(result).toStrictEqual([{
+      scheduleId: 1,
+      settlementId: 1
+    }])
   })
 })

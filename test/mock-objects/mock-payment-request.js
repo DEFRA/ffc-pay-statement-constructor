@@ -8,7 +8,7 @@ const { AP } = require('../../app/constants/ledgers')
 const { FIRST_PAYMENT: FIRST_PAYMENT_PAYMENT_REQUEST_NUMBER } = require('../../app/constants/payment-request-numbers')
 const { DAX_CODES } = require('../../app/constants/schedules')
 const { SFI: SFI_SCHEME_ID } = require('../../app/constants/scheme-ids')
-const { SFI: SFI_SOURCE_SYSTEM } = require('../../app/constants/source-systems')
+const { SFI: SFI_SOURCE_SYSTEM } = require('../../app/constants/source-systems').PAYMENT_SERVICE
 const { COMPLETED, IN_PROGRESS } = require('../../app/constants/statuses')
 
 const { SFI: SFI_AGREEMENT_NUMBER } = require('../mock-components/mock-agreement-number')

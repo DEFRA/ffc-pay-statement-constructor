@@ -3,13 +3,15 @@ module.exports = (sequelize, DataTypes) => {
     settlementId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     paymentRequestId: DataTypes.INTEGER,
     detail: DataTypes.STRING,
-    invalid: DataTypes.BOOLEAN,
+    frn: DataTypes.BIGINT,
     generated: DataTypes.BOOLEAN,
+    invalid: DataTypes.BOOLEAN,
     invoiceNumber: DataTypes.STRING,
     ledger: DataTypes.STRING,
     reference: DataTypes.STRING,
     settled: DataTypes.BOOLEAN,
     settlementDate: DataTypes.DATE,
+    sourceSystem: DataTypes.STRING,
     value: DataTypes.INTEGER
   },
   {
