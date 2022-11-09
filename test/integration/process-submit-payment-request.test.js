@@ -533,10 +533,10 @@ describe('process submit payment request', () => {
     expect(result.schemeCode).toBeUndefined()
   })
 
-  test('should not save frn in paymentRequests table when valid payment request received', async () => {
+  test('should save frn in paymentRequests table when valid payment request received', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.frn).toBeUndefined()
+    expect(result.frn).toBe(paymentRequest.frn.toString())
   })
 })

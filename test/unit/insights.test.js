@@ -26,6 +26,7 @@ describe('Application Insights', () => {
   })
 
   test('does not setup application insights if no instrumentation key', () => {
+    process.env.APPINSIGHTS_INSTRUMENTATIONKEY = undefined
     const appInsights = require('../../app/insights')
     appInsights.setup()
     expect(applicationInsights.setup.mock.calls.length).toBe(0)

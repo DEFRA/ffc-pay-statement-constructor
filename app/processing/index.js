@@ -16,7 +16,7 @@ const start = async () => {
           const aggregatedStatement = await getStatement(pendingStatement.settlementId)
           await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
         } catch (err) {
-          console.error(err)
+          console.error(err.message)
         }
       }
     }
