@@ -48,12 +48,6 @@ describe('settlement schema', () => {
     expect(result.error).toBeDefined()
   })
 
-  test('should error if invoiceNumber not a first payment', () => {
-    settlement.invoiceNumber = 'S12345671234567V002'
-    const result = schema.validate(settlement)
-    expect(result.error).toBeDefined()
-  })
-
   test('should error if reference null', () => {
     settlement.reference = null
     const result = schema.validate(settlement)
