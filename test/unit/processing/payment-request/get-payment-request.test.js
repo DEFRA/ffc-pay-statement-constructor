@@ -105,6 +105,18 @@ describe('get and map required payment request information for building a statem
     expect(getInProgressPaymentRequest).toHaveBeenCalledWith(retrievedPaymentRequest.correlationId, mockTransaction)
   })
 
+  test('should call getLatestCompletedPaymentRequest when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentRequest(paymentRequestId)
+    expect(getLatestCompletedPaymentRequest).toHaveBeenCalled()
+  })
+
+  test('should call getLatestCompletedPaymentRequest once when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentRequest(paymentRequestId)
+    expect(getLatestCompletedPaymentRequest).toHaveBeenCalledTimes(1)
+  })
+
   test('should call validatePaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId)
