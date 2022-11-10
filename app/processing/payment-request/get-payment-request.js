@@ -9,7 +9,8 @@ const getPaymentRequest = async (paymentRequestId, transaction) => {
   const inProgressPaymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.agreementNumber, completedPaymentRequest.marketingYear, completedPaymentRequest.paymentRequestNumber, transaction)
   const latestCompletedPaymentRequest = await getLatestCompletedPaymentRequest(inProgressPaymentRequest.agreementNumber, inProgressPaymentRequest.marketingYear, transaction)
   const latestInProgressPaymentRequest = await getInProgressPaymentRequest(latestCompletedPaymentRequest.agreementNumber, latestCompletedPaymentRequest.marketingYear, latestCompletedPaymentRequest.paymentRequestNumber, transaction)
-  return mapPaymentRequest(validatePaymentRequest(latestInProgressPaymentRequest))
+  validatePaymentRequest(latestInProgressPaymentRequest)
+  return mapPaymentRequest(latestInProgressPaymentRequest)
 }
 
 module.exports = getPaymentRequest

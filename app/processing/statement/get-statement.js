@@ -2,7 +2,7 @@ const db = require('../../data')
 const { getDetails, getAddress, getDetailedFunding, getScheme, getDetailedPayments } = require('./components')
 const getCalculation = require('../calculation')
 const getPaymentRequest = require('../payment-request')
-const { getSettlement, getLastSettlement } = require('../settlement')
+const { getSettlement, getLastSettlement, getSupportingSettlements } = require('../settlement')
 const { getLatestPayment } = require('../payment')
 
 const getStatement = async (settlementId) => {
@@ -17,7 +17,8 @@ const getStatement = async (settlementId) => {
     const funding = await getDetailedFunding(calculation.calculationId, paymentRequest.paymentRequestId, transaction)
     const scheme = getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
     const lastSettlement = await getLastSettlement(settlement.settlementDate, settlement.value, settlement.invoiceNumber, transaction)
-    const latestPayment = getLatestPayment(paymentRequest, settlement, lastSettlement)
+    const supportingSettlements = await getSupportingSettlements(settlement.settlementDate, paymentRequest.agreementNumber, paymentRequest.year, transaction)
+    const latestPayment = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
     const payments = getDetailedPayments(calculation, latestPayment, settlement)
 
     await transaction.commit()

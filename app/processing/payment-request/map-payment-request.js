@@ -1,6 +1,6 @@
 const { NAMES } = require('../../constants/schedules')
 
-const mapPaymentRequest = async (paymentRequest) => {
+const mapPaymentRequest = (paymentRequest) => {
   const year = paymentRequest.marketingYear
   const frequency = NAMES[paymentRequest.schedule] ?? NAMES.N0
 
