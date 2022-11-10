@@ -21,6 +21,9 @@ const {
 jest.mock('../../../../app/processing/settlement/get-last-settlement')
 const getLastSettlement = require('../../../../app/processing/settlement/get-last-settlement')
 
+jest.mock('../../../../app/processing/settlement/get-supporting-settlements')
+const getSupportingSettlements = require('../../../../app/processing/settlement/get-supporting-settlements')
+
 jest.mock('../../../../app/processing/payment/get-latest-payment')
 const getLatestPayment = require('../../../../app/processing/payment/get-latest-payment')
 
@@ -106,6 +109,7 @@ describe('get various components and transform to statement object', () => {
     getDetailedFunding.mockResolvedValue(detailedFunding)
     getScheme.mockResolvedValue(scheme)
     getLastSettlement.mockResolvedValue(lastSettlement)
+    getSupportingSettlements.mockResolvedValue([])
     getLatestPayment.mockReturnValue(latestPayment)
     getDetailedPayments.mockResolvedValue(detailedPayments)
   })
