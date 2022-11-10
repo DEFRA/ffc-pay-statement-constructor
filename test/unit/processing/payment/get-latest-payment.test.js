@@ -11,6 +11,7 @@ describe('get latest payment', () => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
     paymentRequest.dueDate = DATE
     settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+    lastSettlement = undefined
     supportingSettlements = []
     instalmentValue = Math.trunc(paymentRequest.value / 4)
   })
@@ -58,6 +59,30 @@ describe('get latest payment', () => {
     lastSettlement = { value: 10000 }
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
     expect(result.value).toBe(40000)
+  })
+
+  test('returns value including supporting settlement top up', () => {
+    supportingSettlements = [{ value: 10000 }]
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
+    expect(result.value).toBe(60000)
+  })
+
+  test('returns value including supporting settlement downward adjustment', () => {
+    supportingSettlements = [{ value: -10000 }]
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
+    expect(result.value).toBe(40000)
+  })
+
+  test('returns value including top up and downward adjustment', () => {
+    supportingSettlements = [{ value: 10000 }, { value: -5000 }]
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
+    expect(result.value).toBe(55000)
+  })
+
+  test('returns value including multiple supporting settlements', () => {
+    supportingSettlements = [{ value: 10000 }, { value: -5000 }, { value: 20000 }]
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
+    expect(result.value).toBe(75000)
   })
 
   test('returns period if last settlement undefined and one instalment settled', () => {
