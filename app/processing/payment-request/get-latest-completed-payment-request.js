@@ -6,6 +6,7 @@ const getLatestCompletedPaymentRequest = async (agreementNumber, marketingYear, 
     transaction,
     attributes: [
       'agreementNumber',
+      'correlationId',
       'marketingYear',
       'paymentRequestNumber'
     ],

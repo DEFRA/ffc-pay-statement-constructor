@@ -1,12 +1,13 @@
 const db = require('../../data')
 const { IN_PROGRESS } = require('../../constants/statuses')
 
-const getInProgressPaymentRequestByReferenceId = async (agreementNumber, marketingYear, paymentRequestNumber, transaction) => {
+const getInProgressPaymentRequestByReferenceId = async (correlationId, transaction) => {
   return db.paymentRequest.findOne({
     transaction,
     attributes: [
       'paymentRequestId',
       'agreementNumber',
+      'correlationId',
       'dueDate',
       'invoiceNumber',
       'marketingYear',
@@ -15,9 +16,7 @@ const getInProgressPaymentRequestByReferenceId = async (agreementNumber, marketi
       'value'
     ],
     where: {
-      agreementNumber,
-      paymentRequestNumber,
-      marketingYear,
+      correlationId,
       status: IN_PROGRESS
     },
     raw: true

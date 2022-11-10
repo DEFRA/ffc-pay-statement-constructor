@@ -53,8 +53,8 @@ describe('process payment request', () => {
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestInProgress.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      agreementNumber: paymentRequestInProgress.agreementNumber,
       dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
