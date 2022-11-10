@@ -20,7 +20,7 @@ jest.mock('../../../../app/processing/payment-request/get-completed-payment-requ
 const getCompletedPaymentRequestByPaymentRequestId = require('../../../../app/processing/payment-request/get-completed-payment-request-by-payment-request-id')
 
 jest.mock('../../../../app/processing/payment-request/get-in-progress-payment-request-by-reference-id')
-const getInProgressPaymentRequestByReferenceId = require('../../../../app/processing/payment-request/get-in-progress-payment-request-by-reference-id')
+const getInProgressPaymentRequestByReferenceId = require('../../../../app/processing/payment-request/get-latest-in-progress-payment-request-by-reference-id')
 
 jest.mock('../../../../app/processing/payment-request/validate-payment-request')
 const validatePaymentRequest = require('../../../../app/processing/payment-request/validate-payment-request')
