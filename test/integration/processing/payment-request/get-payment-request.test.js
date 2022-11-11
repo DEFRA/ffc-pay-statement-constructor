@@ -9,8 +9,19 @@ const getPaymentRequest = require('../../../../app/processing/payment-request')
 const PAYMENT_REQUEST_ID_IN_PROGRESS = 1
 const PAYMENT_REQUEST_ID_COMPLETED = 2
 
+let invoiceNumbers
+
 let paymentRequestInProgress
 let paymentRequestCompleted
+let topUpInProgressPaymentRequest
+let topUpCompletedPaymentRequest
+let downwardAdjustmentInProgressPaymentRequest
+let downwardAdjustmentCompletedPaymentRequest
+let recoveryInProgressPaymentRequest
+let recoveryCompletedPaymentRequest
+let splitInProgressPaymentRequest
+let splitACompletedPaymentRequest
+let splitBCompletedPaymentRequest
 
 describe('process payment request', () => {
   beforeAll(async () => {
@@ -22,15 +33,21 @@ describe('process payment request', () => {
 
   beforeEach(async () => {
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
-    const {
-      SFI_FIRST_PAYMENT: invoiceNumber,
-      SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
+    invoiceNumbers = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
     paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
     paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
+    topUpInProgressPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').topUpProcessingPaymentRequest))
+    topUpCompletedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').topUpSubmitPaymentRequest))
+    downwardAdjustmentInProgressPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').downwardAdjustmentProcessingPaymentRequest))
+    downwardAdjustmentCompletedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').downwardAdjustmentSubmitPaymentRequest))
+    recoveryInProgressPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').recoveryProcessingPaymentRequest))
+    recoveryCompletedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').recoverySubmitPaymentRequest))
+    splitInProgressPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').splitProcessingPaymentRequest))
+    splitACompletedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').splitSubmitPaymentRequestA))
+    splitBCompletedPaymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').splitSubmitPaymentRequestB))
 
     await db.scheme.bulkCreate(schemes)
-    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
     delete paymentRequestInProgress.paymentRequestId
     delete paymentRequestCompleted.paymentRequestId
   })
@@ -218,18 +235,83 @@ describe('process payment request', () => {
   test('should return top up in progress payment request if top up', async () => {
     await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
-
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
 
     expect(result).toStrictEqual({
-      agreementNumber: paymentRequestInProgress.agreementNumber,
-      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
-      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 3,
+      dueDate: new Date(moment(topUpInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
-      invoiceNumber: paymentRequestInProgress.invoiceNumber,
-      value: paymentRequestInProgress.value,
-      year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
+      value: topUpInProgressPaymentRequest.value,
+      year: topUpInProgressPaymentRequest.marketingYear,
+      schedule: topUpInProgressPaymentRequest.schedule
+    })
+  })
+
+  test('should return downward adjustment in progress payment request if downward adjustment', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
+    await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: downwardAdjustmentInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 3,
+      dueDate: new Date(moment(downwardAdjustmentInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: downwardAdjustmentInProgressPaymentRequest.invoiceNumber,
+      value: downwardAdjustmentInProgressPaymentRequest.value,
+      year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
+      schedule: downwardAdjustmentInProgressPaymentRequest.schedule
+    })
+  })
+
+  test('should return recovery in progress payment request if recovery', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(recoveryInProgressPaymentRequest)
+    await db.paymentRequest.create(recoveryCompletedPaymentRequest)
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: recoveryInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 3,
+      dueDate: new Date(moment(recoveryInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: recoveryInProgressPaymentRequest.invoiceNumber,
+      value: recoveryInProgressPaymentRequest.value,
+      year: recoveryInProgressPaymentRequest.marketingYear,
+      schedule: recoveryInProgressPaymentRequest.schedule
+    })
+  })
+
+  test('should return split in progress payment request if split invoice', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_A, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_B, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(splitInProgressPaymentRequest)
+    await db.paymentRequest.create(splitACompletedPaymentRequest)
+    await db.paymentRequest.create(splitBCompletedPaymentRequest)
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: splitInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 3,
+      dueDate: new Date(moment(splitInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: splitInProgressPaymentRequest.invoiceNumber,
+      value: splitInProgressPaymentRequest.value,
+      year: splitInProgressPaymentRequest.marketingYear,
+      schedule: splitInProgressPaymentRequest.schedule
     })
   })
 })
