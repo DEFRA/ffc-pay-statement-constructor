@@ -474,4 +474,34 @@ describe('process payment request', () => {
       schedule: secondTopUpInProgressPaymentRequest.schedule
     })
   })
+
+  test('should return previous top up in progress payment request if latest not submitted', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    const secondTopUpInProgressPaymentRequest = JSON.parse(JSON.stringify(topUpInProgressPaymentRequest))
+    secondTopUpInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    secondTopUpInProgressPaymentRequest.paymentRequestNumber = 3
+    secondTopUpInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    secondTopUpInProgressPaymentRequest.value = TWO_THOUSAND_POUNDS
+    await db.paymentRequest.create(secondTopUpInProgressPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 5,
+      dueDate: new Date(moment(topUpInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
+      value: topUpInProgressPaymentRequest.value,
+      year: topUpInProgressPaymentRequest.marketingYear,
+      schedule: topUpInProgressPaymentRequest.schedule
+    })
+  })
 })
