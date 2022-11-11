@@ -1,17 +1,17 @@
 jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 
-const db = require('../../app/data')
+const db = require('../../../app/data')
 
 const {
   SFI_PILOT: SFI_PILOT_SCHEME_ID,
   LNR: LNR_SCHEME_ID,
   LUMP_SUMS: LUMP_SUMS_SCHEME_ID,
   VET_VISITS: VET_VISITS_SCHEME_ID
-} = require('../../app/constants/scheme-ids')
-const { IN_PROGRESS } = require('../../app/constants/statuses')
+} = require('../../../app/constants/scheme-ids')
+const { IN_PROGRESS } = require('../../../app/constants/statuses')
 
-const { reverseEngineerInvoiceNumber } = require('../../app/utility')
-const processProcessingPaymentRequest = require('../../app/inbound/processing')
+const { reverseEngineerInvoiceNumber } = require('../../../app/utility')
+const processProcessingPaymentRequest = require('../../../app/inbound/processing')
 
 let paymentRequest
 
@@ -24,9 +24,9 @@ describe('process processing payment request', () => {
   })
 
   beforeEach(async () => {
-    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
-    const fundingOptions = JSON.parse(JSON.stringify(require('../../app/constants/funding-options')))
-    paymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../../app/constants/funding-options')))
+    paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)

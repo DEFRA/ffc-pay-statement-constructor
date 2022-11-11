@@ -1,6 +1,6 @@
-const db = require('../../app/data')
+const db = require('../../../app/data')
 
-const processReturnSettlement = require('../../app/inbound/return')
+const processReturnSettlement = require('../../../app/inbound/return')
 
 let settlement
 let submitPaymentRequest
@@ -15,14 +15,14 @@ describe('process return settlement', () => {
   })
 
   beforeEach(async () => {
-    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
     const {
       SFI_FIRST_PAYMENT: invoiceNumber,
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
-    settlement = JSON.parse(JSON.stringify(require('../mock-objects/mock-settlement')))
-    submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').submitPaymentRequest))
-    processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
+    settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
+    submitPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
+    processingPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
@@ -110,7 +110,7 @@ describe('process return settlement', () => {
     const {
       SFI_SECOND_PAYMENT: invoiceNumber,
       SFI_SECOND_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
 
     const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
     await paymentRequestToRemove.destroy()

@@ -1,6 +1,6 @@
-const db = require('../../app/data')
+const db = require('../../../app/data')
 
-const processCalculation = require('../../app/inbound/calculation')
+const processCalculation = require('../../../app/inbound/calculation')
 
 let calculation
 
@@ -13,18 +13,18 @@ describe('process calculation', () => {
   })
 
   beforeEach(async () => {
-    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
-    const fundingOptions = JSON.parse(JSON.stringify(require('../../app/constants/funding-options')))
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../../app/constants/funding-options')))
     const {
       SFI_FIRST_PAYMENT: invoiceNumber,
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
 
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
 
-    calculation = JSON.parse(JSON.stringify(require('../mock-objects/mock-calculation')))
+    calculation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-calculation')))
   })
 
   afterEach(async () => {
