@@ -7,6 +7,7 @@ const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 const getPaymentRequest = require('../../../../app/processing/payment-request')
 const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS } = require('../../../mock-components/mock-value')
 const { CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT } = require('../../../mock-components/mock-uuidv4')
+const { COMPLETED } = require('../../../../app/constants/statuses')
 
 const PAYMENT_REQUEST_ID_IN_PROGRESS = 1
 const PAYMENT_REQUEST_ID_COMPLETED = 2
@@ -457,6 +458,7 @@ describe('process payment request', () => {
 
     const secondTopUpCompletedPaymentRequest = JSON.parse(JSON.stringify(secondTopUpInProgressPaymentRequest))
     secondTopUpCompletedPaymentRequest.value = ONE_THOUSAND_POUNDS
+    secondTopUpCompletedPaymentRequest.status = COMPLETED
     await db.paymentRequest.create(secondTopUpCompletedPaymentRequest)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
