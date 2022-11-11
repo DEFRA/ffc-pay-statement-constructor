@@ -4,7 +4,9 @@ const getPeriodFromSchedule = (totalValue, totalPayments, paymentValue, schedule
   const firstPeriodIndex = schedule.findIndex(x => x.outstanding)
   const firstPayment = schedule[firstPeriodIndex]
   const lastPayment = schedule[firstPeriodIndex + incrementsInPayment]
-  return `${firstPayment.dueDate.format('MMMM')} to ${lastPayment.dueDate.add(increment - 1, unit).format('MMMM YYYY')}`
+  const firstPeriod = firstPayment.dueDate.clone().subtract(increment, unit)
+  const lastPeriod = lastPayment.dueDate.clone().subtract(1, unit)
+  return `${firstPeriod.format('MMMM')} to ${lastPeriod.format('MMMM YYYY')}`
 }
 
 module.exports = getPeriodFromSchedule
