@@ -5,7 +5,7 @@ const db = require('../../../../app/data')
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 const getPaymentRequest = require('../../../../app/processing/payment-request')
-const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS } = require('../../../mock-components/mock-value')
+const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS, ONE_HUNDRED_POUNDS, MINUS_FOUR_HUNDRED_POUNDS } = require('../../../mock-components/mock-value')
 const { CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT } = require('../../../mock-components/mock-uuidv4')
 const { COMPLETED } = require('../../../../app/constants/statuses')
 
@@ -502,6 +502,41 @@ describe('process payment request', () => {
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
       schedule: topUpInProgressPaymentRequest.schedule
+    })
+  })
+
+  test('should return downward adjustment in progress payment request if top up then downward adjustment', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    const downwardAdjustmentInProgressPaymentRequest = JSON.parse(JSON.stringify(topUpInProgressPaymentRequest))
+    downwardAdjustmentInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    downwardAdjustmentInProgressPaymentRequest.paymentRequestNumber = 3
+    downwardAdjustmentInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    downwardAdjustmentInProgressPaymentRequest.value = ONE_HUNDRED_POUNDS
+    await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
+
+    const downwardAdjustmentCompletedPaymentRequest = JSON.parse(JSON.stringify(downwardAdjustmentInProgressPaymentRequest))
+    downwardAdjustmentCompletedPaymentRequest.value = MINUS_FOUR_HUNDRED_POUNDS
+    downwardAdjustmentCompletedPaymentRequest.status = COMPLETED
+    await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: downwardAdjustmentInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 5,
+      dueDate: new Date(moment(downwardAdjustmentInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: downwardAdjustmentInProgressPaymentRequest.invoiceNumber,
+      value: downwardAdjustmentInProgressPaymentRequest.value,
+      year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
+      schedule: downwardAdjustmentInProgressPaymentRequest.schedule
     })
   })
 })
