@@ -5,6 +5,7 @@ const db = require('../../../../app/data')
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 const getPaymentRequest = require('../../../../app/processing/payment-request')
+const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS } = require('../../../mock-components/mock-value')
 
 const PAYMENT_REQUEST_ID_IN_PROGRESS = 1
 const PAYMENT_REQUEST_ID_COMPLETED = 2
@@ -434,6 +435,39 @@ describe('process payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule
+    })
+  })
+
+  test('should return latest top up in progress payment request if multiple top ups', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    const secondTopUpInProgressPaymentRequest = JSON.parse(JSON.stringify(topUpInProgressPaymentRequest))
+    secondTopUpInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    secondTopUpInProgressPaymentRequest.paymentRequestNumber = 3
+    secondTopUpInProgressPaymentRequest.value = TWO_THOUSAND_POUNDS
+    await db.paymentRequest.create(secondTopUpInProgressPaymentRequest)
+
+    const secondTopUpCompletedPaymentRequest = JSON.parse(JSON.stringify(secondTopUpInProgressPaymentRequest))
+    secondTopUpCompletedPaymentRequest.value = ONE_THOUSAND_POUNDS
+    await db.paymentRequest.create(secondTopUpCompletedPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: secondTopUpInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 5,
+      dueDate: new Date(moment(secondTopUpInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: secondTopUpInProgressPaymentRequest.invoiceNumber,
+      value: secondTopUpInProgressPaymentRequest.value,
+      year: secondTopUpInProgressPaymentRequest.marketingYear,
+      schedule: secondTopUpInProgressPaymentRequest.schedule
     })
   })
 })
