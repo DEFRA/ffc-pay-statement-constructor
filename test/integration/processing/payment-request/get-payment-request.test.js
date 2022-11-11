@@ -196,4 +196,40 @@ describe('process payment request', () => {
     const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED) }
     expect(wrapper).rejects.toThrow()
   })
+
+  test('should return original in progress payment request if no post payment adjustments', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
+    })
+  })
+
+  test('should return top up in progress payment request if top up', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
+    })
+  })
 })
