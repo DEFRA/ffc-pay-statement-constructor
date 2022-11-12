@@ -4,6 +4,7 @@ const getSettlementsByInvoiceNumber = async (settlementDate, completedInvoiceNum
   return db.settlement.findAll({
     transaction,
     attributes: [
+      'invoiceNumber',
       'value'
     ],
     where: {
