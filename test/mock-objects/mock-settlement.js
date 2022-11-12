@@ -17,5 +17,7 @@ module.exports = {
   value: FIVE_HUNDRED_POUNDS,
   settlementDate: SETTLEMENT_DATE,
   reference: SETTLEMENT_REFERENCE,
-  settled: true
+  settled: true,
+  paymentValue: FIVE_HUNDRED_POUNDS,
+  lastSettlementValue: 0
 }

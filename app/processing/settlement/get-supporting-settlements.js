@@ -2,6 +2,7 @@ const settlement = require('../../data/models/settlement')
 const getCompletedInvoiceNumbers = require('./get-completed-invoice-numbers')
 const getLastSettlement = require('./get-last-settlement')
 const getSettlementsByInvoiceNumber = require('./get-settlements-by-invoice-number')
+const getPaymentValue = require('./get-payment-value')
 const validateSupportingSettlements = require('./validate-supporting-settlements')
 
 const getSupportingSettlements = async (settlementDate, agreementNumber, marketingYear, transaction) => {
@@ -10,8 +11,7 @@ const getSupportingSettlements = async (settlementDate, agreementNumber, marketi
   validateSupportingSettlements(completedInvoiceNumbers, supportingSettlements)
   for (const supportingSettlement of supportingSettlements) {
     const lastSettlement = await getLastSettlement(supportingSettlement.settlementDate, supportingSettlement.value, supportingSettlement.invoiceNumber, transaction)
-    const lastSettlementValue = lastSettlement?.value ?? 0
-    settlement.value = settlement.value - lastSettlementValue
+    settlement.paymentValue = getPaymentValue(supportingSettlement.value, lastSettlement?.value)
   }
   return supportingSettlements
 }

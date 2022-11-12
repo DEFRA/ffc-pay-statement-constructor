@@ -2,7 +2,7 @@ const moment = require('moment')
 
 const db = require('../../../../app/data')
 
-const { getLastSettlement } = require('../../../../app/processing/settlement')
+const getLastSettlement = require('../../../../app/processing/settlement/get-last-settlement')
 const { DATE: SETTLEMENT_DATE } = require('../../../mock-components/mock-dates').SETTLEMENT
 
 let currentSettlement

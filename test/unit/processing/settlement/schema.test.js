@@ -9,7 +9,9 @@ describe('settlement schema', () => {
       reference: 'PY1234567',
       settled: true,
       settlementDate: new Date(2022, 9, 12),
-      value: 50000
+      value: 50000,
+      paymentValue: 50000,
+      lastSettlementValue: 0
     }
   })
 

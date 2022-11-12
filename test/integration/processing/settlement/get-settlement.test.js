@@ -36,7 +36,9 @@ describe('process settlement', () => {
       reference: settlement.reference,
       settled: settlement.settled,
       settlementDate: new Date(settlement.settlementDate),
-      value: settlement.value
+      value: settlement.value,
+      paymentValue: settlement.paymentValue,
+      lastSettlementValue: settlement.lastSettlementValue
     }
   })
 
@@ -52,9 +54,93 @@ describe('process settlement', () => {
   })
 
   test('should return mapped settled object when existing settled settlement with required information exists', async () => {
-    try { await db.settlement.create({ ...settlement, paymentRequestId: 1 }) } catch { }
+    await db.settlement.create({ ...settlement, paymentRequestId: 1 })
     const result = await getSettlement(SETTLEMENT_ID_SETTLED)
     expect(result).toStrictEqual(mappedSettlement)
+  })
+
+  test('should return paymentValue as settlement value if no previous settlements', async () => {
+    await db.settlement.create({ ...settlement })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.paymentValue).toBe(settlement.value)
+  })
+
+  test('should return lastSettlementValue as 0 if no previous settlements', async () => {
+    await db.settlement.create({ ...settlement })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.lastSettlementValue).toBe(0)
+  })
+
+  test('should return paymentValue as settlement value if previous settlements same date and value', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.paymentValue).toBe(settlement.value)
+  })
+
+  test('should return lastSettlementValue as 0 if previous settlements same date and value', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.lastSettlementValue).toBe(0)
+  })
+
+  test('should return paymentValue as settlement value if previous settlement has higher value', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, value: 1000 })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.paymentValue).toBe(settlement.value)
+  })
+
+  test('should return lastSettlementValue as 0 if previous settlement has higher value', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, value: 1000 })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.lastSettlementValue).toBe(0)
+  })
+
+  test('should return paymentValue as settlement value if previous settlement unsettled', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, settled: false })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.paymentValue).toBe(settlement.value)
+  })
+
+  test('should return lastSettlementValue as 0 if previous settlement unsettled', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, settled: false })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.lastSettlementValue).toBe(0)
+  })
+
+  test('should return paymentValue subtracting previous settlement', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, value: 100 })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.paymentValue).toBe(settlement.value - 100)
+  })
+
+  test('should return lastSettlementValue as previous settlement value', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, value: 100 })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.lastSettlementValue).toBe(100)
+  })
+
+  test('should return paymentValue subtracting latest previous settlement if multiple previous settlements', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, value: 100 })
+    await db.settlement.create({ ...settlement, value: 200 })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.paymentValue).toBe(settlement.value - 200)
+  })
+
+  test('should return lastSettlementValue as latest previous settlement value if multiple previous settlements', async () => {
+    await db.settlement.create({ ...settlement })
+    await db.settlement.create({ ...settlement, value: 100 })
+    await db.settlement.create({ ...settlement, value: 200 })
+    const result = await getSettlement(SETTLEMENT_ID_NOT_SETTLED)
+    expect(result.lastSettlementValue).toBe(200)
   })
 
   test('should throw when no existing settlement exists', async () => {
