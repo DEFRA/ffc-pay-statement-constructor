@@ -96,4 +96,82 @@ describe('get supporting settlements', () => {
     const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
     expect(settlements).toHaveLength(0)
   })
+
+  test('should return top up settlement if top up has settlement', async () => {
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    await db.settlement.create(settlement)
+    const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
+    expect(settlements).toHaveLength(1)
+  })
+
+  test('should return downward adjustment settlement if downward adjustment has settlement', async () => {
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    await db.settlement.create(settlement)
+    const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
+    expect(settlements).toHaveLength(1)
+  })
+
+  test('should return split payment settlement if split payment has settlement', async () => {
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_A, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(splitPaymentRequestA)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_A
+    await db.settlement.create(settlement)
+    const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
+    expect(settlements).toHaveLength(1)
+  })
+
+  test('should return top up and downward adjustment settlements if both have settlements', async () => {
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    await db.settlement.create(settlement)
+    const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
+    expect(settlements).toHaveLength(2)
+  })
+
+  test('should return top up and split payment settlements if both have settlements', async () => {
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_A, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(splitPaymentRequestA)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_A
+    await db.settlement.create(settlement)
+    const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
+    expect(settlements).toHaveLength(2)
+  })
+
+  test('should return downward adjustment and split payment settlements if both have settlements', async () => {
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_FIRST_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(paymentRequest)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_A, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(splitPaymentRequestA)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_A
+    await db.settlement.create(settlement)
+    const settlements = await getSupportingSettlements(settlementDate, agreementNumber, marketingYear)
+    expect(settlements).toHaveLength(2)
+  })
 })
