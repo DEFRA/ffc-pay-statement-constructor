@@ -124,12 +124,6 @@ describe('get various components and transform to statement object', () => {
     expect(getCalculation).toHaveBeenCalled()
   })
 
-  test('should call getLastSettlement once when a settlementId is given', async () => {
-    const settlementId = 1
-    await getStatement(settlementId)
-    expect(getLastSettlement).toHaveBeenCalledTimes(1)
-  })
-
   test('should call getLatestPayment when a settlementId is given', async () => {
     const settlementId = 1
     await getStatement(settlementId)
