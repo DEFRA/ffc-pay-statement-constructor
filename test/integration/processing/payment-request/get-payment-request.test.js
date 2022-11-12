@@ -5,7 +5,7 @@ const db = require('../../../../app/data')
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 const getPaymentRequest = require('../../../../app/processing/payment-request')
-const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS, ONE_HUNDRED_POUNDS, MINUS_FOUR_HUNDRED_POUNDS } = require('../../../mock-components/mock-value')
+const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS, MINUS_NINE_HUNDRED_POUNDS } = require('../../../mock-components/mock-value')
 const { CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT } = require('../../../mock-components/mock-uuidv4')
 const { COMPLETED } = require('../../../../app/constants/statuses')
 
@@ -495,7 +495,7 @@ describe('process payment request', () => {
 
     expect(result).toStrictEqual({
       agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
-      paymentRequestId: 5,
+      paymentRequestId: 3,
       dueDate: new Date(moment(topUpInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
       invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
@@ -514,16 +514,15 @@ describe('process payment request', () => {
 
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
 
-    const downwardAdjustmentInProgressPaymentRequest = JSON.parse(JSON.stringify(topUpInProgressPaymentRequest))
     downwardAdjustmentInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     downwardAdjustmentInProgressPaymentRequest.paymentRequestNumber = 3
     downwardAdjustmentInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
-    downwardAdjustmentInProgressPaymentRequest.value = ONE_HUNDRED_POUNDS
     await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
 
-    const downwardAdjustmentCompletedPaymentRequest = JSON.parse(JSON.stringify(downwardAdjustmentInProgressPaymentRequest))
-    downwardAdjustmentCompletedPaymentRequest.value = MINUS_FOUR_HUNDRED_POUNDS
-    downwardAdjustmentCompletedPaymentRequest.status = COMPLETED
+    downwardAdjustmentCompletedPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    downwardAdjustmentCompletedPaymentRequest.paymentRequestNumber = 3
+    downwardAdjustmentCompletedPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    downwardAdjustmentCompletedPaymentRequest.value = MINUS_NINE_HUNDRED_POUNDS
     await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
 
     const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
