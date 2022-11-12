@@ -67,7 +67,7 @@ describe('process settlement', () => {
   })
 
   test('should return null if previous settlements lower value and later date', async () => {
-    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).add('days', 1)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).add(1, 'day')
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
@@ -92,7 +92,7 @@ describe('process settlement', () => {
   test('should return latest settlement if multiple previous settlements', async () => {
     previousSettlement.value = 40000
     await db.settlement.create(previousSettlement)
-    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract('days', 2)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract(2, 'day')
     previousSettlement.value = 30000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
@@ -101,7 +101,7 @@ describe('process settlement', () => {
 
   test('should return latest lower settlement if multiple previous settlements', async () => {
     await db.settlement.create(previousSettlement)
-    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract('days', 2)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract(2, 'day')
     previousSettlement.value = 30000
     await db.settlement.create(previousSettlement)
     const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
