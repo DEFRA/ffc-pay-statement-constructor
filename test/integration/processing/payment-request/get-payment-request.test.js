@@ -5,7 +5,7 @@ const db = require('../../../../app/data')
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
 const getPaymentRequest = require('../../../../app/processing/payment-request')
-const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS, MINUS_NINE_HUNDRED_POUNDS } = require('../../../mock-components/mock-value')
+const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS, MINUS_NINE_HUNDRED_POUNDS, NINE_HUNDRED_POUNDS, MINUS_FOUR_HUNDRED_AND_FIFTY_POUNDS } = require('../../../mock-components/mock-value')
 const { CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT } = require('../../../mock-components/mock-uuidv4')
 const { COMPLETED } = require('../../../../app/constants/statuses')
 
@@ -536,6 +536,83 @@ describe('process payment request', () => {
       value: downwardAdjustmentInProgressPaymentRequest.value,
       year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
       schedule: downwardAdjustmentInProgressPaymentRequest.schedule
+    })
+  })
+
+  test('should return downward adjustment in progress payment request if downward adjustment then top up', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
+    await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    topUpInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    topUpInProgressPaymentRequest.paymentRequestNumber = 3
+    topUpInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+
+    topUpCompletedPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    topUpCompletedPaymentRequest.paymentRequestNumber = 3
+    topUpCompletedPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    topUpCompletedPaymentRequest.value = NINE_HUNDRED_POUNDS
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 5,
+      dueDate: new Date(moment(topUpInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
+      value: topUpInProgressPaymentRequest.value,
+      year: topUpInProgressPaymentRequest.marketingYear,
+      schedule: topUpInProgressPaymentRequest.schedule
+    })
+  })
+
+  test('should return downward adjustment in progress payment request if top up then split', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    splitInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    splitInProgressPaymentRequest.paymentRequestNumber = 3
+    splitInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    await db.paymentRequest.create(splitInProgressPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_A_THIRD, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_B_THIRD, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    splitACompletedPaymentRequest.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_A
+    splitACompletedPaymentRequest.paymentRequestNumber = 3
+    splitACompletedPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    splitACompletedPaymentRequest.value = MINUS_FOUR_HUNDRED_AND_FIFTY_POUNDS
+    await db.paymentRequest.create(splitACompletedPaymentRequest)
+
+    splitBCompletedPaymentRequest.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_B
+    splitBCompletedPaymentRequest.paymentRequestNumber = 3
+    splitBCompletedPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    splitBCompletedPaymentRequest.value = MINUS_FOUR_HUNDRED_AND_FIFTY_POUNDS
+    await db.paymentRequest.create(splitBCompletedPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: splitInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 5,
+      dueDate: new Date(moment(splitInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: splitInProgressPaymentRequest.invoiceNumber,
+      value: splitInProgressPaymentRequest.value,
+      year: splitInProgressPaymentRequest.marketingYear,
+      schedule: splitInProgressPaymentRequest.schedule
     })
   })
 })
