@@ -136,6 +136,7 @@ describe('get supporting settlements', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    downwardAdjustmentPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     await db.paymentRequest.create(downwardAdjustmentPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     await db.settlement.create(settlement)
@@ -151,6 +152,7 @@ describe('get supporting settlements', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_THIRD_A, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    splitPaymentRequestA.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_A
     await db.paymentRequest.create(splitPaymentRequestA)
     settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_A
     await db.settlement.create(settlement)
@@ -166,6 +168,7 @@ describe('get supporting settlements', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_THIRD_A, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    splitPaymentRequestA.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_A
     await db.paymentRequest.create(splitPaymentRequestA)
     settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_A
     await db.settlement.create(settlement)
