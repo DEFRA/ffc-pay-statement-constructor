@@ -1,6 +1,6 @@
 const db = require('../../data')
 const { COMPLETED } = require('../../constants/statuses')
-const {AP} = require('../../constants/ledgers')
+const { AP } = require('../../constants/ledgers')
 
 const getSupportingInvoiceNumbers = async (agreementNumber, marketingYear, transaction) => {
   const completedPaymentRequests = await db.paymentRequest.findAll({

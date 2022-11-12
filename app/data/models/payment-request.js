@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     deliveryBody: DataTypes.STRING,
     dueDate: DataTypes.STRING,
     frn: DataTypes.BIGINT,
+    ledger: DataTypes.STRING,
     marketingYear: DataTypes.INTEGER,
     received: DataTypes.DATE,
     recoveryDate: DataTypes.STRING,
