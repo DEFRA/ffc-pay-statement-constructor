@@ -587,8 +587,8 @@ describe('process payment request', () => {
     splitInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
     await db.paymentRequest.create(splitInProgressPaymentRequest)
 
-    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_A_THIRD, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
-    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_B_THIRD, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_THIRD_A, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_THIRD_B, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
 
     splitACompletedPaymentRequest.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_A
     splitACompletedPaymentRequest.paymentRequestNumber = 3
