@@ -61,6 +61,18 @@ describe('get latest payment', () => {
     expect(result.value).toBe(40000)
   })
 
+  test('returns difference between current and last settlement if supporting settlements null', () => {
+    supportingSettlements = null
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
+    expect(result.value).toBe(settlement.value)
+  })
+
+  test('returns difference between current and last settlement if supporting settlements undefined', () => {
+    supportingSettlements = undefined
+    const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
+    expect(result.value).toBe(settlement.value)
+  })
+
   test('returns value including supporting settlement top up', () => {
     supportingSettlements = [{ value: 10000 }]
     const result = getLatestPayment(paymentRequest, settlement, lastSettlement, supportingSettlements)
