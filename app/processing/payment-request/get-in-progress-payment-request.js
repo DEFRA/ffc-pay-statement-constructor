@@ -1,7 +1,7 @@
 const db = require('../../data')
 const { IN_PROGRESS } = require('../../constants/statuses')
 
-const getInProgressPaymentRequestByReferenceId = async (correlationId, transaction) => {
+const getInProgressPaymentRequest = async (correlationId, transaction) => {
   return db.paymentRequest.findOne({
     transaction,
     attributes: [
@@ -23,4 +23,4 @@ const getInProgressPaymentRequestByReferenceId = async (correlationId, transacti
   })
 }
 
-module.exports = getInProgressPaymentRequestByReferenceId
+module.exports = getInProgressPaymentRequest
