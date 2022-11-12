@@ -115,7 +115,7 @@ describe('process return settlement', () => {
     const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
     await paymentRequestToRemove.destroy()
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
-    submitPaymentRequest.invoiceNumber = 'S0000001SFIP000001V002'
+    submitPaymentRequest.invoiceNumber = invoiceNumber
     await db.paymentRequest.create(submitPaymentRequest)
 
     await processReturnSettlement(settlement)
@@ -133,5 +133,20 @@ describe('process return settlement', () => {
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.paymentRequestId).toBeNull()
+  })
+
+  test('should save entry into schedule table if first payment settlement', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.schedule.count()
+    expect(result).toBe(1)
+  })
+
+  test('should not save entry into settlement table if not first payment settlement', async () => {
+    settlement.invoiceNumber = 'S0000001SFIP000001V002'
+    await processReturnSettlement(settlement)
+
+    const result = await db.schedule.count()
+    expect(result).toBe(0)
   })
 })
