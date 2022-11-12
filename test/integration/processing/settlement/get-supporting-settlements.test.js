@@ -1,5 +1,3 @@
-const moment = require('moment')
-
 const db = require('../../../../app/data')
 
 const { getSupportingSettlements } = require('../../../../app/processing/settlement')
@@ -36,7 +34,7 @@ describe('get supporting settlements', () => {
 
     settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
     settlement.settlementDate = SETTLEMENT_DATE
-  
+
     settlementDate = SETTLEMENT_DATE
     agreementNumber = SFI_AGREEMENT_NUMBER
     marketingYear = MARKETING_YEAR
