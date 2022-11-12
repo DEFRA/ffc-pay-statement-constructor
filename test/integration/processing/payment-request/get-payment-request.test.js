@@ -615,4 +615,38 @@ describe('process payment request', () => {
       schedule: splitInProgressPaymentRequest.schedule
     })
   })
+
+  test('should return top up in progress payment request if recovery then top up', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(recoveryInProgressPaymentRequest)
+    await db.paymentRequest.create(recoveryCompletedPaymentRequest)
+
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
+
+    topUpInProgressPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    topUpInProgressPaymentRequest.paymentRequestNumber = 3
+    topUpInProgressPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+
+    topUpCompletedPaymentRequest.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
+    topUpCompletedPaymentRequest.paymentRequestNumber = 3
+    topUpCompletedPaymentRequest.correlationId = CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT
+    topUpCompletedPaymentRequest.value = NINE_HUNDRED_POUNDS
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED)
+
+    expect(result).toStrictEqual({
+      agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
+      paymentRequestId: 5,
+      dueDate: new Date(moment(topUpInProgressPaymentRequest.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
+      value: topUpInProgressPaymentRequest.value,
+      year: topUpInProgressPaymentRequest.marketingYear,
+      schedule: topUpInProgressPaymentRequest.schedule
+    })
+  })
 })
