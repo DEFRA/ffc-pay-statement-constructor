@@ -107,4 +107,23 @@ describe('process settlement', () => {
     const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
     expect(lastSettlement.value).toBe(30000)
   })
+
+  test('should return settlement if previous settlements lower value and earlier date if negative values', async () => {
+    value = -50000
+    previousSettlement.value = -40000
+    await db.settlement.create(previousSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
+    expect(lastSettlement.value).toBe(previousSettlement.value)
+  })
+
+  test('should return latest settlement if multiple previous settlements if negative values', async () => {
+    value = -50000
+    previousSettlement.value = -40000
+    await db.settlement.create(previousSettlement)
+    previousSettlement.settlementDate = moment(currentSettlement.settlementDate).subtract(2, 'day')
+    previousSettlement.value = -30000
+    await db.settlement.create(previousSettlement)
+    const lastSettlement = await getLastSettlement(settlementDate, value, invoiceNumber)
+    expect(lastSettlement.value).toBe(-40000)
+  })
 })
