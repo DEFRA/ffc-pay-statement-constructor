@@ -1,5 +1,5 @@
 const isFirstPayment = (invoiceNumber) => {
-  return invoiceNumber.endsWith('001')
+  return invoiceNumber?.toString().endsWith('001')
 }
 
 module.exports = isFirstPayment
