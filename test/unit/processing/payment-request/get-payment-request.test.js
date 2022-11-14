@@ -98,15 +98,15 @@ describe('get and map required payment request information for building a statem
     expect(getInProgressPaymentRequest).toHaveBeenCalled()
   })
 
-  test('should call getInProgressPaymentRequest twice when a paymentRequestId is given', async () => {
+  test('should call getInProgressPaymentRequest once when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId, settlementDate)
-    expect(getInProgressPaymentRequest).toHaveBeenCalledTimes(2)
+    expect(getInProgressPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
-  test('should call getInProgressPaymentRequest with paymentRequestId when a paymentRequestId is given', async () => {
+  test('should call getInProgressPaymentRequest with correlationId when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId, mockTransaction)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getInProgressPaymentRequest).toHaveBeenCalledWith(retrievedPaymentRequest.correlationId, mockTransaction)
   })
 
