@@ -89,7 +89,7 @@ describe('get and map required payment request information for building a statem
   test('should call getCompletedPaymentRequest with paymentRequestId when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId, mockTransaction)
-    expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, SETTLEMENT_DATE, mockTransaction)
+    expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
   })
 
   test('should call getInProgressPaymentRequest when a paymentRequestId is given', async () => {
