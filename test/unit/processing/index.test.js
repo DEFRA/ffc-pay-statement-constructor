@@ -24,6 +24,9 @@ jest.mock('../../../app/data', () => {
 jest.mock('../../../app/processing/schedule')
 const schedulePendingSettlements = require('../../../app/processing/schedule')
 
+jest.mock('../../../app/messaging/wait-for-idle-messaging')
+const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messaging')
+
 jest.mock('../../../app/processing/statement')
 const { getStatement, sendStatement } = require('../../../app/processing/statement')
 
@@ -50,6 +53,11 @@ describe('start processing', () => {
 
   afterEach(() => {
     jest.clearAllMocks()
+  })
+
+  test('should call waitForIdleMessaging', async () => {
+    await processing.start()
+    expect(waitForIdleMessaging).toHaveBeenCalled()
   })
 
   test('should call schedulePendingSettlements', async () => {

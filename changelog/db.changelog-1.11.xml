@@ -29,7 +29,19 @@
       WHERE "paymentRequestNumber" IS NULL;
     </sql>
   </changeSet>
-  <changeSet author="John Watson" id="7">
+  <changeSet author="John Watson" id="6">
     <dropColumn tableName="paymentRequests" columnName="submitted" />
+  </changeSet>
+  <changeSet author="John Watson" id="7">
+    <addColumn tableName="schedule">
+      <column name="void" type="BOOLEAN" defaultValue="false" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="8">
+    <sql>
+      UPDATE "schedule"
+      SET void = false
+      WHERE void IS NULL;
+    </sql>
   </changeSet>
 </databaseChangeLog>

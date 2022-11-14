@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     scheduleId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     settlementId: DataTypes.INTEGER,
     completed: DataTypes.DATE,
-    started: DataTypes.DATE
+    started: DataTypes.DATE,
+    void: DataTypes.BOOLEAN
   },
   {
     tableName: 'schedules',
