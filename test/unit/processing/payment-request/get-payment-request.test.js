@@ -36,7 +36,10 @@ const getPaymentRequest = require('../../../../app/processing/payment-request/ge
 let retrievedPaymentRequest
 let mappedPaymentRequest
 
+let settlementDate
+
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
+const { DATE: SETTLEMENT_DATE } = require('../../../mock-components/mock-dates').SETTLEMENT
 
 describe('get and map required payment request information for building a statement object', () => {
   beforeEach(() => {
@@ -63,6 +66,8 @@ describe('get and map required payment request information for building a statem
     getLatestCompletedPaymentRequest.mockResolvedValue(retrievedPaymentRequest)
     validatePaymentRequest.mockReturnValue(retrievedPaymentRequest)
     mapPaymentRequest.mockResolvedValue(mappedPaymentRequest)
+
+    settlementDate = SETTLEMENT_DATE
   })
 
   afterEach(() => {
@@ -71,31 +76,31 @@ describe('get and map required payment request information for building a statem
 
   test('should call getCompletedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalled()
   })
 
   test('should call getCompletedPaymentRequest once when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledTimes(1)
   })
 
   test('should call getCompletedPaymentRequest with paymentRequestId when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentRequest(paymentRequestId, mockTransaction)
-    expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
+    expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, SETTLEMENT_DATE, mockTransaction)
   })
 
   test('should call getInProgressPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getInProgressPaymentRequest).toHaveBeenCalled()
   })
 
   test('should call getInProgressPaymentRequest twice when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getInProgressPaymentRequest).toHaveBeenCalledTimes(2)
   })
 
@@ -107,55 +112,55 @@ describe('get and map required payment request information for building a statem
 
   test('should call getLatestCompletedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getLatestCompletedPaymentRequest).toHaveBeenCalled()
   })
 
   test('should call getLatestCompletedPaymentRequest once when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(getLatestCompletedPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
   test('should call validatePaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(validatePaymentRequest).toHaveBeenCalled()
   })
 
   test('should call validatePaymentRequest once when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(validatePaymentRequest).toHaveBeenCalledTimes(1)
   })
 
   test('should call validatePaymentRequest with retrievedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(validatePaymentRequest).toHaveBeenCalledWith(retrievedPaymentRequest)
   })
 
   test('should call mapPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(mapPaymentRequest).toHaveBeenCalled()
   })
 
   test('should call mapPaymentRequest once when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(mapPaymentRequest).toHaveBeenCalledTimes(1)
   })
 
   test('should call mapPaymentRequest with retrievedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    await getPaymentRequest(paymentRequestId)
+    await getPaymentRequest(paymentRequestId, settlementDate)
     expect(mapPaymentRequest).toHaveBeenCalledWith(retrievedPaymentRequest)
   })
 
   test('should return mappedPaymentRequest when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
-    const result = await getPaymentRequest(paymentRequestId)
+    const result = await getPaymentRequest(paymentRequestId, settlementDate)
     expect(result).toStrictEqual(mappedPaymentRequest)
   })
 
@@ -164,7 +169,7 @@ describe('get and map required payment request information for building a statem
     getCompletedPaymentRequestByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -175,7 +180,7 @@ describe('get and map required payment request information for building a statem
     getCompletedPaymentRequestByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -186,7 +191,7 @@ describe('get and map required payment request information for building a statem
     getCompletedPaymentRequestByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
@@ -196,7 +201,7 @@ describe('get and map required payment request information for building a statem
     const paymentRequestId = 1
     getCompletedPaymentRequestByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
-    try { await getPaymentRequest(paymentRequestId) } catch {}
+    try { await getPaymentRequest(paymentRequestId, settlementDate) } catch {}
 
     expect(validatePaymentRequest).not.toHaveBeenCalled()
   })
@@ -205,7 +210,7 @@ describe('get and map required payment request information for building a statem
     const paymentRequestId = 1
     getCompletedPaymentRequestByPaymentRequestId.mockRejectedValue(new Error('Database retrieval issue'))
 
-    try { await getPaymentRequest(paymentRequestId) } catch {}
+    try { await getPaymentRequest(paymentRequestId, settlementDate) } catch {}
 
     expect(mapPaymentRequest).not.toHaveBeenCalled()
   })
@@ -215,7 +220,7 @@ describe('get and map required payment request information for building a statem
     validatePaymentRequest.mockImplementation(() => { throw new Error('Joi validation error') })
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -226,7 +231,7 @@ describe('get and map required payment request information for building a statem
     validatePaymentRequest.mockImplementation(() => { throw new Error('Joi validation error') })
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -237,7 +242,7 @@ describe('get and map required payment request information for building a statem
     validatePaymentRequest.mockImplementation(() => { throw new Error('Joi validation error') })
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow(/^Joi validation error$/)
@@ -247,7 +252,7 @@ describe('get and map required payment request information for building a statem
     const paymentRequestId = 1
     validatePaymentRequest.mockImplementation(() => { throw new Error('Joi validation error') })
 
-    try { await getPaymentRequest(paymentRequestId) } catch {}
+    try { await getPaymentRequest(paymentRequestId, settlementDate) } catch {}
 
     expect(mapPaymentRequest).not.toHaveBeenCalled()
   })
@@ -257,7 +262,7 @@ describe('get and map required payment request information for building a statem
     mapPaymentRequest.mockRejectedValue(new Error('Payment request mapping issue'))
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow()
@@ -268,7 +273,7 @@ describe('get and map required payment request information for building a statem
     mapPaymentRequest.mockRejectedValue(new Error('Payment request mapping issue'))
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow(Error)
@@ -279,7 +284,7 @@ describe('get and map required payment request information for building a statem
     mapPaymentRequest.mockRejectedValue(new Error('Payment request mapping issue'))
 
     const wrapper = async () => {
-      await getPaymentRequest(paymentRequestId)
+      await getPaymentRequest(paymentRequestId, settlementDate)
     }
 
     expect(wrapper).rejects.toThrow(/^Payment request mapping issue$/)

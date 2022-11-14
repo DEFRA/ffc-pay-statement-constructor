@@ -322,13 +322,6 @@ describe('process submit payment request', () => {
     expect(result.sourceSystem).toBe(paymentRequest.sourceSystem)
   })
 
-  test('should save entry into paymentRequest with submitted as null where paymentRequest.referenceId', async () => {
-    await processSubmitPaymentRequest(paymentRequest)
-
-    const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
-    expect(result.submitted).toBeNull()
-  })
-
   test('should save entry into paymentRequest with received given by Date where paymentRequest.referenceId', async () => {
     await processSubmitPaymentRequest(paymentRequest)
 

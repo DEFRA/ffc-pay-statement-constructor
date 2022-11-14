@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     schedule: DataTypes.STRING,
     sourceSystem: DataTypes.STRING,
     status: DataTypes.STRING,
-    submitted: DataTypes.DATE,
     value: DataTypes.INTEGER
   },
   {
@@ -44,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
     paymentRequest.hasMany(models.settlement, {
       foreignKey: 'paymentRequestId',
       as: 'settlements'
+    })
+    paymentRequest.hasMany(models.settlement, {
+      sourceKey: 'invoiceNumber',
+      foreignKey: 'invoiceNumber',
+      as: 'settlementsByInvoiceNumber'
     })
     paymentRequest.hasOne(models.calculation, {
       foreignKey: 'paymentRequestId',

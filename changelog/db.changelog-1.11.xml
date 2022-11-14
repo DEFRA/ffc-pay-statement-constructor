@@ -22,4 +22,14 @@
       WHERE ledger IS NULL;
     </sql>
   </changeSet>
+  <changeSet author="John Watson" id="5">
+    <sql>
+      UPDATE "paymentRequests"
+      SET "paymentRequestNumber" = 1
+      WHERE "paymentRequestNumber" IS NULL;
+    </sql>
+  </changeSet>
+  <changeSet author="John Watson" id="7">
+    <dropColumn tableName="paymentRequests" columnName="submitted" />
+  </changeSet>
 </databaseChangeLog>

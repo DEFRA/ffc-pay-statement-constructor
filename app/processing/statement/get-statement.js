@@ -9,7 +9,7 @@ const getStatement = async (settlementId) => {
   const transaction = await db.sequelize.transaction()
   try {
     const settlement = await getSettlement(settlementId, transaction)
-    const paymentRequest = await getPaymentRequest(settlement.paymentRequestId, transaction)
+    const paymentRequest = await getPaymentRequest(settlement.paymentRequestId, settlement.settlementDate, transaction)
     const calculation = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber, transaction)
     const sbi = calculation.sbi
     const details = await getDetails(sbi, transaction)
