@@ -7,9 +7,6 @@ const start = async () => {
   try {
     if (processingConfig.constructionActive) {
       const pendingStatements = await schedulePendingSettlements()
-      if (!pendingStatements) {
-        throw new Error('No statements to be generated')
-      }
 
       for (const pendingStatement of pendingStatements) {
         try {
