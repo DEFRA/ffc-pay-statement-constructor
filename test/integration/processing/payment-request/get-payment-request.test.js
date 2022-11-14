@@ -305,6 +305,51 @@ describe('process payment request', () => {
     })
   })
 
+  test('should original in progress payment request if top up settlement does not exist', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+
+    expect(result).toStrictEqual({
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: 1,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
+    })
+  })
+
+  test('should return original in progress payment request if top up unsettled', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(topUpInProgressPaymentRequest)
+    await db.paymentRequest.create(topUpCompletedPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    settlement.settled = false
+    await db.settlement.create(settlement)
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+
+    expect(result).toStrictEqual({
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: 1,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
+    })
+  })
+
   test('should return downward adjustment in progress payment request if downward adjustment', async () => {
     await db.paymentRequest.create(paymentRequestInProgress)
     await db.paymentRequest.create(paymentRequestCompleted)
@@ -352,6 +397,53 @@ describe('process payment request', () => {
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
       paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
+    })
+  })
+
+  test('should return original in progress payment request if downward adjustment settlement does not exist', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
+    await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+
+    expect(result).toStrictEqual({
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: 3,
+      dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
+      frequency: SCHEDULE_NAMES.Q4,
+      invoiceNumber: paymentRequestInProgress.invoiceNumber,
+      value: paymentRequestInProgress.value,
+      year: paymentRequestInProgress.marketingYear,
+      schedule: paymentRequestInProgress.schedule
+    })
+  })
+
+  test('should return original in progress payment request if downward adjustment unsettled', async () => {
+    await db.paymentRequest.create(paymentRequestInProgress)
+    await db.paymentRequest.create(paymentRequestCompleted)
+    await db.settlement.create(settlement)
+    await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
+    await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
+    await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
+    settlement.settled = false
+    await db.settlement.create(settlement)
+
+    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+
+    expect(result).toStrictEqual({
+      agreementNumber: paymentRequestInProgress.agreementNumber,
+      paymentRequestId: 3,
       dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
