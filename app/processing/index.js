@@ -1,11 +1,12 @@
 const { processingConfig } = require('../config')
-
+const waitForIdleMessaging = require('../messaging/wait-for-idle-messaging')
 const schedulePendingSettlements = require('./schedule')
 const { getStatement, sendStatement } = require('./statement')
 
 const start = async () => {
   try {
     if (processingConfig.constructionActive) {
+      await waitForIdleMessaging()
       const pendingStatements = await schedulePendingSettlements()
 
       for (const pendingStatement of pendingStatements) {
