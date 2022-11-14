@@ -535,7 +535,7 @@ describe('process payment request', () => {
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
     await db.paymentRequest.create(topUpInProgressPaymentRequest)
     await db.paymentRequest.create(topUpCompletedPaymentRequest)
-    settlement.invoiceNumbers = invoiceNumbers.SFI_SECOND_PAYMENT
+    settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
 
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_THIRD_PAYMENT_ORIGINAL })
