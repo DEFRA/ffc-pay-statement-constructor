@@ -12,7 +12,8 @@ const mapPaymentRequest = (paymentRequest) => {
     invoiceNumber: paymentRequest.invoiceNumber,
     value: paymentRequest.value,
     year,
-    schedule: paymentRequest.schedule
+    schedule: paymentRequest.schedule,
+    originalValue: paymentRequest.originalValue
   }
 }
 

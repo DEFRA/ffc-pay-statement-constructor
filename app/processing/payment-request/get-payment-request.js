@@ -6,8 +6,10 @@ const mapPaymentRequest = require('./map-payment-request')
 
 const getPaymentRequest = async (paymentRequestId, settlementDate, transaction) => {
   const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
+  const inProgressPaymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.correlationId, transaction)
   const latestCompletedPaymentRequest = await getLatestCompletedPaymentRequest(settlementDate, completedPaymentRequest.agreementNumber, completedPaymentRequest.marketingYear, transaction)
   const latestInProgressPaymentRequest = await getInProgressPaymentRequest(latestCompletedPaymentRequest.correlationId, transaction)
+  latestInProgressPaymentRequest.originalValue = inProgressPaymentRequest.value
   return mapPaymentRequest(validatePaymentRequest(latestInProgressPaymentRequest))
 }
 
