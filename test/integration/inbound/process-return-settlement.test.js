@@ -1,3 +1,4 @@
+const { AP } = require('../../../app/constants/ledgers')
 const db = require('../../../app/data')
 
 const processReturnSettlement = require('../../../app/inbound/return')
@@ -87,6 +88,20 @@ describe('process return settlement', () => {
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.frn).toBe(settlement.frn.toString())
+  })
+
+  test('should save ledger as AP in the table when valid settlement received ', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.ledger).toBe(AP)
+  })
+
+  test('should save received date in the table when valid settlement received ', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.receivedDate).not.toBeNull()
   })
 
   test('should save settlement with paymentRequestId of paymentRequest.PaymentRequestId when matching paymentRequest with status of "Completed" is found ', async () => {
