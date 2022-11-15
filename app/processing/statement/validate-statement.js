@@ -1,6 +1,5 @@
 const validateStatement = (statement) => {
-  const hasValue = hasPaymentValue(statement.payments)
-  return hasValue
+  return hasPaymentValue(statement.payments)
 }
 
 const hasPaymentValue = (payments) => {
