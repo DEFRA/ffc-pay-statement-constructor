@@ -1,3 +1,5 @@
+jest.useFakeTimers()
+jest.spyOn(global, 'setTimeout')
 const sleep = require('../../../app/messaging/sleep')
 
 describe('sleep', () => {
@@ -5,10 +7,8 @@ describe('sleep', () => {
     expect(sleep(1000)).toBeInstanceOf(Promise)
   })
 
-  test('should resolve after the specified time', async () => {
-    const start = Date.now()
-    await sleep(1000)
-    const end = Date.now()
-    expect(end - start).toBeGreaterThanOrEqual(1000)
+  test('should call setTimeout with ms', () => {
+    sleep(1000)
+    expect(setTimeout).toHaveBeenCalledWith(expect.anything(), 1000)
   })
 })
