@@ -5,7 +5,7 @@ const getCompletedPaymentRequestByInvoiceNumber = require('../get-completed-paym
 const saveSettlement = async (settlement, transaction) => {
   const matchedPaymentRequest = await getCompletedPaymentRequestByInvoiceNumber(settlement.invoiceNumber, transaction)
   settlement.paymentRequestId = (matchedPaymentRequest ? matchedPaymentRequest?.paymentRequestId : null) ?? null
-  return db.settlement.create({ ...settlement, ledger: AP }, { transaction })
+  return db.settlement.create({ ...settlement, ledger: AP, received: new Date() }, { transaction })
 }
 
 module.exports = saveSettlement

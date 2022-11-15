@@ -32,4 +32,16 @@
   <changeSet author="John Watson" id="6">
     <dropColumn tableName="paymentRequests" columnName="submitted" />
   </changeSet>
+  <changeSet author="John Watson" id="7">
+    <addColumn tableName="settlements">
+      <column name="received" type="TIMESTAMP" />
+    </addColumn>
+  </changeSet>
+  <changeSet author="John Watson" id="8">
+    <sql>
+      UPDATE "settlements"
+      SET "received" = NOW()
+      WHERE "received" IS NULL;
+    </sql>
+  </changeSet>
 </databaseChangeLog>

@@ -8,6 +8,7 @@ const getSupportingSettlements = async (settlementDate, agreementNumber, marketi
   const supportingSettlements = await getSettlementsByInvoiceNumber(settlementDate, completedInvoiceNumbers, transaction)
   for (const supportingSettlement of supportingSettlements) {
     const lastSettlement = await getLastSettlement(supportingSettlement.settlementDate, supportingSettlement.value, supportingSettlement.invoiceNumber, transaction)
+    supportingSettlement.lastSettlementValue = lastSettlement?.value ?? 0
     supportingSettlement.paymentValue = getPaymentValue(supportingSettlement.value, lastSettlement?.value)
   }
   return supportingSettlements

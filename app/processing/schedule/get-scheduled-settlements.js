@@ -21,6 +21,9 @@ const getScheduledSettlements = async (started, transaction) => {
     where: {
       completed: null,
       '$settlements.sourceSystem$': SOURCE_SYSTEM.SFI,
+      '$settlements.received$': {
+        [db.Sequelize.Op.lte]: moment(started).subtract(config.settlementWaitTime).toDate()
+      },
       [db.Sequelize.Op.or]: [{
         started: null
       }, {

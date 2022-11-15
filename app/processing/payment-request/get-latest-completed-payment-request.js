@@ -26,7 +26,6 @@ const getLatestCompletedPaymentRequest = async (settlementDate, agreementNumber,
       status: COMPLETED
     },
     order: [['paymentRequestNumber', 'DESC']],
-    limit: 1,
     raw: true
   })
 }

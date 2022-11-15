@@ -51,6 +51,7 @@ container:
   idleCheckBatchSize: 250
   idleCheckMaxDeliveryCount: 1 
   idleCheckInterval: 60000
+  settlementWaitTime: 600000
 
 postgresService:
   postgresDb: ffc_pay_statement_constructor
