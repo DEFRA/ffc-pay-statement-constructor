@@ -19,7 +19,6 @@ const getScheduledSettlements = async (started, transaction) => {
       attributes: []
     }],
     where: {
-      void: false,
       completed: null,
       '$settlements.sourceSystem$': SOURCE_SYSTEM.SFI,
       [db.Sequelize.Op.or]: [{
