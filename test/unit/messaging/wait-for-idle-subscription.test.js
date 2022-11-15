@@ -1,10 +1,11 @@
 const mockPeekMessages = jest.fn()
+const mockCloseConnection = jest.fn()
 jest.mock('ffc-messaging', () => {
   return {
     MessageReceiver: jest.fn().mockImplementation(() => {
       return {
         peekMessages: mockPeekMessages,
-        closeConnection: jest.fn().mockResolvedValue()
+        closeConnection: mockCloseConnection
       }
     })
   }
@@ -102,5 +103,19 @@ describe('wait for idle subscription', () => {
     mockPeekMessages.mockResolvedValueOnce([])
     await waitForIdleSubscription(subscription)
     expect(sleep).toHaveBeenCalledTimes(1)
+  })
+
+  test('should close connection', async () => {
+    await waitForIdleSubscription(subscription)
+    expect(mockCloseConnection).toHaveBeenCalled()
+  })
+
+  test('should close connection if peekMessages throws', async () => {
+    mockPeekMessages.mockRejectedValue(new Error('test error'))
+    try {
+      await waitForIdleSubscription(subscription)
+    } catch (err) {
+      expect(mockCloseConnection).toHaveBeenCalled()
+    }
   })
 })
