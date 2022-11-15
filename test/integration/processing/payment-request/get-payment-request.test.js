@@ -430,7 +430,7 @@ describe('process payment request', () => {
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
-      paymentRequestId: 3,
+      paymentRequestId: 1,
       dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
@@ -456,7 +456,7 @@ describe('process payment request', () => {
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
-      paymentRequestId: 3,
+      paymentRequestId: 1,
       dueDate: new Date(moment(paymentRequestInProgress.dueDate, 'DD/MM/YYYY')),
       frequency: SCHEDULE_NAMES.Q4,
       invoiceNumber: paymentRequestInProgress.invoiceNumber,

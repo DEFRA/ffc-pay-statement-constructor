@@ -28,7 +28,10 @@ jest.mock('../../../app/messaging/wait-for-idle-messaging')
 const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messaging')
 
 jest.mock('../../../app/processing/statement')
-const { getStatement, sendStatement } = require('../../../app/processing/statement')
+const { getStatement, sendStatement, validateStatement } = require('../../../app/processing/statement')
+
+jest.mock('../../../app/processing/statement/update-schedule-by-schedule-id')
+const updateScheduleByScheduleId = require('../../../app/processing/statement/update-schedule-by-schedule-id')
 
 const processing = require('../../../app/processing')
 
@@ -48,7 +51,9 @@ describe('start processing', () => {
 
     schedulePendingSettlements.mockResolvedValue([retrievedSchedule])
     getStatement.mockResolvedValue(statement)
+    validateStatement.mockReturnValue(true)
     sendStatement.mockResolvedValue(undefined)
+    updateScheduleByScheduleId.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -142,7 +147,7 @@ describe('start processing', () => {
 
   test('should call sendStatement with schedulePendingSettlements()[0].scheduleId and getStatement when schedulePendingSettlements returns 1 record', async () => {
     await processing.start()
-    expect(sendStatement).toHaveBeenCalledWith((await schedulePendingSettlements())[0].scheduleId, await getStatement())
+    expect(sendStatement).toHaveBeenCalledWith(await getStatement())
   })
 
   test('should call sendStatement when schedulePendingSettlements returns 2 records', async () => {
@@ -162,8 +167,8 @@ describe('start processing', () => {
 
     await processing.start()
 
-    expect(sendStatement).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].scheduleId, await getStatement())
-    expect(sendStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].scheduleId, await getStatement())
+    expect(sendStatement).toHaveBeenNthCalledWith(1, await getStatement())
+    expect(sendStatement).toHaveBeenNthCalledWith(2, await getStatement())
   })
 
   test('should not call sendStatement when schedulePendingSettlements returns an empty array', async () => {

@@ -7,7 +7,7 @@ const { FIVE_HUNDRED_POUNDS } = require('../mock-components/mock-value')
 const { STRING_FORMAT: SETTLEMENT_DATE } = require('../mock-components/mock-dates').SETTLEMENT
 const { SETTLEMENT_REFERENCE } = require('../mock-components/mock-settlement-reference')
 const { SFI_FIRST_PAYMENT: SFI_FIRST_PAYMENT_INVOICE_NUMBER } = require('../mock-components/mock-invoice-number')
-const { RECEIVED: RECEIVED_DATE } = require('../mock-components/mock-dates').RECEIVED
+const { DATE: RECEIVED_DATE } = require('../mock-components/mock-dates').RECEIVED
 
 module.exports = {
   sourceSystem: SFI_SOURCE_SYSTEM,
