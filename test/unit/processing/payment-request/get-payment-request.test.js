@@ -47,18 +47,25 @@ describe('get and map required payment request information for building a statem
 
     retrievedPaymentRequest = {
       paymentRequestId: 1,
+      agreementNumber: paymentRequest.agreementNumber,
       dueDate: paymentRequest.dueDate,
+      invoiceNumber: paymentRequest.invoiceNumber,
       marketingYear: paymentRequest.marketingYear,
+      value: paymentRequest.value,
       schedule: paymentRequest.schedule,
-      correlationId: paymentRequest.correlationId
+      originalValue: paymentRequest.value
     }
 
     mappedPaymentRequest = {
       paymentRequestId: retrievedPaymentRequest.paymentRequestId,
+      agreementNumber: retrievedPaymentRequest.agreementNumber,
       dueDate: retrievedPaymentRequest.dueDate,
       frequency: SCHEDULE_NAMES[retrievedPaymentRequest.schedule],
+      invoiceNumber: retrievedPaymentRequest.invoiceNumber,
+      value: retrievedPaymentRequest.value,
       year: retrievedPaymentRequest.marketingYear,
-      correlationId: retrievedPaymentRequest.correlationId
+      schedule: retrievedPaymentRequest.schedule,
+      originalValue: retrievedPaymentRequest.originalValue
     }
 
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(retrievedPaymentRequest)
