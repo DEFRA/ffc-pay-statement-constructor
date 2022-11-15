@@ -5,7 +5,7 @@ const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messa
 
 const config = require('../../../app/config/message')
 
-describe('waitForIdleMessaging', () => {
+describe('wait for idle messaging', () => {
   test('should call waitForIdleSubscription for each subscription', async () => {
     await waitForIdleMessaging()
     expect(waitForIdleSubscription).toHaveBeenCalledTimes(4)
