@@ -1,7 +1,7 @@
 const { processingConfig } = require('../config')
 const waitForIdleMessaging = require('../messaging/wait-for-idle-messaging')
 const schedulePendingSettlements = require('./schedule')
-const { getStatement, sendStatement } = require('./statement')
+const { getStatement, sendStatement, validateStatement } = require('./statement')
 
 const start = async () => {
   try {
@@ -12,7 +12,9 @@ const start = async () => {
       for (const pendingStatement of pendingStatements) {
         try {
           const aggregatedStatement = await getStatement(pendingStatement.settlementId)
-          await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
+          if (validateStatement(aggregatedStatement)) {
+            await sendStatement(pendingStatement.scheduleId, aggregatedStatement)
+          }
         } catch (err) {
           console.error(err.message)
         }
