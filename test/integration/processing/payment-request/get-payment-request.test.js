@@ -86,7 +86,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -106,7 +107,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: null
+      schedule: null,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -126,7 +128,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: null
+      schedule: null,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -146,7 +149,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -166,7 +170,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -244,7 +249,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -267,7 +273,8 @@ describe('process payment request', () => {
       invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
-      schedule: topUpInProgressPaymentRequest.schedule
+      schedule: topUpInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -301,7 +308,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -322,7 +330,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -346,7 +355,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -369,7 +379,8 @@ describe('process payment request', () => {
       invoiceNumber: downwardAdjustmentInProgressPaymentRequest.invoiceNumber,
       value: downwardAdjustmentInProgressPaymentRequest.value,
       year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
-      schedule: downwardAdjustmentInProgressPaymentRequest.schedule
+      schedule: downwardAdjustmentInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -402,7 +413,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -424,7 +436,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -449,7 +462,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -472,7 +486,8 @@ describe('process payment request', () => {
       invoiceNumber: recoveryInProgressPaymentRequest.invoiceNumber,
       value: recoveryInProgressPaymentRequest.value,
       year: recoveryInProgressPaymentRequest.marketingYear,
-      schedule: recoveryInProgressPaymentRequest.schedule
+      schedule: recoveryInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -506,7 +521,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -534,7 +550,8 @@ describe('process payment request', () => {
       invoiceNumber: splitInProgressPaymentRequest.invoiceNumber,
       value: splitInProgressPaymentRequest.value,
       year: splitInProgressPaymentRequest.marketingYear,
-      schedule: splitInProgressPaymentRequest.schedule
+      schedule: splitInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -575,7 +592,8 @@ describe('process payment request', () => {
       invoiceNumber: paymentRequestInProgress.invoiceNumber,
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
-      schedule: paymentRequestInProgress.schedule
+      schedule: paymentRequestInProgress.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -616,7 +634,8 @@ describe('process payment request', () => {
       invoiceNumber: secondTopUpInProgressPaymentRequest.invoiceNumber,
       value: secondTopUpInProgressPaymentRequest.value,
       year: secondTopUpInProgressPaymentRequest.marketingYear,
-      schedule: secondTopUpInProgressPaymentRequest.schedule
+      schedule: secondTopUpInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -649,7 +668,8 @@ describe('process payment request', () => {
       invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
-      schedule: topUpInProgressPaymentRequest.schedule
+      schedule: topUpInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -689,7 +709,8 @@ describe('process payment request', () => {
       invoiceNumber: downwardAdjustmentInProgressPaymentRequest.invoiceNumber,
       value: downwardAdjustmentInProgressPaymentRequest.value,
       year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
-      schedule: downwardAdjustmentInProgressPaymentRequest.schedule
+      schedule: downwardAdjustmentInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -729,7 +750,8 @@ describe('process payment request', () => {
       invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
-      schedule: topUpInProgressPaymentRequest.schedule
+      schedule: topUpInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -780,7 +802,8 @@ describe('process payment request', () => {
       invoiceNumber: splitInProgressPaymentRequest.invoiceNumber,
       value: splitInProgressPaymentRequest.value,
       year: splitInProgressPaymentRequest.marketingYear,
-      schedule: splitInProgressPaymentRequest.schedule
+      schedule: splitInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 
@@ -820,7 +843,8 @@ describe('process payment request', () => {
       invoiceNumber: topUpInProgressPaymentRequest.invoiceNumber,
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
-      schedule: topUpInProgressPaymentRequest.schedule
+      schedule: topUpInProgressPaymentRequest.schedule,
+      originalValue: paymentRequestInProgress.value
     })
   })
 })

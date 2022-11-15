@@ -16,7 +16,8 @@ describe('validate payment request', () => {
       paymentRequestId: paymentRequest.paymentRequestId,
       paymentRequestNumber: paymentRequest.paymentRequestNumber,
       value: paymentRequest.value,
-      schedule: paymentRequest.schedule
+      schedule: paymentRequest.schedule,
+      originalValue: paymentRequest.value
     }
   })
 
@@ -82,6 +83,21 @@ describe('validate payment request', () => {
   test('should throw error which ends "does not have the required data: "correlationId" is required" when retrievedPaymentRequest is missing required correlationId', async () => {
     delete retrievedPaymentRequest.correlationId
     expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "correlationId" is required/)
+  })
+
+  test('should throw when retrievedPaymentRequest is missing required originalValue', async () => {
+    delete retrievedPaymentRequest.originalValue
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow()
+  })
+
+  test('should throw Error when retrievedPaymentRequest is missing required originalValue', async () => {
+    delete retrievedPaymentRequest.originalValue
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(Error)
+  })
+
+  test('should throw error which ends "does not have the required data: "originalValue" is required" when retrievedPaymentRequest is missing required originalValue', async () => {
+    delete retrievedPaymentRequest.originalValue
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "originalValue" is required/)
   })
 
   test('should not throw when retrievedPaymentRequest is missing optional schedule', async () => {

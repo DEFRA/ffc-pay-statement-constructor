@@ -16,7 +16,8 @@ describe('map required payment request information for building a statement obje
       invoiceNumber: paymentRequest.invoiceNumber,
       marketingYear: paymentRequest.marketingYear,
       value: paymentRequest.value,
-      schedule: paymentRequest.schedule
+      schedule: paymentRequest.schedule,
+      originalValue: paymentRequest.value
     }
 
     mappedPaymentRequest = {
@@ -27,7 +28,8 @@ describe('map required payment request information for building a statement obje
       invoiceNumber: retrievedPaymentRequest.invoiceNumber,
       value: retrievedPaymentRequest.value,
       year: retrievedPaymentRequest.marketingYear,
-      schedule: retrievedPaymentRequest.schedule
+      schedule: retrievedPaymentRequest.schedule,
+      originalValue: retrievedPaymentRequest.originalValue
     }
   })
 
