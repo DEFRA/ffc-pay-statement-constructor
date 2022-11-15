@@ -152,6 +152,21 @@ describe('start processing', () => {
     expect(getStatement).not.toHaveBeenCalled()
   })
 
+  test('should call validateStatement when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(validateStatement).toHaveBeenCalled()
+  })
+
+  test('should call validateStatement once when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(validateStatement).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call validateStatement with statement when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(validateStatement).toHaveBeenCalledWith(statement)
+  })
+
   test('should call sendStatement when schedulePendingSettlements returns 1 record', async () => {
     await processing.start()
     expect(sendStatement).toHaveBeenCalled()
@@ -192,6 +207,27 @@ describe('start processing', () => {
     schedulePendingSettlements.mockResolvedValue([])
     await processing.start()
     expect(sendStatement).not.toHaveBeenCalled()
+  })
+
+  test('should not call sendStatement if validateStatement returns false', async () => {
+    validateStatement.mockReturnValue(false)
+    await processing.start()
+    expect(sendStatement).not.toHaveBeenCalled()
+  })
+
+  test('should call updateScheduleByScheduleId when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(updateScheduleByScheduleId).toHaveBeenCalled()
+  })
+
+  test('should call updateScheduleByScheduleId once when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call updateScheduleByScheduleId with schedulePendingSettlements()[0].scheduleId and mockTransaction when schedulePendingSettlements returns 1 record', async () => {
+    await processing.start()
+    expect(updateScheduleByScheduleId).toHaveBeenCalledWith((await schedulePendingSettlements())[0].scheduleId)
   })
 
   test('should not throw when schedulePendingSettlements throws', async () => {
