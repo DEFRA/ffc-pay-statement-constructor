@@ -96,7 +96,7 @@ describe('process get calculation object', () => {
       await getOrganisation(sbi)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should not throw error when there is existing organisation data with sbi but no postcode', async () => {
@@ -107,7 +107,7 @@ describe('process get calculation object', () => {
       await getOrganisation(sbi)
     }
 
-    expect(wrapper).resolves.not.toThrow()
+    await expect(wrapper).resolves.not.toThrow()
   })
 
   test('should not throw error when there is existing organisation data with sbi but no emailAddress', async () => {
