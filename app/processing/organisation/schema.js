@@ -7,8 +7,8 @@ module.exports = Joi.object({
   addressLine3: Joi.string().allow('', null).optional(),
   city: Joi.string().allow('', null).optional(),
   county: Joi.string().allow('', null).optional(),
-  emailAddress: Joi.string().email().required(),
+  emailAddress: Joi.string().allow('', null).optional(),
   frn: Joi.number().integer().min(1000000000).max(9999999999).required(),
   name: Joi.string().required(),
-  postcode: Joi.string().required()
+  postcode: Joi.string().allow('', null).optional()
 }).required()

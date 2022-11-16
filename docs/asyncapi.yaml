@@ -204,7 +204,6 @@ components:
       - businessName
       - sbi
       - frn
-      - email
       - address
       - scheme
       - payments
@@ -232,8 +231,6 @@ components:
             $ref: '#/components/schemas/Funding'
     Address:
       type: object
-      required:
-      - postcode
       properties:
         line1:
           $ref: '#/components/schemas/AddressLine1'
