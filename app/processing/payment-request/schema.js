@@ -9,8 +9,8 @@ module.exports = Joi.object({
   dueDate: Joi.date().format('D/M/YYYY').required(),
   invoiceNumber: Joi.string().required(),
   marketingYear: Joi.number().integer().required(),
+  originalValue: Joi.number().integer().required(),
   paymentRequestNumber: Joi.number().required(),
   schedule: Joi.string().optional().allow(null).default(DAX_CODES.QUARTERLY),
-  value: Joi.number().integer().required(),
-  originalValue: Joi.number().integer().required()
+  value: Joi.number().integer().required()
 }).required()
