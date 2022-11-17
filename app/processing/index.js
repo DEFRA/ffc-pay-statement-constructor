@@ -7,11 +7,11 @@ const updateScheduleByScheduleId = require('./statement/update-schedule-by-sched
 const start = async () => {
   try {
     if (processingConfig.constructionActive) {
+      await waitForIdleMessaging()
       const pendingStatements = await schedulePendingSettlements()
 
       for (const pendingStatement of pendingStatements) {
         try {
-          await waitForIdleMessaging()
           const aggregatedStatement = await getStatement(pendingStatement.settlementId)
           if (validateStatement(aggregatedStatement)) {
             await sendStatement(aggregatedStatement)

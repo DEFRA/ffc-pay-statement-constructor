@@ -88,26 +88,9 @@ describe('start processing', () => {
     expect(setTimeout).toHaveBeenCalled()
   })
 
-  test('should call waitForIdleMessaging when schedulePendingSettlements returns 1 record', async () => {
-    await processing.start()
-    expect(waitForIdleMessaging).toHaveBeenCalled()
-  })
-
-  test('should call waitForIdleMessaging once when schedulePendingSettlements returns 1 record', async () => {
+  test('should call waitForIdleMessaging once', async () => {
     await processing.start()
     expect(waitForIdleMessaging).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call waitForIdleMessaging twice schedulePendingSettlements returns 2 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
-    await processing.start()
-    expect(waitForIdleMessaging).toHaveBeenCalledTimes(2)
-  })
-
-  test('should not call waitForIdleMessaging when schedulePendingSettlements returns 0 records', async () => {
-    schedulePendingSettlements.mockResolvedValue([])
-    await processing.start()
-    expect(waitForIdleMessaging).not.toHaveBeenCalled()
   })
 
   test('should call getStatement when schedulePendingSettlements returns 1 record', async () => {
