@@ -4,7 +4,6 @@ const savePlaceholderOrganisation = require('./save-placeholder-organisation')
 const getCalculationByCalculationReference = require('./get-calculation-by-calculation-reference')
 const saveCalculation = require('./save-calculation')
 const saveFundings = require('./save-fundings')
-const updateCalculation = require('./update-calculation')
 
 const processCalculation = async (calculation) => {
   const transaction = await db.sequelize.transaction()
@@ -18,7 +17,6 @@ const processCalculation = async (calculation) => {
       await savePlaceholderOrganisation({ sbi: calculation.sbi }, calculation.sbi)
       const savedCalculation = await saveCalculation(calculation, transaction)
       await saveFundings(calculation.fundings, savedCalculation.calculationId, transaction)
-      await updateCalculation(calculation.invoiceNumber, savedCalculation.calculationId, transaction)
       await transaction.commit()
     }
   } catch (error) {

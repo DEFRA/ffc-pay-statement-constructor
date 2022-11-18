@@ -1,8 +1,7 @@
 const db = require('../../../app/data')
 
-const updateScheduleByScheduleId = async (scheduleId, transaction) => {
+const updateScheduleByScheduleId = async (scheduleId) => {
   await db.schedule.update({ completed: new Date() }, {
-    transaction,
     lock: true,
     where: {
       scheduleId

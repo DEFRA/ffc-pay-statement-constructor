@@ -3,7 +3,6 @@ jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 12, 0, 0, 0))
 const moment = require('moment')
 
 const db = require('../../../app/data')
-const settlement = require('../../../app/data/models/settlement')
 const config = require('../../../app/config').processingConfig
 
 const schedulePendingSettlements = require('../../../app/processing/schedule')
@@ -11,6 +10,10 @@ const schedulePendingSettlements = require('../../../app/processing/schedule')
 const LESS_TIME_THAN_ELAPSED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
 const MORE_TIME_THAN_ELAPSED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()
 
+const LESS_TIME_THAN_WAIT_TIME = moment(new Date()).subtract(config.settlementWaitTime - 500).toDate()
+const MORE_TIME_THAN_WAIT_TIME = moment(new Date()).subtract(config.settlementWaitTime + 500).toDate()
+
+let settlement
 let schedule
 
 describe('batch schedule', () => {
@@ -28,7 +31,7 @@ describe('batch schedule', () => {
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
     } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
     const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
-    const settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
     schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule')))
 
     await db.scheme.bulkCreate(schemes)
@@ -113,6 +116,27 @@ describe('batch schedule', () => {
   test('should return empty array when existing schedule with not null completed and started is LESS_TIME_THAN_ELAPSED_MAX exists', async () => {
     schedule.started = LESS_TIME_THAN_ELAPSED_MAX
     schedule.completed = new Date()
+    await db.schedule.create(schedule)
+
+    const result = await schedulePendingSettlements()
+
+    expect(result).toStrictEqual([])
+  })
+
+  test('should return mapped schedule array when settlement MORE_TIME_THAN_WAIT_TIME exists', async () => {
+    await db.settlement.update({ received: MORE_TIME_THAN_WAIT_TIME }, { where: { paymentRequestId: 1 } })
+    await db.schedule.create(schedule)
+
+    const result = await schedulePendingSettlements()
+
+    expect(result).toStrictEqual([{
+      scheduleId: 1,
+      settlementId: schedule.settlementId
+    }])
+  })
+
+  test('should return empty array when settlement LESS_TIME_THAN_WAIT_TIME exists', async () => {
+    await db.settlement.update({ received: LESS_TIME_THAN_WAIT_TIME }, { where: { paymentRequestId: 1 } })
     await db.schedule.create(schedule)
 
     const result = await schedulePendingSettlements()

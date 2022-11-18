@@ -1,4 +1,4 @@
-const getScheme = async (year, frequency, agreementNumber) => {
+const getScheme = (year, frequency, agreementNumber) => {
   return {
     name: 'Sustainable Farming Incentive',
     shortName: 'SFI',

@@ -1,6 +1,7 @@
-const db = require('../../app/data')
+const { AP } = require('../../../app/constants/ledgers')
+const db = require('../../../app/data')
 
-const processReturnSettlement = require('../../app/inbound/return')
+const processReturnSettlement = require('../../../app/inbound/return')
 
 let settlement
 let submitPaymentRequest
@@ -15,14 +16,14 @@ describe('process return settlement', () => {
   })
 
   beforeEach(async () => {
-    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
     const {
       SFI_FIRST_PAYMENT: invoiceNumber,
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
-    settlement = JSON.parse(JSON.stringify(require('../mock-objects/mock-settlement')))
-    submitPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').submitPaymentRequest))
-    processingPaymentRequest = JSON.parse(JSON.stringify(require('../mock-objects/mock-payment-request').processingPaymentRequest))
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
+    settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
+    submitPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
+    processingPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
@@ -89,6 +90,20 @@ describe('process return settlement', () => {
     expect(result.frn).toBe(settlement.frn.toString())
   })
 
+  test('should save ledger as AP in the table when valid settlement received ', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.ledger).toBe(AP)
+  })
+
+  test('should save received date in the table when valid settlement received ', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+    expect(result.receivedDate).not.toBeNull()
+  })
+
   test('should save settlement with paymentRequestId of paymentRequest.PaymentRequestId when matching paymentRequest with status of "Completed" is found ', async () => {
     await processReturnSettlement(settlement)
 
@@ -110,12 +125,12 @@ describe('process return settlement', () => {
     const {
       SFI_SECOND_PAYMENT: invoiceNumber,
       SFI_SECOND_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
 
     const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
     await paymentRequestToRemove.destroy()
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
-    submitPaymentRequest.invoiceNumber = 'S0000001SFIP000001V002'
+    submitPaymentRequest.invoiceNumber = invoiceNumber
     await db.paymentRequest.create(submitPaymentRequest)
 
     await processReturnSettlement(settlement)
@@ -133,5 +148,20 @@ describe('process return settlement', () => {
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.paymentRequestId).toBeNull()
+  })
+
+  test('should save entry into schedule table if first payment settlement', async () => {
+    await processReturnSettlement(settlement)
+
+    const result = await db.schedule.count()
+    expect(result).toBe(1)
+  })
+
+  test('should not save entry into settlement table if not first payment settlement', async () => {
+    settlement.invoiceNumber = 'S0000001SFIP000001V002'
+    await processReturnSettlement(settlement)
+
+    const result = await db.schedule.count()
+    expect(result).toBe(0)
   })
 })

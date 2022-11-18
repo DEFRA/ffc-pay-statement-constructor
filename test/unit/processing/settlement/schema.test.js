@@ -9,7 +9,9 @@ describe('settlement schema', () => {
       reference: 'PY1234567',
       settled: true,
       settlementDate: new Date(2022, 9, 12),
-      value: 50000
+      value: 50000,
+      paymentValue: 50000,
+      lastSettlementValue: 0
     }
   })
 
@@ -44,12 +46,6 @@ describe('settlement schema', () => {
 
   test('should error if invoiceNumber not a string', () => {
     settlement.invoiceNumber = 1
-    const result = schema.validate(settlement)
-    expect(result.error).toBeDefined()
-  })
-
-  test('should error if invoiceNumber not a first payment', () => {
-    settlement.invoiceNumber = 'S12345671234567V002'
     const result = schema.validate(settlement)
     expect(result.error).toBeDefined()
   })

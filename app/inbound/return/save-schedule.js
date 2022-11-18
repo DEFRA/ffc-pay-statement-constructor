@@ -1,7 +1,11 @@
 const db = require('../../data')
+const isFirstPayment = require('./is-first-payment')
+
 const saveSchedule = async (settlement, transaction) => {
   if (settlement) {
-    await db.schedule.create({ settlementId: settlement.settlementId }, { transaction })
+    if (isFirstPayment(settlement.invoiceNumber)) {
+      await db.schedule.create({ settlementId: settlement.settlementId }, { transaction })
+    }
   } else {
     throw new Error('Schedule can not be saved for null settlement')
   }

@@ -28,9 +28,6 @@ const savePlaceholderOrganisation = require('../../../app/inbound/calculation/sa
 jest.mock('../../../app/inbound/calculation/save-fundings')
 const saveFundings = require('../../../app/inbound/calculation/save-fundings')
 
-jest.mock('../../../app/inbound/calculation/update-calculation')
-const updateCalculation = require('../../../app/inbound/calculation/update-calculation')
-
 const processCalculation = require('../../../app/inbound/calculation')
 
 let calculation
@@ -43,7 +40,6 @@ describe('process calculation', () => {
     savePlaceholderOrganisation.mockResolvedValue(undefined)
     saveFundings.mockResolvedValue(undefined)
     saveCalculation.mockResolvedValue({ ...calculation, calculationId: 1 })
-    updateCalculation.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -110,21 +106,6 @@ describe('process calculation', () => {
     expect(saveFundings).toHaveBeenCalledWith(calculation.fundings, (await saveCalculation()).calculationId, mockTransaction)
   })
 
-  test('should call updateCalculation when a valid calculation is given and a previous calculation does not exist', async () => {
-    await processCalculation(calculation)
-    expect(updateCalculation).toHaveBeenCalled()
-  })
-
-  test('should call updateCalculation once when a valid calculation is given and a previous calculation does not exist', async () => {
-    await processCalculation(calculation)
-    expect(updateCalculation).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call updateCalculation with calculation.invoiceNumber, saveCalculation().calculationId and mockTransaction when a valid calculation is given and a previous calculation does not exist', async () => {
-    await processCalculation(calculation)
-    expect(updateCalculation).toHaveBeenCalledWith(calculation.invoiceNumber, (await saveCalculation()).calculationId, mockTransaction)
-  })
-
   test('should call mockTransaction.commit when a valid calculation is given and a previous calculation does not exist', async () => {
     await processCalculation(calculation)
     expect(mockTransaction.commit).toHaveBeenCalled()
@@ -186,12 +167,6 @@ describe('process calculation', () => {
     getCalculationByCalculationReference.mockResolvedValue(calculation)
     await processCalculation(calculation)
     expect(saveFundings).not.toHaveBeenCalled()
-  })
-
-  test('should not call updateCalculation when a valid calculation is given and a previous calculation exists', async () => {
-    getCalculationByCalculationReference.mockResolvedValue(calculation)
-    await processCalculation(calculation)
-    expect(updateCalculation).not.toHaveBeenCalled()
   })
 
   test('should throw when getCalculationByCalculationReference throws', async () => {
@@ -314,36 +289,6 @@ describe('process calculation', () => {
     expect(wrapper).rejects.toThrow(/^Database save down issue$/)
   })
 
-  test('should throw when updateCalculation throws', async () => {
-    updateCalculation.mockRejectedValue(new Error('Database save down issue'))
-
-    const wrapper = async () => {
-      await processCalculation(calculation)
-    }
-
-    expect(wrapper).rejects.toThrow()
-  })
-
-  test('should throw Error when updateCalculation throws Error', async () => {
-    updateCalculation.mockRejectedValue(new Error('Database save down issue'))
-
-    const wrapper = async () => {
-      await processCalculation(calculation)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
-  })
-
-  test('should throw error with "Database save down issue" when updateCalculation throws error with "Database save down issue"', async () => {
-    updateCalculation.mockRejectedValue(new Error('Database save down issue'))
-
-    const wrapper = async () => {
-      await processCalculation(calculation)
-    }
-
-    expect(wrapper).rejects.toThrow(/^Database save down issue$/)
-  })
-
   test('should throw when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
 
@@ -406,18 +351,6 @@ describe('process calculation', () => {
 
   test('should call mockTransaction.rollback once when saveCalculation throws', async () => {
     saveCalculation.mockRejectedValue(new Error('Database save down issue'))
-    try { await processCalculation(calculation) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
-  })
-
-  test('should call mockTransaction.rollback when updateCalculation throws', async () => {
-    updateCalculation.mockRejectedValue(new Error('Database save down issue'))
-    try { await processCalculation(calculation) } catch { }
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-  })
-
-  test('should call mockTransaction.rollback once when updateCalculation throws', async () => {
-    updateCalculation.mockRejectedValue(new Error('Database save down issue'))
     try { await processCalculation(calculation) } catch { }
     expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
   })

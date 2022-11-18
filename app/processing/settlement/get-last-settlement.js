@@ -1,6 +1,7 @@
 const db = require('../../data')
 
 const getLastSettlement = async (settlementDate, value, invoiceNumber, transaction) => {
+  const valueParam = value > 0 ? db.Sequelize.Op.lt : db.Sequelize.Op.gt
   return db.settlement.findOne({
     transaction,
     attributes: [
@@ -11,7 +12,7 @@ const getLastSettlement = async (settlementDate, value, invoiceNumber, transacti
         [db.Sequelize.Op.lt]: settlementDate
       },
       value: {
-        [db.Sequelize.Op.lt]: value
+        [valueParam]: value
       },
       invoiceNumber,
       settled: true

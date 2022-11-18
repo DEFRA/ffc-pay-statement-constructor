@@ -31,7 +31,10 @@ const mqSchema = Joi.object({
   statementTopic: {
     address: Joi.string(),
     source: Joi.string()
-  }
+  },
+  idleCheckBatchSize: Joi.number().default(250),
+  idleCheckMaxDeliveryCount: Joi.number().default(1),
+  idleCheckInterval: Joi.number().default(10000)
 })
 
 const mqConfig = {
@@ -65,7 +68,10 @@ const mqConfig = {
   statementTopic: {
     address: process.env.STATEMENT_TOPIC_ADDRESS,
     source: 'ffc-pay-statement-constructor'
-  }
+  },
+  idleCheckBatchSize: process.env.IDLE_CHECK_BATCH_SIZE,
+  idleCheckMaxDeliveryCount: process.env.IDLE_CHECK_MAX_DELIVERY_COUNT,
+  idleCheckInterval: process.env.IDLE_CHECK_INTERVAL
 }
 
 const mqResult = mqSchema.validate(mqConfig, {
@@ -81,11 +87,17 @@ const submitSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.s
 const returnSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.returnSubscription }
 const statementDataSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.statementDataSubscription }
 const statementTopic = { ...mqResult.value.messageQueue, ...mqResult.value.statementTopic }
+const idleCheckBatchSize = mqResult.value.idleCheckBatchSize
+const idleCheckMaxDeliveryCount = mqResult.value.idleCheckMaxDeliveryCount
+const idleCheckInterval = mqResult.value.idleCheckInterval
 
 module.exports = {
   processingSubscription,
   submitSubscription,
   returnSubscription,
   statementDataSubscription,
-  statementTopic
+  statementTopic,
+  idleCheckBatchSize,
+  idleCheckMaxDeliveryCount,
+  idleCheckInterval
 }

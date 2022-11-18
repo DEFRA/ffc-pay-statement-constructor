@@ -1,6 +1,6 @@
-const db = require('../../app/data')
+const db = require('../../../app/data')
 
-const processOrganisation = require('../../app/inbound/organisation')
+const processOrganisation = require('../../../app/inbound/organisation')
 
 let organisation
 
@@ -13,7 +13,7 @@ describe('process processing payment request', () => {
   })
 
   beforeEach(async () => {
-    organisation = JSON.parse(JSON.stringify(require('../mock-objects/mock-organisation')))
+    organisation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-organisation')))
   })
 
   afterEach(async () => {

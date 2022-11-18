@@ -1,3 +1,3 @@
 module.exports = {
-  SFI: 'SIP000000000001'
+  SFI: '0000001'
 }

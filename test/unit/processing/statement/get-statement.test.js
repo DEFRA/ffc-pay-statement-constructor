@@ -21,6 +21,9 @@ const {
 jest.mock('../../../../app/processing/settlement/get-last-settlement')
 const getLastSettlement = require('../../../../app/processing/settlement/get-last-settlement')
 
+jest.mock('../../../../app/processing/settlement/get-supporting-settlements')
+const getSupportingSettlements = require('../../../../app/processing/settlement/get-supporting-settlements')
+
 jest.mock('../../../../app/processing/payment/get-latest-payment')
 const getLatestPayment = require('../../../../app/processing/payment/get-latest-payment')
 
@@ -106,6 +109,7 @@ describe('get various components and transform to statement object', () => {
     getDetailedFunding.mockResolvedValue(detailedFunding)
     getScheme.mockResolvedValue(scheme)
     getLastSettlement.mockResolvedValue(lastSettlement)
+    getSupportingSettlements.mockResolvedValue([])
     getLatestPayment.mockReturnValue(latestPayment)
     getDetailedPayments.mockResolvedValue(detailedPayments)
   })
@@ -120,15 +124,57 @@ describe('get various components and transform to statement object', () => {
     expect(getCalculation).toHaveBeenCalled()
   })
 
-  test('should call getLastSettlement once when a settlementId is given', async () => {
-    const settlementId = 1
-    await getStatement(settlementId)
-    expect(getLastSettlement).toHaveBeenCalledTimes(1)
-  })
-
   test('should call getLatestPayment when a settlementId is given', async () => {
     const settlementId = 1
     await getStatement(settlementId)
     expect(getLatestPayment).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call getSupportingSettlements once when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getSupportingSettlements).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call getSettlement when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getSettlement).toHaveBeenCalled()
+  })
+
+  test('should call getPaymentRequest when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getPaymentRequest).toHaveBeenCalled()
+  })
+
+  test('should call getDetails when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getDetails).toHaveBeenCalled()
+  })
+
+  test('should call getAddress when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getAddress).toHaveBeenCalled()
+  })
+
+  test('should call getDetailedFunding when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getDetailedFunding).toHaveBeenCalled()
+  })
+
+  test('should call getScheme when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getScheme).toHaveBeenCalled()
+  })
+
+  test('should call getDetailedPayments when a settlementId is given', async () => {
+    const settlementId = 1
+    await getStatement(settlementId)
+    expect(getDetailedPayments).toHaveBeenCalled()
   })
 })
