@@ -1,10 +1,8 @@
-const db = require('../../app/data')
+const db = require('../../../app/data')
 
-const processCalculation = require('../../app/inbound/calculation')
+const processCalculation = require('../../../app/inbound/calculation')
 
 let calculation
-let paymentRequestInProgress
-let paymentRequestCompleted
 
 describe('process calculation', () => {
   beforeAll(async () => {
@@ -15,20 +13,18 @@ describe('process calculation', () => {
   })
 
   beforeEach(async () => {
-    const schemes = JSON.parse(JSON.stringify(require('../../app/constants/schemes')))
-    const fundingOptions = JSON.parse(JSON.stringify(require('../../app/constants/funding-options')))
+    const schemes = JSON.parse(JSON.stringify(require('../../../app/constants/schemes')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../../app/constants/funding-options')))
     const {
       SFI_FIRST_PAYMENT: invoiceNumber,
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../mock-components/mock-invoice-number')))
+    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
 
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
 
-    calculation = JSON.parse(JSON.stringify(require('../mock-objects/mock-calculation')))
-    paymentRequestInProgress = require('../mock-objects/mock-payment-request').processingPaymentRequest
-    paymentRequestCompleted = require('../mock-objects/mock-payment-request').submitPaymentRequest
+    calculation = JSON.parse(JSON.stringify(require('../../mock-objects/mock-calculation')))
   })
 
   afterEach(async () => {
@@ -77,24 +73,6 @@ describe('process calculation', () => {
     await processCalculation(calculation)
 
     const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
-    expect(result.paymentRequestId).toBe(null)
-  })
-
-  test('should save entry into calculation with paymentRequestId as 1 when matching completed paymentRequest record has paymentRequestId 1 where calculation.invoiceNumber', async () => {
-    await db.paymentRequest.create(paymentRequestCompleted)
-    await processCalculation(calculation)
-
-    const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
-
-    expect(result.paymentRequestId).toBe(1)
-  })
-
-  test('should save entry into calculation with paymentRequestId as null when no matching completed paymentRequest records where calculation.invoiceNumber', async () => {
-    try { await db.paymentRequest.create(paymentRequestInProgress) } catch (err) { }
-    await processCalculation(calculation)
-
-    const result = await db.calculation.findOne({ where: { invoiceNumber: calculation.invoiceNumber } })
-
     expect(result.paymentRequestId).toBe(null)
   })
 

@@ -1,12 +1,10 @@
-const updateScheduleByScheduleId = require('./update-schedule-by-schedule-id')
 const publishStatement = require('./publish-statement')
 
-const sendStatement = async (scheduleId, statement, transaction) => {
+const sendStatement = async (statement) => {
   try {
     await publishStatement(statement)
-    await updateScheduleByScheduleId(scheduleId, transaction)
   } catch (err) {
-    throw new Error(`Failed to send statement with scheduleId of ${scheduleId}`, err)
+    throw new Error(`Failed to send statement for ${statement.payments[0]?.invoiceNumber}`, err)
   }
 }
 

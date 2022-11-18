@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     invalid: DataTypes.BOOLEAN,
     invoiceNumber: DataTypes.STRING,
     ledger: DataTypes.STRING,
+    received: DataTypes.DATE,
     reference: DataTypes.STRING,
     settled: DataTypes.BOOLEAN,
     settlementDate: DataTypes.DATE,

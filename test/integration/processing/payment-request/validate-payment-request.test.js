@@ -9,12 +9,15 @@ describe('validate payment request', () => {
     const paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
     retrievedPaymentRequest = {
       agreementNumber: paymentRequest.agreementNumber,
+      correlationId: paymentRequest.correlationId,
       dueDate: new Date(paymentRequest.dueDate),
       invoiceNumber: paymentRequest.invoiceNumber,
       marketingYear: paymentRequest.marketingYear,
       paymentRequestId: paymentRequest.paymentRequestId,
+      paymentRequestNumber: paymentRequest.paymentRequestNumber,
       value: paymentRequest.value,
-      schedule: paymentRequest.schedule
+      schedule: paymentRequest.schedule,
+      originalValue: paymentRequest.value
     }
   })
 
@@ -29,102 +32,77 @@ describe('validate payment request', () => {
 
   test('should throw when retrievedPaymentRequest is missing required paymentRequestId', async () => {
     delete retrievedPaymentRequest.paymentRequestId
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow()
   })
 
   test('should throw Error when retrievedPaymentRequest is missing required paymentRequestId', async () => {
     delete retrievedPaymentRequest.paymentRequestId
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(Error)
   })
 
   test('should throw error which ends "does not have the required data: "paymentRequestId" is required" when retrievedPaymentRequest is missing required paymentRequestId', async () => {
     delete retrievedPaymentRequest.paymentRequestId
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow(/does not have the required data: "paymentRequestId" is required/)
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "paymentRequestId" is required/)
   })
 
   test('should throw when retrievedPaymentRequest is missing required dueDate', async () => {
     delete retrievedPaymentRequest.dueDate
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow()
   })
 
   test('should throw Error when retrievedPaymentRequest is missing required dueDate', async () => {
     delete retrievedPaymentRequest.dueDate
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(Error)
   })
 
   test('should throw error which ends "does not have the required data: "dueDate" is required" when retrievedPaymentRequest is missing required dueDate', async () => {
     delete retrievedPaymentRequest.dueDate
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow(/does not have the required data: "dueDate" is required/)
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "dueDate" is required/)
   })
 
   test('should throw when retrievedPaymentRequest is missing required marketingYear', async () => {
     delete retrievedPaymentRequest.marketingYear
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow()
   })
 
   test('should throw Error when retrievedPaymentRequest is missing required marketingYear', async () => {
     delete retrievedPaymentRequest.marketingYear
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(Error)
   })
 
   test('should throw error which ends "does not have the required data: "marketingYear" is required" when retrievedPaymentRequest is missing required marketingYear', async () => {
     delete retrievedPaymentRequest.marketingYear
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "marketingYear" is required/)
+  })
 
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
+  test('should throw Error when retrievedPaymentRequest is missing required correlationId', async () => {
+    delete retrievedPaymentRequest.correlationId
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(Error)
+  })
 
-    expect(wrapper).rejects.toThrow(/does not have the required data: "marketingYear" is required/)
+  test('should throw error which ends "does not have the required data: "correlationId" is required" when retrievedPaymentRequest is missing required correlationId', async () => {
+    delete retrievedPaymentRequest.correlationId
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "correlationId" is required/)
+  })
+
+  test('should throw when retrievedPaymentRequest is missing required originalValue', async () => {
+    delete retrievedPaymentRequest.originalValue
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow()
+  })
+
+  test('should throw Error when retrievedPaymentRequest is missing required originalValue', async () => {
+    delete retrievedPaymentRequest.originalValue
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(Error)
+  })
+
+  test('should throw error which ends "does not have the required data: "originalValue" is required" when retrievedPaymentRequest is missing required originalValue', async () => {
+    delete retrievedPaymentRequest.originalValue
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).toThrow(/does not have the required data: "originalValue" is required/)
   })
 
   test('should not throw when retrievedPaymentRequest is missing optional schedule', async () => {
     delete retrievedPaymentRequest.schedule
-
-    const wrapper = async () => {
-      validatePaymentRequest(retrievedPaymentRequest)
-    }
-
-    expect(wrapper).not.toThrow()
+    expect(() => validatePaymentRequest(retrievedPaymentRequest)).not.toThrow()
   })
 
   test('should return retrievedPaymentRequest with default DAX_CODES.QUARTERLY schedule when retrievedPaymentRequest is missing optional schedule', async () => {
