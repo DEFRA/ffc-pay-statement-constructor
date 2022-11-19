@@ -48,6 +48,7 @@ container:
   storageFolder: inbound
   settlementProcessingInterval: 60000
   constructionActive: true
+  scheduleConstructionActive: true
   idleCheckBatchSize: 250
   idleCheckMaxDeliveryCount: 1 
   idleCheckInterval: 60000
