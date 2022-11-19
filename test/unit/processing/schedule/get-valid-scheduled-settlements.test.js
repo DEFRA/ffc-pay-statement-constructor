@@ -1,7 +1,7 @@
 jest.mock('../../../../app/processing/schedule/validate-schedule')
 const validateSchedule = require('../../../../app/processing/schedule/validate-schedule')
 
-const getValidScheduledSettlements = require('../../../../app/processing/schedule/get-valid-scheduled-settlements')
+const getValidScheduledSettlements = require('../../../../app/processing/schedule/get-valid-scheduled')
 
 let retrievedSchedules
 

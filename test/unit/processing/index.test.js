@@ -22,7 +22,7 @@ jest.mock('../../../app/data', () => {
 })
 
 jest.mock('../../../app/processing/schedule')
-const schedulePendingSettlements = require('../../../app/processing/schedule')
+const { schedulePendingSettlements } = require('../../../app/processing/schedule')
 
 jest.mock('../../../app/messaging/wait-for-idle-messaging')
 const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messaging')

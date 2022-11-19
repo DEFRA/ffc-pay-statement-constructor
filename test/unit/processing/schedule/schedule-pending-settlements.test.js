@@ -22,12 +22,12 @@ jest.mock('../../../../app/processing/schedule/get-scheduled-settlements')
 const getScheduledSettlements = require('../../../../app/processing/schedule/get-scheduled-settlements')
 
 jest.mock('../../../../app/processing/schedule/get-valid-scheduled-settlements')
-const getValidScheduledSettlements = require('../../../../app/processing/schedule/get-valid-scheduled-settlements')
+const getValidScheduledSettlements = require('../../../../app/processing/schedule/get-valid-scheduled')
 
 jest.mock('../../../../app/processing/schedule/get-updated-scheduled-settlements')
-const getUpdatedScheduledSettlements = require('../../../../app/processing/schedule/get-updated-scheduled-settlements')
+const getUpdatedScheduledSettlements = require('../../../../app/processing/schedule/get-updated-scheduled')
 
-const schedulePendingSettlements = require('../../../../app/processing/schedule/schedule-pending-settlements')
+const { schedulePendingSettlements } = require('../../../../app/processing/schedule/schedule-pending-settlements')
 
 let retrievedSchedules
 
