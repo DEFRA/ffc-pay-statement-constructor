@@ -22,61 +22,31 @@ describe('validate schedule', () => {
 
   test('should throw when retrievedSchedule is missing required scheduleId', async () => {
     delete retrievedSchedule.scheduleId
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validateSchedule(retrievedSchedule)).toThrow()
   })
 
   test('should throw Error when retrievedSchedule is missing required scheduleId', async () => {
     delete retrievedSchedule.scheduleId
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(Error)
   })
 
   test('should throw error which ends "does not have the required data: "scheduleId" is required" when retrievedSchedule is missing required scheduleId', async () => {
     delete retrievedSchedule.scheduleId
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(/does not have the required data: "scheduleId" is required/)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(/does not have the required data: "scheduleId" is required/)
   })
 
   test('should throw when retrievedSchedule is missing required settlementId', async () => {
     delete retrievedSchedule.settlementId
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validateSchedule(retrievedSchedule)).toThrow()
   })
 
   test('should throw Error when retrievedSchedule is missing required settlementId', async () => {
     delete retrievedSchedule.settlementId
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(Error)
   })
 
   test('should throw error which ends "does not have the required data: "settlementId" is required" when retrievedSchedule is missing required settlementId', async () => {
     delete retrievedSchedule.settlementId
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(/does not have the required data: "settlementId" is required/)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(/does not have the required data: "settlementId" is required/)
   })
 })
