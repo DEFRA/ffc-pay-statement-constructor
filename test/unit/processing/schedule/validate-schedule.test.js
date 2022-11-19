@@ -7,7 +7,7 @@ let retrievedSchedule
 
 describe('validate schedule', () => {
   beforeEach(() => {
-    const schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))
+    const schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule').STATEMENT))
 
     retrievedSchedule = {
       scheduleId: 1,

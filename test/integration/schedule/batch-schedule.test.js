@@ -32,7 +32,7 @@ describe('batch schedule', () => {
     } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
     const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
     settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
-    schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule')))
+    schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule').STATEMENT))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
