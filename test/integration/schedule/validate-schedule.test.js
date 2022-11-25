@@ -47,6 +47,6 @@ describe('validate schedule', () => {
 
   test('should throw error which ends "does not have the required data: "settlementId" is required" when retrievedSchedule is missing required settlementId', async () => {
     delete retrievedSchedule.settlementId
-    expect(() => validateSchedule(retrievedSchedule)).toThrow(/does not have the required data: "settlementId" is required/)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(/does not have the required data: "value" must contain at least one of \[settlementId, paymentRequestId\]/)
   })
 })

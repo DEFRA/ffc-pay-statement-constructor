@@ -27,7 +27,7 @@ const getValidScheduled = require('../../../../app/processing/schedule/get-valid
 jest.mock('../../../../app/processing/schedule/get-updated-scheduled')
 const getUpdatedScheduled = require('../../../../app/processing/schedule/get-updated-scheduled')
 
-const { schedulePendingSettlements } = require('../../../../app/processing/schedule/schedule-pending-settlements')
+const schedulePendingSettlements = require('../../../../app/processing/schedule/schedule-pending-settlements')
 
 let retrievedSchedules
 
