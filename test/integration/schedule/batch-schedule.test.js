@@ -5,7 +5,7 @@ const moment = require('moment')
 const db = require('../../../app/data')
 const config = require('../../../app/config').processingConfig
 
-const schedulePendingSettlements = require('../../../app/processing/schedule')
+const { schedulePendingSettlements } = require('../../../app/processing/schedule')
 
 const LESS_TIME_THAN_ELAPSED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime - 500).toDate()
 const MORE_TIME_THAN_ELAPSED_MAX = moment(new Date()).subtract(config.scheduleProcessingMaxElapsedTime + 500).toDate()
@@ -32,7 +32,7 @@ describe('batch schedule', () => {
     } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
     const paymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
     settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
-    schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule')))
+    schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule').STATEMENT))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })

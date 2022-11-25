@@ -1,6 +1,6 @@
 const validateSchedule = require('./validate-schedule')
 
-const getValidScheduledSettlements = (scheduledSettlements) => {
+const getValidScheduled = (scheduledSettlements) => {
   const validScheduledSettlements = []
   for (const scheduledSettlement of scheduledSettlements) {
     try {
@@ -12,4 +12,4 @@ const getValidScheduledSettlements = (scheduledSettlements) => {
   return validScheduledSettlements
 }
 
-module.exports = getValidScheduledSettlements
+module.exports = getValidScheduled

@@ -1,10 +1,10 @@
 const moment = require('moment')
 const db = require('../../data')
 const config = require('../../config').processingConfig
-const { DAX: SOURCE_SYSTEM } = require('../../constants/source-systems')
-const { STATEMENT } = require('../../constants/categories')
+const { SCHEDULE } = require('../../constants/categories')
+const { SFI } = require('../../constants/scheme-ids')
 
-const getScheduledSettlements = async (started, transaction) => {
+const getScheduledPaymentRequests = async (started, transaction) => {
   return db.schedule.findAll({
     lock: true,
     skipLocked: true,
@@ -12,18 +12,18 @@ const getScheduledSettlements = async (started, transaction) => {
     transaction,
     attributes: [
       'scheduleId',
-      'settlementId'
+      'paymentRequestId'
     ],
     include: [{
-      model: db.settlement,
-      as: 'settlements',
+      model: db.paymentRequest,
+      as: 'paymentRequest',
       attributes: []
     }],
     where: {
-      category: STATEMENT,
+      category: SCHEDULE,
       completed: null,
-      '$settlements.sourceSystem$': SOURCE_SYSTEM.SFI,
-      '$settlements.received$': {
+      '$paymentRequest.schemeId$': SFI,
+      '$paymentRequest.received$': {
         [db.Sequelize.Op.lte]: moment(started).subtract(config.settlementWaitTime).toDate()
       },
       [db.Sequelize.Op.or]: [{
@@ -36,4 +36,4 @@ const getScheduledSettlements = async (started, transaction) => {
   })
 }
 
-module.exports = getScheduledSettlements
+module.exports = getScheduledPaymentRequests

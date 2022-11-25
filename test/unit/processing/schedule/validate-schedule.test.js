@@ -7,7 +7,7 @@ let retrievedSchedule
 
 describe('validate schedule', () => {
   beforeEach(() => {
-    const schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule')))
+    const schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule').STATEMENT))
 
     retrievedSchedule = {
       scheduleId: 1,
@@ -21,68 +21,40 @@ describe('validate schedule', () => {
     jest.clearAllMocks()
   })
 
-  test('should return retrievedSchedule', async () => {
+  test('should return retrievedSchedule', () => {
     const result = validateSchedule(retrievedSchedule)
     expect(result).toBe(retrievedSchedule)
   })
 
-  test('should throw when schema.validate throws', async () => {
+  test('should throw when schema.validate throws', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
 
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validateSchedule(retrievedSchedule)).toThrow()
   })
 
-  test('should throw Error when schema.validate throws Error', async () => {
+  test('should throw Error when schema.validate throws Error', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(Error)
   })
 
-  test('should throw error "Joi validation issue" when schema.validate throws with "Joi validation issue"', async () => {
+  test('should throw error "Joi validation issue" when schema.validate throws with "Joi validation issue"', () => {
     schema.validate.mockImplementation(() => { throw new Error('Joi validation issue') })
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(/^Joi validation issue$/)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(/^Joi validation issue$/)
   })
 
-  test('should throw when schema.validate returns with error key', async () => {
+  test('should throw when schema.validate returns with error key', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
 
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow()
+    expect(() => validateSchedule(retrievedSchedule)).toThrow()
   })
 
-  test('should throw Error when schema.validate returns with error key', async () => {
+  test('should throw Error when schema.validate returns with error key', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(Error)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(Error)
   })
 
-  test('should throw error which has in it "does not have the required data" when schema.validate returns with error key of "Not a valid object"', async () => {
+  test('should throw error which has in it "does not have the required data" when schema.validate returns with error key of "Not a valid object"', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
-
-    const wrapper = async () => {
-      validateSchedule(retrievedSchedule)
-    }
-
-    expect(wrapper).rejects.toThrow(/does not have the required data/)
+    expect(() => validateSchedule(retrievedSchedule)).toThrow(/does not have the required data/)
   })
 })
