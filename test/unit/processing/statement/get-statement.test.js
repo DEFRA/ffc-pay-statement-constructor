@@ -4,7 +4,7 @@ jest.mock('../../../../app/processing/settlement/get-settlement')
 const getSettlement = require('../../../../app/processing/settlement/get-settlement')
 
 jest.mock('../../../../app/processing/payment-request/get-latest-in-progress-payment-request')
-const getPaymentRequest = require('../../../../app/processing/payment-request/get-latest-in-progress-payment-request')
+const getLatestInProgressPaymentRequest = require('../../../../app/processing/payment-request/get-latest-in-progress-payment-request')
 
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
@@ -102,7 +102,7 @@ describe('get various components and transform to statement object', () => {
     }]
 
     getSettlement.mockResolvedValue(mappedSettlement)
-    getPaymentRequest.mockResolvedValue(mappedPaymentRequest)
+    getLatestInProgressPaymentRequest.mockResolvedValue(mappedPaymentRequest)
     getCalculation.mockResolvedValue(mappedCalculation)
     getDetails.mockResolvedValue(details)
     getAddress.mockResolvedValue(address)
@@ -145,7 +145,7 @@ describe('get various components and transform to statement object', () => {
   test('should call getPaymentRequest when a settlementId is given', async () => {
     const settlementId = 1
     await getStatement(settlementId)
-    expect(getPaymentRequest).toHaveBeenCalled()
+    expect(getLatestInProgressPaymentRequest).toHaveBeenCalled()
   })
 
   test('should call getDetails when a settlementId is given', async () => {

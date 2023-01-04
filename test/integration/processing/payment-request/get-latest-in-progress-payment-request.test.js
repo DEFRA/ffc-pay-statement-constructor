@@ -4,7 +4,7 @@ const db = require('../../../../app/data')
 
 const { NAMES: SCHEDULE_NAMES } = require('../../../../app/constants/schedules')
 
-const getPaymentRequest = require('../../../../app/processing/payment-request')
+const { getLatestInProgressPaymentRequest } = require('../../../../app/processing/payment-request')
 const { TWO_THOUSAND_POUNDS, ONE_THOUSAND_POUNDS, MINUS_NINE_HUNDRED_POUNDS, NINE_HUNDRED_POUNDS, MINUS_FOUR_HUNDRED_AND_FIFTY_POUNDS } = require('../../../mock-components/mock-value')
 const { CORRELATION_ID_SECOND_POST_PAYMENT_ADJUSTMENT } = require('../../../mock-components/mock-uuidv4')
 const { COMPLETED } = require('../../../../app/constants/statuses')
@@ -29,7 +29,7 @@ let splitBCompletedPaymentRequest
 
 let settlement
 
-describe('process payment request', () => {
+describe('get latest in progress payment request', () => {
   beforeAll(async () => {
     await db.sequelize.truncate({
       cascade: true,
@@ -76,7 +76,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       paymentRequestId: PAYMENT_REQUEST_ID_IN_PROGRESS,
@@ -97,7 +97,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -118,7 +118,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -139,7 +139,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -160,7 +160,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -181,7 +181,7 @@ describe('process payment request', () => {
       restartIdentity: true
     })
 
-    const wrapper = async () => { await getPaymentRequest(1, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(1, SETTLEMENT_DATE) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -192,7 +192,7 @@ describe('process payment request', () => {
       restartIdentity: true
     })
 
-    const wrapper = async () => { await getPaymentRequest(undefined, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(undefined, SETTLEMENT_DATE) }
 
     expect(wrapper).rejects.toThrow()
   })
@@ -203,14 +203,14 @@ describe('process payment request', () => {
       restartIdentity: true
     })
 
-    const wrapper = async () => { await getPaymentRequest(null, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(null, SETTLEMENT_DATE) }
 
     expect(wrapper).rejects.toThrow()
   })
 
   test('should throw when existing in progress payment request with required information exists', async () => {
     await db.paymentRequest.create(paymentRequestInProgress)
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -220,7 +220,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -230,7 +230,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -239,7 +239,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(paymentRequestCompleted)
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -263,7 +263,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(topUpCompletedPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
@@ -286,7 +286,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(topUpCompletedPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -298,7 +298,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(topUpInProgressPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -320,7 +320,7 @@ describe('process payment request', () => {
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
     await db.paymentRequest.create(topUpInProgressPaymentRequest)
     await db.paymentRequest.create(topUpCompletedPaymentRequest)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -345,7 +345,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     settlement.settled = false
     await db.settlement.create(settlement)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -369,7 +369,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: downwardAdjustmentInProgressPaymentRequest.agreementNumber,
@@ -392,7 +392,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -403,7 +403,7 @@ describe('process payment request', () => {
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
     await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -426,7 +426,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(downwardAdjustmentInProgressPaymentRequest)
     await db.paymentRequest.create(downwardAdjustmentCompletedPaymentRequest)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -452,7 +452,7 @@ describe('process payment request', () => {
     settlement.settled = false
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -476,7 +476,7 @@ describe('process payment request', () => {
     await db.paymentRequest.create(recoveryCompletedPaymentRequest)
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: recoveryInProgressPaymentRequest.agreementNumber,
@@ -500,7 +500,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SECOND_PAYMENT
     await db.settlement.create(settlement)
 
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -511,7 +511,7 @@ describe('process payment request', () => {
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
     await db.paymentRequest.create(recoveryInProgressPaymentRequest)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -540,7 +540,7 @@ describe('process payment request', () => {
     await db.settlement.create(settlement)
     settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_B
     await db.settlement.create(settlement)
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: splitInProgressPaymentRequest.agreementNumber,
@@ -569,7 +569,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_B
     await db.settlement.create(settlement)
 
-    const wrapper = async () => { await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
+    const wrapper = async () => { await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE) }
     expect(wrapper).rejects.toThrow()
   })
 
@@ -582,7 +582,7 @@ describe('process payment request', () => {
     await db.invoiceNumber.create({ invoiceNumber: invoiceNumbers.SFI_SPLIT_B, originalInvoiceNumber: invoiceNumbers.SFI_SECOND_PAYMENT_ORIGINAL })
     await db.paymentRequest.create(splitInProgressPaymentRequest)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: paymentRequestInProgress.agreementNumber,
@@ -624,7 +624,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: secondTopUpInProgressPaymentRequest.agreementNumber,
@@ -658,7 +658,7 @@ describe('process payment request', () => {
     secondTopUpInProgressPaymentRequest.value = TWO_THOUSAND_POUNDS
     await db.paymentRequest.create(secondTopUpInProgressPaymentRequest)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
@@ -699,7 +699,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: downwardAdjustmentInProgressPaymentRequest.agreementNumber,
@@ -740,7 +740,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
@@ -792,7 +792,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_SPLIT_THIRD_B
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: splitInProgressPaymentRequest.agreementNumber,
@@ -833,7 +833,7 @@ describe('process payment request', () => {
     settlement.invoiceNumber = invoiceNumbers.SFI_THIRD_PAYMENT
     await db.settlement.create(settlement)
 
-    const result = await getPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
+    const result = await getLatestInProgressPaymentRequest(PAYMENT_REQUEST_ID_COMPLETED, SETTLEMENT_DATE)
 
     expect(result).toStrictEqual({
       agreementNumber: topUpInProgressPaymentRequest.agreementNumber,
