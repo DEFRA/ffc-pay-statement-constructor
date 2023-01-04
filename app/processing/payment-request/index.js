@@ -1,3 +1,3 @@
-const getPaymentRequest = require('./get-payment-request')
+const getLatestInProgressPaymentRequest = require('./get-latest-in-progress-payment-request')
 
-module.exports = getPaymentRequest
+module.exports = getLatestInProgressPaymentRequest

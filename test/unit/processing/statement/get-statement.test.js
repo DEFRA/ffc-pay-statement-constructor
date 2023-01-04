@@ -3,8 +3,8 @@ const { NAMES } = require('../../../../app/constants/schedules')
 jest.mock('../../../../app/processing/settlement/get-settlement')
 const getSettlement = require('../../../../app/processing/settlement/get-settlement')
 
-jest.mock('../../../../app/processing/payment-request/get-payment-request')
-const getPaymentRequest = require('../../../../app/processing/payment-request/get-payment-request')
+jest.mock('../../../../app/processing/payment-request/get-latest-in-progress-payment-request')
+const getPaymentRequest = require('../../../../app/processing/payment-request/get-latest-in-progress-payment-request')
 
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')

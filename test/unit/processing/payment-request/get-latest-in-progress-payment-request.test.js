@@ -31,7 +31,7 @@ const validatePaymentRequest = require('../../../../app/processing/payment-reque
 jest.mock('../../../../app/processing/payment-request/map-payment-request')
 const mapPaymentRequest = require('../../../../app/processing/payment-request/map-payment-request')
 
-const getPaymentRequest = require('../../../../app/processing/payment-request/get-payment-request')
+const getPaymentRequest = require('../../../../app/processing/payment-request/get-latest-in-progress-payment-request')
 
 let retrievedPaymentRequest
 let mappedPaymentRequest
