@@ -1,20 +1,17 @@
 const db = require('../../data')
+const { getInProgressPaymentRequestFromCompleted } = require('../payment-request')
 const getCalculation = require('../calculation')
-const getInProgressPaymentRequest = require('../payment-request/get-in-progress-payment-request')
 const { getDetails, getAddress, getScheme } = require('../statement/components')
-const mapPaymentRequest = require('../payment-request/map-payment-request')
 
 const getPaymentSchedule = async (paymentRequestId) => {
   const transaction = await db.sequelize.transaction()
   try {
-    const paymentRequest = await db.paymentRequest.findByPk(paymentRequestId, { transaction })
-    const inProgressPaymentRequest = await getInProgressPaymentRequest(paymentRequest.correlationId, transaction)
-    const mappedPaymentRequest = mapPaymentRequest(inProgressPaymentRequest)
-    const calculation = await getCalculation(mappedPaymentRequest.paymentRequestId, mappedPaymentRequest.invoiceNumber, transaction)
+    const paymentRequest = await getInProgressPaymentRequestFromCompleted(paymentRequestId, transaction)
+    const calculation = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber, transaction)
     const sbi = calculation.sbi
     const details = await getDetails(sbi, transaction)
     const address = await getAddress(sbi, transaction)
-    const scheme = getScheme(mappedPaymentRequest.year, mappedPaymentRequest.frequency, mappedPaymentRequest.agreementNumber)
+    const scheme = getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
 
     await transaction.commit()
     return {
