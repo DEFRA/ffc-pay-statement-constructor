@@ -1,6 +1,12 @@
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
 
+jest.mock('../../../../app/processing/payment-request/get-in-progress-payment-request')
+const getInProgressPaymentRequest = require('../../../../app/processing/payment-request/get-in-progress-payment-request')
+
+jest.mock('../../../../app/processing/payment-request/map-payment-request')
+const mapPaymentRequest = require('../../../../app/processing/payment-request/map-payment-request')
+
 jest.mock('../../../../app/processing/statement/components')
 const {
   getAddress,
@@ -48,6 +54,7 @@ describe('get various components and transform to payment schedule object', () =
       agreementNumber: paymentRequest.agreementNumber
     }
 
+    getInProgressPaymentRequest.mockResolvedValue(paymentRequest)
     getCalculation.mockResolvedValue(mappedCalculation)
     getDetails.mockResolvedValue(details)
     getAddress.mockResolvedValue(address)
@@ -56,6 +63,18 @@ describe('get various components and transform to payment schedule object', () =
 
   afterEach(() => {
     jest.clearAllMocks()
+  })
+
+  test('should call getInProgressPaymentRequest when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentSchedule(paymentRequestId)
+    expect(getInProgressPaymentRequest).toHaveBeenCalled()
+  })
+
+  test('should call mapPaymentRequest when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentSchedule(paymentRequestId)
+    expect(mapPaymentRequest).toHaveBeenCalled()
   })
 
   test('should call getCalculation when a paymentRequestId is given', async () => {
