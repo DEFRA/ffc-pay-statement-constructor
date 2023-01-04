@@ -1,6 +1,6 @@
 const { getPaymentSchedule, sendPaymentSchedule } = require('./payment-schedule')
 const { schedulePendingPaymentSchedules } = require('./schedule')
-const updateScheduleByScheduleId = require('./statement/update-schedule-by-schedule-id')
+const updateScheduleByScheduleId = require('./update-schedule-by-schedule-id')
 
 const processPaymentSchedules = async () => {
   const pendingPaymentSchedules = await schedulePendingPaymentSchedules()

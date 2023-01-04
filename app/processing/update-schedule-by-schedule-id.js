@@ -1,4 +1,4 @@
-const db = require('../../../app/data')
+const db = require('../data')
 
 const updateScheduleByScheduleId = async (scheduleId) => {
   await db.schedule.update({ completed: new Date() }, {

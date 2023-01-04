@@ -10,6 +10,7 @@ const start = async () => {
       await processStatements()
     }
     if (processingConfig.scheduleConstructionActive) {
+      await waitForIdleMessaging()
       await processPaymentSchedules()
     }
   } catch (err) {

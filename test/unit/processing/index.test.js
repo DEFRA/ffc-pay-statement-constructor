@@ -22,7 +22,7 @@ jest.mock('../../../app/data', () => {
 })
 
 jest.mock('../../../app/processing/schedule')
-const { schedulePendingSettlements } = require('../../../app/processing/schedule')
+const { schedulePendingSettlements, schedulePendingPaymentSchedules } = require('../../../app/processing/schedule')
 
 jest.mock('../../../app/messaging/wait-for-idle-messaging')
 const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messaging')
@@ -30,8 +30,8 @@ const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messa
 jest.mock('../../../app/processing/statement')
 const { getStatement, sendStatement, validateStatement } = require('../../../app/processing/statement')
 
-jest.mock('../../../app/processing/statement/update-schedule-by-schedule-id')
-const updateScheduleByScheduleId = require('../../../app/processing/statement/update-schedule-by-schedule-id')
+jest.mock('../../../app/processing/update-schedule-by-schedule-id')
+const updateScheduleByScheduleId = require('../../../app/processing/update-schedule-by-schedule-id')
 
 const processing = require('../../../app/processing')
 
@@ -42,6 +42,7 @@ describe('start processing', () => {
   beforeEach(() => {
     processingConfig.settlementProcessingInterval = 10000
     processingConfig.constructionActive = true
+    processingConfig.scheduleConstructionActive = true
     const schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule').STATEMENT))
     retrievedSchedule = {
       scheduleId: 1,
@@ -76,6 +77,22 @@ describe('start processing', () => {
     expect(schedulePendingSettlements).not.toHaveBeenCalled()
   })
 
+  test('should call schedulePendingPaymentSchedules', async () => {
+    await processing.start()
+    expect(schedulePendingPaymentSchedules).toHaveBeenCalled()
+  })
+
+  test('should call schedulePendingPaymentSchedules once if schedule construction active', async () => {
+    await processing.start()
+    expect(schedulePendingPaymentSchedules).toHaveBeenCalledTimes(1)
+  })
+
+  test('should not call schedulePendingPaymentSchedules if schedule construction not active', async () => {
+    processingConfig.scheduleConstructionActive = false
+    await processing.start()
+    expect(schedulePendingPaymentSchedules).not.toHaveBeenCalled()
+  })
+
   test('should call setTimeout if construction is active', async () => {
     processingConfig.constructionActive = true
     await processing.start()
@@ -88,9 +105,21 @@ describe('start processing', () => {
     expect(setTimeout).toHaveBeenCalled()
   })
 
-  test('should call waitForIdleMessaging once', async () => {
+  test('should call setTimeout if schedule construction is active', async () => {
+    processingConfig.scheduleConstructionActive = true
     await processing.start()
-    expect(waitForIdleMessaging).toHaveBeenCalledTimes(1)
+    expect(setTimeout).toHaveBeenCalled()
+  })
+
+  test('should call setTimeout if schedule construction is not active', async () => {
+    processingConfig.scheduleConstructionActive = false
+    await processing.start()
+    expect(setTimeout).toHaveBeenCalled()
+  })
+
+  test('should call waitForIdleMessaging twice if all construction active', async () => {
+    await processing.start()
+    expect(waitForIdleMessaging).toHaveBeenCalledTimes(2)
   })
 
   test('should call getStatement when schedulePendingSettlements returns 1 record', async () => {

@@ -1,6 +1,6 @@
 const { schedulePendingSettlements } = require('./schedule')
 const { getStatement, sendStatement, validateStatement } = require('./statement')
-const updateScheduleByScheduleId = require('./statement/update-schedule-by-schedule-id')
+const updateScheduleByScheduleId = require('./update-schedule-by-schedule-id')
 
 const processStatements = async () => {
   const pendingStatements = await schedulePendingSettlements()
