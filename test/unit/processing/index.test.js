@@ -30,6 +30,9 @@ const waitForIdleMessaging = require('../../../app/messaging/wait-for-idle-messa
 jest.mock('../../../app/processing/statement')
 const { getStatement, sendStatement, validateStatement } = require('../../../app/processing/statement')
 
+jest.mock('../../../app/processing/payment-schedule')
+const { getPaymentSchedule, sendPaymentSchedule } = require('../../../app/processing/payment-schedule')
+
 jest.mock('../../../app/processing/update-schedule-by-schedule-id')
 const updateScheduleByScheduleId = require('../../../app/processing/update-schedule-by-schedule-id')
 
@@ -37,6 +40,8 @@ const processing = require('../../../app/processing')
 
 let retrievedSchedule
 let statement
+
+let retrievedPaymentSchedule
 
 describe('start processing', () => {
   beforeEach(() => {
@@ -48,12 +53,23 @@ describe('start processing', () => {
       scheduleId: 1,
       settlementId: schedule.settlementId
     }
+    const paymentSchedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule').SCHEDULE))
+    retrievedPaymentSchedule = {
+      scheduleId: 1,
+      paymentRequestId: paymentSchedule.paymentRequestId
+    }
+
     statement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
 
     schedulePendingSettlements.mockResolvedValue([retrievedSchedule])
     getStatement.mockResolvedValue(statement)
     validateStatement.mockReturnValue(true)
     sendStatement.mockResolvedValue(undefined)
+
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedPaymentSchedule])
+    getPaymentSchedule.mockResolvedValue(paymentSchedule)
+    sendPaymentSchedule.mockResolvedValue(undefined)
+
     updateScheduleByScheduleId.mockResolvedValue(undefined)
   })
 
@@ -122,6 +138,18 @@ describe('start processing', () => {
     expect(waitForIdleMessaging).toHaveBeenCalledTimes(2)
   })
 
+  test('should call waitForIdleMessaging once if construction active and schedule construction not active', async () => {
+    processingConfig.scheduleConstructionActive = false
+    await processing.start()
+    expect(waitForIdleMessaging).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call waitForIdleMessaging once if construction not active and schedule construction active', async () => {
+    processingConfig.constructionActive = false
+    await processing.start()
+    expect(waitForIdleMessaging).toHaveBeenCalledTimes(1)
+  })
+
   test('should call getStatement when schedulePendingSettlements returns 1 record', async () => {
     await processing.start()
     expect(getStatement).toHaveBeenCalled()
@@ -162,6 +190,73 @@ describe('start processing', () => {
     schedulePendingSettlements.mockResolvedValue([])
     await processing.start()
     expect(getStatement).not.toHaveBeenCalled()
+  })
+
+  test('should call getPaymentSchedule when schedulePendingSchedules returns 1 record', async () => {
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalled()
+  })
+
+  test('should call getPaymentSchedule once when schedulePendingSchedules returns 1 record', async () => {
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call getPaymentSchedule with schedulePendingSchedules()[0].paymentScheduleId and mockTransaction when schedulePendingSchedules returns 1 record', async () => {
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalledWith((await schedulePendingPaymentSchedules())[0].paymentRequestId)
+  })
+
+  test('should not call getPaymentSchedule when schedulePendingSchedules returns an empty array', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([])
+    await processing.start()
+    expect(getPaymentSchedule).not.toHaveBeenCalled()
+  })
+
+  test('should call getPaymentSchedule when schedulePendingSchedules returns 2 records', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalled()
+  })
+
+  test('should call getPaymentSchedule twice when schedulePendingSchedules returns 2 records', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalledTimes(2)
+  })
+
+  test('should call getPaymentSchedule with each schedulePendingSchedules().paymentScheduleId and mockTransaction when schedulePendingSchedules returns 2 records', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+
+    await processing.start()
+
+    expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentRequestId)
+    expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentRequestId)
+  })
+
+  test('should call getPaymentSchedule when schedulePendingSchedules returns 2 records', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalled()
+  })
+
+  test('should call getPaymentSchedule twice when schedulePendingSchedules returns 2 records', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenCalledTimes(2)
+  })
+
+  test('should call getPaymentSchedule with each schedulePendingSchedules().paymentScheduleId and mockTransaction when schedulePendingSchedules returns 2 records', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([retrievedSchedule, retrievedSchedule])
+    await processing.start()
+    expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentScheduleId)
+    expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentScheduleId)
+  })
+
+  test('should not call getPaymentSchedule when schedulePendingSchedules returns an empty array', async () => {
+    schedulePendingPaymentSchedules.mockResolvedValue([])
+    await processing.start()
+    expect(getPaymentSchedule).not.toHaveBeenCalled()
   })
 
   test('should call validateStatement when schedulePendingSettlements returns 1 record', async () => {
@@ -227,12 +322,39 @@ describe('start processing', () => {
     expect(sendStatement).not.toHaveBeenCalled()
   })
 
+  test('should call sendPaymentSchedule when schedulePendingPaymentSchedules returns 1 record', async () => {
+    await processing.start()
+    expect(sendPaymentSchedule).toHaveBeenCalled()
+  })
+
+  test('should call sendPaymentSchedule once when schedulePendingPaymentSchedules returns 1 record', async () => {
+    await processing.start()
+    expect(sendPaymentSchedule).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call sendPaymentSchedule with schedulePendingPaymentSchedules()[0].paymentScheduleId and getPaymentSchedule when schedulePendingPaymentSchedules returns 1 record', async () => {
+    await processing.start()
+    expect(sendPaymentSchedule).toHaveBeenCalledWith(await getPaymentSchedule())
+  })
+
   test('should call updateScheduleByScheduleId when schedulePendingSettlements returns 1 record', async () => {
     await processing.start()
     expect(updateScheduleByScheduleId).toHaveBeenCalled()
   })
 
-  test('should call updateScheduleByScheduleId once when schedulePendingSettlements returns 1 record', async () => {
+  test('should call updateScheduleByScheduleId twice when schedulePendingSettlements and schedulePendingPaymentSchedules both return 1 record', async () => {
+    await processing.start()
+    expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(2)
+  })
+
+  test('should call updateScheduleByScheduleId once when schedulePendingSettlements and schedulePendingPaymentSchedules both return 1 record and schedule construction not active', async () => {
+    processingConfig.scheduleConstructionActive = false
+    await processing.start()
+    expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call updateScheduleByScheduleId once when schedulePendingSettlements and schedulePendingPaymentSchedules both return 1 record and construction not active', async () => {
+    processingConfig.constructionActive = false
     await processing.start()
     expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(1)
   })
