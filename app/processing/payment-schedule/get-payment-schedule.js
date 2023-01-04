@@ -1,23 +1,24 @@
 const db = require('../../data')
 const { getInProgressPaymentRequestFromCompleted } = require('../payment-request')
 const getCalculation = require('../calculation')
-const { getDetails, getAddress, getScheme } = require('../components')
+const { getDetails, getAddress, getScheme, getSchedule } = require('../components')
 
 const getPaymentSchedule = async (paymentRequestId) => {
   const transaction = await db.sequelize.transaction()
   try {
     const paymentRequest = await getInProgressPaymentRequestFromCompleted(paymentRequestId, transaction)
     const calculation = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber, transaction)
-    const sbi = calculation.sbi
-    const details = await getDetails(sbi, transaction)
-    const address = await getAddress(sbi, transaction)
+    const details = await getDetails(calculation.sbi, transaction)
+    const address = await getAddress(calculation.sbi, transaction)
     const scheme = getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
+    const schedule = getSchedule(paymentRequest.payments)
 
     await transaction.commit()
     return {
       ...details,
       address,
-      scheme
+      scheme,
+      schedule
     }
   } catch (err) {
     await transaction.rollback()
