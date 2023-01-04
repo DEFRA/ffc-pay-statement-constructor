@@ -4,12 +4,12 @@ const getCalculation = require('../../../../app/processing/calculation/get-calcu
 jest.mock('../../../../app/processing/payment-request/get-in-progress-payment-request-from-completed')
 const getInProgressPaymentRequestFromCompleted = require('../../../../app/processing/payment-request/get-in-progress-payment-request-from-completed')
 
-jest.mock('../../../../app/processing/statement/components')
+jest.mock('../../../../app/processing/components')
 const {
   getAddress,
   getDetails,
   getScheme
-} = require('../../../../app/processing/statement/components')
+} = require('../../../../app/processing/components')
 
 const { getPaymentSchedule } = require('../../../../app/processing/payment-schedule')
 

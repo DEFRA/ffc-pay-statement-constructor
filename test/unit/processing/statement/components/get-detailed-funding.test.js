@@ -4,7 +4,7 @@ const mockFunding = require('../../../../../app/processing/funding')
 jest.mock('../../../../../app/processing/invoice-line')
 const mockInvoiceLine = require('../../../../../app/processing/invoice-line')
 
-const getDetailedFunding = require('../../../../../app/processing/statement/components/get-detailed-funding')
+const getDetailedFunding = require('../../../../../app/processing/components/get-detailed-funding')
 
 let fundings
 let mappedFundings

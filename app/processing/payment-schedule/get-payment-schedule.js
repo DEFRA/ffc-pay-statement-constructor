@@ -1,7 +1,7 @@
 const db = require('../../data')
 const { getInProgressPaymentRequestFromCompleted } = require('../payment-request')
 const getCalculation = require('../calculation')
-const { getDetails, getAddress, getScheme } = require('../statement/components')
+const { getDetails, getAddress, getScheme } = require('../components')
 
 const getPaymentSchedule = async (paymentRequestId) => {
   const transaction = await db.sequelize.transaction()

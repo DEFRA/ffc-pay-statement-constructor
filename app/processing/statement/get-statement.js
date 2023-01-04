@@ -1,5 +1,5 @@
 const db = require('../../data')
-const { getDetails, getAddress, getDetailedFunding, getScheme, getDetailedPayments } = require('./components')
+const { getDetails, getAddress, getDetailedFunding, getScheme, getDetailedPayments } = require('../components')
 const getCalculation = require('../calculation')
 const { getLatestInProgressPaymentRequest } = require('../payment-request')
 const { getSettlement, getSupportingSettlements } = require('../settlement')

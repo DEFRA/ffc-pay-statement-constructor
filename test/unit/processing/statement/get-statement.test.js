@@ -9,14 +9,14 @@ const getLatestInProgressPaymentRequest = require('../../../../app/processing/pa
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
 
-jest.mock('../../../../app/processing/statement/components')
+jest.mock('../../../../app/processing/components')
 const {
   getAddress,
   getDetailedFunding,
   getDetails,
   getDetailedPayments,
   getScheme
-} = require('../../../../app/processing/statement/components')
+} = require('../../../../app/processing/components')
 
 jest.mock('../../../../app/processing/settlement/get-last-settlement')
 const getLastSettlement = require('../../../../app/processing/settlement/get-last-settlement')

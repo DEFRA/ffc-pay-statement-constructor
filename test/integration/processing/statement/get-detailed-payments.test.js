@@ -1,4 +1,4 @@
-const getDetailedPayments = require('../../../../app/processing/statement/components/get-detailed-payments')
+const getDetailedPayments = require('../../../../app/processing/components/get-detailed-payments')
 
 let mockPaymentRequest
 const mockSettlement = {}
