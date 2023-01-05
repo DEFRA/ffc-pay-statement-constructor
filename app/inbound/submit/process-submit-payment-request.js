@@ -22,7 +22,7 @@ const processSubmitPaymentRequest = async (paymentRequest) => {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
       const savedPaymentRequest = await savePaymentRequest({ ...paymentRequest, status: COMPLETED }, transaction)
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
-      if (!isFirstPayment(paymentRequest.paymentRequestNumber) && hasValue(paymentRequest.value)) {
+      if (paymentRequest.schedule && !isFirstPayment(paymentRequest.paymentRequestNumber) && hasValue(paymentRequest.value)) {
         await saveSchedule(savedPaymentRequest.paymentRequestId, transaction)
       }
       await transaction.commit()

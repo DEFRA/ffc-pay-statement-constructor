@@ -541,6 +541,36 @@ describe('process submit payment request', () => {
     expect(result).toBe(0)
   })
 
+  test('should not save entry in schedule table when payment request has no schedule', async () => {
+    delete paymentRequest.schedule
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should not save entry in schedule table when payment request has null schedule', async () => {
+    paymentRequest.schedule = null
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should not save entry in schedule table when payment request has undefined schedule', async () => {
+    paymentRequest.schedule = undefined
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
   test('should save entry in schedule table when paymentRequestNumber greater than 1', async () => {
     paymentRequest.paymentRequestNumber = 2
 

@@ -163,6 +163,38 @@ describe('process submit payment request', () => {
     expect(saveSchedule).not.toHaveBeenCalled()
   })
 
+  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and no schedule', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    delete paymentRequest.schedule
+
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
+  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and schedule is empty', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.schedule = ''
+
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
+  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and schedule is null', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.schedule = null
+
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
+  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and schedule is undefined', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.schedule = undefined
+
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
   test('should call mockTransaction.commit when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
     expect(mockTransaction.commit).toHaveBeenCalled()
