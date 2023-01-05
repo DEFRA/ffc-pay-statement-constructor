@@ -7,6 +7,8 @@ const saveInvoiceNumber = require('../save-invoice-number')
 const savePaymentRequest = require('../save-payment-request')
 const saveInvoiceLines = require('../save-invoice-lines')
 const saveSchedule = require('./save-schedule')
+const isFirstPayment = require('./is-first-payment')
+const hasValue = require('./has-value')
 
 const processSubmitPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
@@ -20,7 +22,9 @@ const processSubmitPaymentRequest = async (paymentRequest) => {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
       const savedPaymentRequest = await savePaymentRequest({ ...paymentRequest, status: COMPLETED }, transaction)
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
-      await saveSchedule(savedPaymentRequest, transaction)
+      if (!isFirstPayment(paymentRequest.paymentRequestNumber) && hasValue(paymentRequest.value)) {
+        await saveSchedule(savedPaymentRequest.paymentRequestId, transaction)
+      }
       await transaction.commit()
     }
   } catch (error) {

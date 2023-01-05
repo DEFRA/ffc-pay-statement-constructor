@@ -30,6 +30,9 @@ const savePaymentRequest = require('../../../app/inbound/save-payment-request')
 jest.mock('../../../app/inbound/save-invoice-lines')
 const saveInvoiceLines = require('../../../app/inbound/save-invoice-lines')
 
+jest.mock('../../../app/inbound/submit/save-schedule')
+const saveSchedule = require('../../../app/inbound/submit/save-schedule')
+
 const processSubmitPaymentRequest = require('../../../app/inbound/submit')
 
 let paymentRequest
@@ -42,6 +45,7 @@ describe('process submit payment request', () => {
     saveInvoiceNumber.mockResolvedValue(undefined)
     savePaymentRequest.mockResolvedValue(paymentRequest)
     saveInvoiceLines.mockResolvedValue(undefined)
+    saveSchedule.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -108,6 +112,57 @@ describe('process submit payment request', () => {
     expect(saveInvoiceLines).toHaveBeenCalledWith(paymentRequest.invoiceLines, paymentRequest.paymentRequestId, mockTransaction)
   })
 
+  test('should call saveSchedule when a valid post payment adjustment paymentRequest is given and a previous paymentRequest does not exist', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).toHaveBeenCalled()
+  })
+
+  test('should call saveSchedule once when a valid post payment adjustment paymentRequest is given and a previous paymentRequest does not exist', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call saveSchedule with paymentRequest.paymentRequestId and mockTransaction when a valid post payment adjustment paymentRequest is given and a previous paymentRequest does not exist', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).toHaveBeenCalledWith(paymentRequest.paymentRequestId, mockTransaction)
+  })
+
+  test('should not call saveSchedule when a valid post payment adjustment paymentRequest is given and a previous paymentRequest exist', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    getCompletedPaymentRequestByReferenceId.mockResolvedValue(paymentRequest)
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
+  test('should not call saveSchedule when a valid paymentRequest is not post payment adjustment and a previous paymentRequest does not exist', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
+  test('should call saveSchedule when a valid paymentRequest is valid post payment adjustment and value is greater less than 0', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = -1
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).toHaveBeenCalled()
+  })
+
+  test('should call saveSchedule when a valid paymentRequest is valid post payment adjustment and value is greater than 0', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 1
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).toHaveBeenCalled()
+  })
+
+  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and value is equal to 0', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.value = 0
+    await processSubmitPaymentRequest(paymentRequest)
+    expect(saveSchedule).not.toHaveBeenCalled()
+  })
+
   test('should call mockTransaction.commit when a valid paymentRequest is given and a previous paymentRequest does not exist', async () => {
     await processSubmitPaymentRequest(paymentRequest)
     expect(mockTransaction.commit).toHaveBeenCalled()
@@ -160,7 +215,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when getCompletedPaymentRequestByReferenceId throws Error', async () => {
@@ -170,7 +225,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Database retrieval issue" when getCompletedPaymentRequestByReferenceId throws error with "Database retrieval issue"', async () => {
@@ -180,7 +235,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
+    await expect(wrapper).rejects.toThrow(/^Database retrieval issue$/)
   })
 
   test('should throw when saveInvoiceNumber throws', async () => {
@@ -190,7 +245,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when saveInvoiceNumber throws Error', async () => {
@@ -200,7 +255,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Database save down issue" when saveInvoiceNumber throws error with "Database save down issue"', async () => {
@@ -210,7 +265,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(/^Database save down issue$/)
+    await expect(wrapper).rejects.toThrow(/^Database save down issue$/)
   })
 
   test('should throw when savePaymentRequest throws', async () => {
@@ -220,7 +275,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when savePaymentRequest throws Error', async () => {
@@ -230,7 +285,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Database save down issue" when savePaymentRequest throws error with "Database save down issue"', async () => {
@@ -240,7 +295,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(/^Database save down issue$/)
+    await expect(wrapper).rejects.toThrow(/^Database save down issue$/)
   })
 
   test('should throw when saveInvoiceLines throws', async () => {
@@ -250,7 +305,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when saveInvoiceLines throws Error', async () => {
@@ -260,7 +315,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Database save down issue" when saveInvoiceLines throws error with "Database save down issue"', async () => {
@@ -270,7 +325,40 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(/^Database save down issue$/)
+    await expect(wrapper).rejects.toThrow(/^Database save down issue$/)
+  })
+
+  test('should throw when saveSchedule throws', async () => {
+    saveSchedule.mockRejectedValue(new Error('Database save down issue'))
+    paymentRequest.paymentRequestNumber = 2
+
+    const wrapper = async () => {
+      await processSubmitPaymentRequest(paymentRequest)
+    }
+
+    await expect(wrapper).rejects.toThrow()
+  })
+
+  test('should throw Error when saveSchedule throws Error', async () => {
+    saveSchedule.mockRejectedValue(new Error('Database save down issue'))
+    paymentRequest.paymentRequestNumber = 2
+
+    const wrapper = async () => {
+      await processSubmitPaymentRequest(paymentRequest)
+    }
+
+    await expect(wrapper).rejects.toThrow(Error)
+  })
+
+  test('should throw error with "Database save down issue" when saveSchedule throws error with "Database save down issue"', async () => {
+    saveSchedule.mockRejectedValue(new Error('Database save down issue'))
+    paymentRequest.paymentRequestNumber = 2
+
+    const wrapper = async () => {
+      await processSubmitPaymentRequest(paymentRequest)
+    }
+
+    await expect(wrapper).rejects.toThrow(/^Database save down issue$/)
   })
 
   test('should throw when mockTransaction.commit throws', async () => {
@@ -280,7 +368,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow()
+    await expect(wrapper).rejects.toThrow()
   })
 
   test('should throw Error when mockTransaction.commit throws Error', async () => {
@@ -290,7 +378,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(Error)
+    await expect(wrapper).rejects.toThrow(Error)
   })
 
   test('should throw error with "Sequelize transaction issue" when mockTransaction.commit throws error with "Sequelize transaction commit issue"', async () => {
@@ -300,7 +388,7 @@ describe('process submit payment request', () => {
       await processSubmitPaymentRequest(paymentRequest)
     }
 
-    expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
+    await expect(wrapper).rejects.toThrow(/^Sequelize transaction commit issue$/)
   })
 
   test('should call mockTransaction.rollback when getCompletedPaymentRequestByReferenceId throws', async () => {
