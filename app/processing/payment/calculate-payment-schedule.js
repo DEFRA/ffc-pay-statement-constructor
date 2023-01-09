@@ -1,28 +1,39 @@
 const moment = require('moment')
 const { DAX_CODES } = require('../../constants/schedules')
 
-const calculatePaymentSchedule = (paymentRequest) => {
+const calculatePaymentSchedule = (paymentRequest, previousSettlements = [], previousValue = 0, currentDate = new Date()) => {
+  const settledValue = getSettledValue(previousSettlements)
+  const totalValue = previousValue === 0 ? paymentRequest.value : previousValue
+
   const scheduleDate = moment(paymentRequest.dueDate, 'DD/MM/YYYY')
 
   switch (paymentRequest.schedule) {
     case DAX_CODES.QUARTERLY:
-      return getSchedule(scheduleDate, 4, paymentRequest.value, 3, 'month')
+      return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, 'month', currentDate)
     case DAX_CODES.MONTHLY:
-      return getSchedule(scheduleDate, 12, paymentRequest.value, 1, 'month')
+      return getSchedule(scheduleDate, 12, settledValue, totalValue, 1, 'month', currentDate)
     case DAX_CODES.THREE_DAY_QUARTERLY:
-      return getSchedule(scheduleDate, 4, paymentRequest.value, 3, 'day')
+      return getSchedule(scheduleDate, 4, settledValue, totalValue, 3, 'day', currentDate)
     default:
       throw new Error(`Unknown schedule ${paymentRequest.schedule}`)
   }
 }
 
-const getSchedule = (scheduleDate, totalPayments, totalValue, increment, unit) => {
+const getSettledValue = (previousSettlements) => {
+  return previousSettlements.reduce((total, settlement) => total + settlement.value, 0)
+}
+
+const getSchedule = (scheduleDate, totalPayments, settledValue, totalValue, increment, unit, currentDate) => {
   const scheduleDates = []
+  let expectedSettlementValue = 0
   for (let i = 1; i <= totalPayments; i++) {
+    expectedSettlementValue = getExpectedValue(totalValue, totalPayments, i === totalPayments)
+    const cappedSettlementValue = settledValue <= expectedSettlementValue ? settledValue : expectedSettlementValue
     scheduleDates.push({
       dueDate: scheduleDate.clone(),
       period: getPeriod(scheduleDate, totalPayments, i, increment, unit),
-      value: getExpectedValue(totalValue, totalPayments, i === totalPayments)
+      value: expectedSettlementValue,
+      outstanding: scheduleDate >= currentDate || cappedSettlementValue < expectedSettlementValue
     })
     scheduleDate = scheduleDate.add(increment, unit)
   }
