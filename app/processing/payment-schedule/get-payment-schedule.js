@@ -38,7 +38,7 @@ const getPaymentSchedule = async (paymentRequestId) => {
 
 const { convertToPounds } = require('../../utility')
 
-const getSchedule = (previousPaymentSchedule, newPaymentSchedule, adjustmentValue) => {
+const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
   if (previousPaymentSchedule.every(x => x.outstanding)) {
     return mapSchedule(newPaymentSchedule)
   }
@@ -46,9 +46,9 @@ const getSchedule = (previousPaymentSchedule, newPaymentSchedule, adjustmentValu
   const paidSegments = previousPaymentSchedule.filter(x => !x.outstanding)
   paidSegments.push({
     period: 'Adjustment',
-    value: adjustmentValue
+    value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
   })
-  newPaymentSchedule.splice(0, paidSegments.length)
+  newPaymentSchedule.splice(0, paidSegments.length - 1)
   const schedule = paidSegments.concat(newPaymentSchedule)
 
   return mapSchedule(schedule)
@@ -57,7 +57,7 @@ const getSchedule = (previousPaymentSchedule, newPaymentSchedule, adjustmentValu
 const mapSchedule = (schedule) => {
   return schedule.map((segment, i) => ({
     order: i + 1,
-    dueDate: segment.dueDate,
+    dueDate: segment.dueDate?.format('DD/MM/YYYY'),
     period: segment.period,
     value: convertToPounds(segment.value)
   }))
@@ -65,9 +65,9 @@ const mapSchedule = (schedule) => {
 
 const getAdjustment = (previousValue, newValue, adjustmentValue) => {
   return {
-    currentValue: previousValue,
-    newValue,
-    adjustmentValue
+    currentValue: convertToPounds(previousValue),
+    newValue: convertToPounds(newValue),
+    adjustmentValue: convertToPounds(adjustmentValue)
   }
 }
 
