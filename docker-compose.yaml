@@ -7,7 +7,6 @@ services:
     image: ffc-pay-statement-constructor
     container_name: ffc-pay-statement-constructor
     depends_on:
-      - ffc-pay-statement-constructor-azurite
       - ffc-pay-statement-constructor-postgres
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-statement-constructor-local
@@ -30,8 +29,6 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME:-public}
       POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
-      AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
-      AZURE_STORAGE_USE_CONNECTION_STRING: "true"
 
   ffc-pay-statement-constructor-postgres:
     image: postgres:11.4-alpine
@@ -39,7 +36,3 @@ services:
       POSTGRES_DB: ffc_pay_statement_constructor
       POSTGRES_PASSWORD: ppp
       POSTGRES_USERNAME: postgres
-
-  ffc-pay-statement-constructor-azurite:
-    image: mcr.microsoft.com/azure-storage/azurite:3.17.1
-    command: "azurite-blob --loose --blobHost 0.0.0.0"

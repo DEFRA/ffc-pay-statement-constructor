@@ -13,20 +13,12 @@ services:
     volumes:
       - ./app:/home/node/app
       - ./package.json:/home/node/package.json
-    environment:
-      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-pay-statement-constructor-azurite:10000/devstoreaccount1;
 
   ffc-pay-statement-constructor-postgres:
     ports:
       - "5450:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  ffc-pay-statement-constructor-azurite:
-    volumes:
-      - azurite_data:/data
-    ports:
-      - "10050:10000"
 
 volumes:
   azurite_data:
