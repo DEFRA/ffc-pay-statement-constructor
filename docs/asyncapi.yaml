@@ -209,7 +209,6 @@ components:
           $ref: '#/components/schemas/SchemeId'
         value:
           $ref: '#/components/schemas/ValueInteger'
-    
         paymentRequestId:
           $ref: '#/components/schemas/PaymentRequestId'
         referenceId:
