@@ -1,17 +1,17 @@
-asyncapi: 2.4.0
+asyncapi: 2.5.0
 info:
   title: FFC Payment Statement Constructor
-  version: '1.0.0'
+  version: 1.0.0
   description: Construct payment statements
 channels:
   dwh/calculation:
-      subscribe:
-        message:
-          $ref: '#/components/messages/DWHCalculation'
+    subscribe:
+      message:
+        $ref: '#/components/messages/DWHCalculation'
   dwh/organisation:
-      subscribe:
-        message:
-          $ref: '#/components/messages/DWHOrganisation'
+    subscribe:
+      message:
+        $ref: '#/components/messages/DWHOrganisation'
   payment/processing:
     subscribe:
       message:
@@ -20,7 +20,7 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestSubmit'
-  return/message:
+  payment/return:
     subscribe:
       message:
         $ref: '#/components/messages/ReturnMessage'
@@ -31,15 +31,15 @@ channels:
 components:
   messages:
     DWHCalculation:
-        name: Calculation information from DWH
-        contentType: application/json
-        payload:
-          $ref: '#/components/schemas/DWHCalculation'
+      name: Calculation information from DWH
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/DWHCalculation'
     DWHOrganisation:
-        name: Organisation information from DWH
-        contentType: application/json
-        payload:
-          $ref: '#/components/schemas/DWHOrganisation'
+      name: Organisation information from DWH
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/DWHOrganisation'
     PaymentRequestProcessing:
       name: Payment statement before PPA
       contentType: application/json
@@ -62,22 +62,26 @@ components:
         $ref: '#/components/schemas/PaymentStatement'
   schemas:
     DWHCalculation:
-        type: object
-        properties:
-          calculationDate:
-            $ref: '#/components/schemas/CalculationDate'
-          calculationReference:
-            $ref: '#/components/schemas/CalculationReference'
-          invoiceNumber:
-            $ref: '#/components/schemas/InvoiceNumber'
-          frn:
-            $ref: '#/components/schemas/FRN'
-          sbi:
-            $ref: '#/components/schemas/SBI'
-          type:
-            $ref: '#/components/schemas/Type'
-          updated:
-            $ref: '#/components/schemas/Updated'
+      type: object
+      properties:
+        calculationDate:
+          $ref: '#/components/schemas/CalculationDate'
+        calculationReference:
+          $ref: '#/components/schemas/CalculationReference'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumberSitiAgri'
+        frn:
+          $ref: '#/components/schemas/FRN'
+        sbi:
+          $ref: '#/components/schemas/SBI'
+        fundings:
+          type: array
+          items:
+            $ref: '#/components/schemas/FundingInitial'
+        type:
+          $ref: '#/components/schemas/Type'
+        updated:
+          $ref: '#/components/schemas/Updated'
     DWHOrganisation:
       type: object
       properties:
@@ -110,20 +114,21 @@ components:
     PaymentRequestProcessing:
       type: object
       required:
-      - agreementNumber
-      - contractNumber
-      - correlationId
-      - currency
-      - deliveryBody
-      - dueDate
-      - frn
-      - invoiceLines
-      - ledger
-      - marketingYear
-      - paymentRequestNumber
-      - schedule
-      - schemeId
-      - value
+        - agreementNumber
+        - contractNumber
+        - correlationId
+        - currency
+        - deliveryBody
+        - dueDate
+        - frn
+        - invoiceLines
+        - invoiceNumber
+        - ledger
+        - marketingYear
+        - paymentRequestNumber
+        - schedule
+        - schemeId
+        - value
       properties:
         agreementNumber:
           $ref: '#/components/schemas/AgreementNumber'
@@ -141,6 +146,8 @@ components:
           $ref: '#/components/schemas/FRN'
         invoiceLines:
           $ref: '#/components/schemas/InvoiceLinesProcessing'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
         ledger:
           $ref: '#/components/schemas/Ledger'
         marketingYear:
@@ -156,29 +163,70 @@ components:
     PaymentRequestSubmit:
       type: object
       required:
-      - paymentRequest
-      - referenceId
+        - agreementNumber
+        - contractNumber
+        - correlationId
+        - currency
+        - deliveryBody
+        - dueDate
+        - frn
+        - invoiceLines
+        - invoiceNumber
+        - ledger
+        - marketingYear
+        - paymentRequestNumber
+        - schedule
+        - schemeId
+        - value
       properties:
+        agreementNumber:
+          $ref: '#/components/schemas/AgreementNumber'
+        contractNumber:
+          $ref: '#/components/schemas/ContractNumber'
+        correlationId:
+          $ref: '#/components/schemas/CorrelationId'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        deliveryBody:
+          $ref: '#/components/schemas/DeliveryBody'
+        dueDate:
+          $ref: '#/components/schemas/DueDate'
+        frn:
+          $ref: '#/components/schemas/FRN'
         invoiceLines:
           $ref: '#/components/schemas/InvoiceLinesSubmit'
-        paymentRequest:
-          $ref: '#/components/schemas/PaymentRequestProcessing'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        ledger:
+          $ref: '#/components/schemas/Ledger'
+        marketingYear:
+          $ref: '#/components/schemas/MarketingYear'
+        paymentRequestNumber:
+          $ref: '#/components/schemas/PaymentRequestNumber'
+        schedule:
+          $ref: '#/components/schemas/Schedule'
+        schemeId:
+          $ref: '#/components/schemas/SchemeId'
+        value:
+          $ref: '#/components/schemas/ValueInteger'
+    
         paymentRequestId:
           $ref: '#/components/schemas/PaymentRequestId'
         referenceId:
-          $ref: '#/components/schemas/ReferenceId'
+          $ref: '#/components/schemas/ReferenceIdSubmit'
     ReturnMessage:
       type: object
       required:
-      - sourceSystem
-      - invoiceNumber
-      - frn
-      - currency
-      - value
-      - settlementDate
-      - reference 
-      - settled
-      - detail
+        - sourceSystem
+        - invoiceNumber
+        - frn
+        - currency
+        - value
+        - settlementDate
+        - reference
+        - settled
+        - detail
+        - referenceId
       properties:
         sourceSystem:
           $ref: '#/components/schemas/SourceSystem'
@@ -198,16 +246,18 @@ components:
           $ref: '#/components/schemas/Settled'
         detail:
           $ref: '#/components/schemas/Detail'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdReturn'
     PaymentStatement:
       type: object
       required:
-      - businessName
-      - sbi
-      - frn
-      - address
-      - scheme
-      - payments
-      - funding
+        - businessName
+        - sbi
+        - frn
+        - address
+        - scheme
+        - payments
+        - funding
       properties:
         businessName:
           $ref: '#/components/schemas/BusinessName'
@@ -247,10 +297,10 @@ components:
     Scheme:
       type: object
       required:
-      - name
-      - shortName
-      - year
-      - frequency
+        - name
+        - shortName
+        - year
+        - frequency
       properties:
         name:
           type: string
@@ -271,13 +321,13 @@ components:
     Payment:
       type: object
       required:
-      - invoiceNumber
-      - reference
-      - dueDate
-      - settled
-      - calculated
-      - value
-      - period
+        - invoiceNumber
+        - reference
+        - dueDate
+        - settled
+        - calculated
+        - value
+        - period
       properties:
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
@@ -293,15 +343,34 @@ components:
           $ref: '#/components/schemas/ValueInteger'
         period:
           $ref: '#/components/schemas/Period'
+    FundingInitial:
+      type: object
+      required:
+        - fundingCode
+        - areaClaimed
+        - rate
+      properties:
+        fundingCode:
+          type: string
+          description: The funding code ID
+          example: 80002
+        areaClaimed:
+          type: string
+          description: The funding option area claimed in hectares
+          example: 10
+        rate:
+          type: string
+          description: The funding option rate in pounds per hectare
+          example: 40
     Funding:
       type: object
       required:
-      - name
-      - area
-      - annualValue
-      - quarterlyValue
-      - quarterlyReduction
-      - quarterlyPayment
+        - name
+        - area
+        - annualValue
+        - quarterlyValue
+        - quarterlyReduction
+        - quarterlyPayment
       properties:
         name:
           type: string
@@ -314,27 +383,27 @@ components:
         area:
           type: string
           description: The funding option area in hectares
-          example: 10.00
+          example: 10
         rate:
           type: string
           description: The funding option rate in pounds per hectare
-          example: 40.00
+          example: 40
         annualValue:
           type: string
           description: The funding option annual value in pounds
-          example: 400.00
+          example: 400
         quarterlyValue:
           type: string
           description: The funding option quarterly value in pounds
-          example: 100.00
+          example: 100
         quarterlyReduction:
           type: string
           description: The funding option quarterly reduction in pounds
-          example: 75.00
+          example: 75
         quarterlyPayment:
           type: string
           description: The funding option quarterly payment in pounds
-          example: 25.00
+          example: 25
         reductions:
           type: array
           items:
@@ -342,8 +411,8 @@ components:
     Reduction:
       type: object
       required:
-      - reason
-      - value
+        - reason
+        - value
       properties:
         reason:
           type: string
@@ -352,7 +421,7 @@ components:
         value:
           type: string
           description: The reduction level
-          example: 75.00
+          example: 75
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -411,24 +480,26 @@ components:
       description: Currency of values in request
       example: GBP
       enum:
-      - GBP
-      - EUR
+        - GBP
+        - EUR
     DeliveryBody:
       type: string
       description: Delivery body responsible for payment
       example: RP00
     Description:
       type: string
-      description: Description of what line relates to, eg gross or penalty
+      description: 'Description of what line relates to, eg gross or penalty'
       example: G00 - Gross value of claim
     Detail:
       type: string
       description: Additional settlement information from DAX
-      example: BAC Rejection  
+      example: BAC Rejection
     DueDate:
       type: string
-      format: DD/MM/YYYY, YYYY/MM/DD, DD-MM-YYYY or YYYY-MM-DD
-      description: Date request should be issued from. If not supplied will default to current date.
+      format: 'DD/MM/YYYY, YYYY/MM/DD, DD-MM-YYYY or YYYY-MM-DD'
+      description: >-
+        Date request should be issued from. If not supplied will default to
+        current date.
       example: 09/11/2022
       default: Current date
     EmailAddress:
@@ -451,11 +522,11 @@ components:
       items:
         type: object
         required:
-        - accountCode
-        - description
-        - fundCode
-        - schemeCode
-        - value
+          - accountCode
+          - description
+          - fundCode
+          - schemeCode
+          - value
         properties:
           accountCode:
             $ref: '#/components/schemas/AccountCode'
@@ -473,10 +544,22 @@ components:
       items:
         type: object
         required:
-        - invoiceLine
+          - accountCode
+          - description
+          - fundCode
+          - schemeCode
+          - value
         properties:
-          invoiceLine:
-            $ref: '#/components/schemas/InvoiceLinesProcessing'
+          accountCode:
+            $ref: '#/components/schemas/AccountCode'
+          description:
+            $ref: '#/components/schemas/Description'
+          fundCode:
+            $ref: '#/components/schemas/FundCode'
+          schemeCode:
+            $ref: '#/components/schemas/SchemeCode'
+          value:
+            $ref: '#/components/schemas/ValueString'
           completedInvoiceLineId:
             $ref: '#/components/schemas/CompletedInvoiceLineId'
           completedPaymentRequestId:
@@ -484,14 +567,21 @@ components:
     InvoiceNumber:
       type: string
       description: Unique identifier for payment request
-      example: A12345678S1234567V001
+      example: A1234567S1234567V001
+    InvoiceNumberSitiAgri:
+      type: string
+      pattern: ^SFI0[0-9]{7}$
+      description: Unique identifier for payment request in Siti Agri format
+      example: SFI012345678
     Ledger:
       type: string
-      description: Target ledger for settlement, AP for Accounts Payable and AR for Accounts Receivable
+      description: >-
+        Target ledger for settlement, AP for Accounts Payable and AR for
+        Accounts Receivable
       example: AP
       enum:
-      - AP
-      - AR
+        - AP
+        - AR
     MarketingYear:
       type: number
       description: Scheme year for request
@@ -508,7 +598,9 @@ components:
       minimum: 1
     PaymentRequestNumber:
       type: number
-      description: Version of payment request starting with 1, anything greater than 1 is an adjustment
+      description: >-
+        Version of payment request starting with 1, anything greater than 1 is
+        an adjustment
       minimum: 1
       maximum: 99
     Postcode:
@@ -518,12 +610,17 @@ components:
     Reference:
       type: string
       description: Settlement reference of payment request
-      example: PY1234567  
-    ReferenceId:
+      example: PY1234567
+    ReferenceIdSubmit:
       type: string
       format: uuid
       description: GUID for a specific event reference
       example: ce6ec916-bebe-4bc0-bad1-255298c82845
+    ReferenceIdReturn:
+      type: string
+      format: uuid
+      description: GUID for a specific event reference
+      example: 931e1a76-cff2-43ef-bfe5-82742eeeae68
     SBI:
       type: number
       description: Single Business Identifier
@@ -532,35 +629,37 @@ components:
       example: 123456789
     Schedule:
       type: string
-      description: Payment frequency instruction for DAX, eg Q4 for quarterly payments, optional
+      description: >-
+        Payment frequency instruction for DAX, eg Q4 for quarterly payments,
+        optional
       enum:
-      - Q4
-      - M12
-      - T4
+        - Q4
+        - M12
+        - T4
     SchemeCode:
       type: string
       description: Unique funding option code
       example: 80001
       enum:
-      - 80001 (Arable and horticultural soils Introductory)
+        - 80001 (Arable and horticultural soils Introductory)
     SchemeId:
       type: number
       format: integer
       description: Unique ID for scheme used internal to payment services
       example: 1
       enum:
-      - 1 (SFI)
-      - 2 (SFI Pilot)
-      - 3 (Lump Sums)
-      - 4 (LNR)
-      - 5 (Vet Visits)
+        - 1 (SFI)
+        - 2 (SFI Pilot)
+        - 3 (Lump Sums)
+        - 4 (LNR)
+        - 5 (Vet Visits)
     Settled:
       type: boolean
-      description: Whether the return file has been settled or not  
+      description: Whether the return file has been settled or not
     SettlementDate:
       type: string
       description: Date of settlement
-      example: Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)  
+      example: 'Fri Jan 21 2022 10:38:44 GMT+0000 (Greenwich Mean Time)'
     SourceSystem:
       type: string
       description: System identifier request originates from
@@ -570,8 +669,8 @@ components:
       description: Type of dataset
       example: organisation
       enum:
-      - calculation
-      - organisation
+        - calculation
+        - organisation
     Updated:
       type: string
       description: Date of a DWH record's last update
@@ -579,18 +678,20 @@ components:
     ValueInteger:
       type: number
       format: integer
-      description: Value of request or invoice line after enrichment with main and fractional currency combined
+      description: >-
+        Value of request or invoice line after enrichment with main and
+        fractional currency combined
       minimum: 0
       maximum: 999999999999
       example: 50000
     ValueString:
       type: string
       description: Value of request as string decimal
-      example: 500.00
+      example: 500
     BusinessName:
       type: string
       description: The business name
-      example: 'FFC Ltd'
+      example: FFC Ltd
     Period:
       type: string
       description: Period of payment request
