@@ -40,12 +40,6 @@ container:
   dataTopicAddress: ffc-pay-statement-data
   dataSubscriptionAddress: ffc-pay-statement-constructor
   statementTopicAddress: ffc-pay-statements
-  azureStorageAccountName: ffcpay
-  azureStorageConnectionString: dummy
-  azureStorageUseConnectionString: false
-  azureStorageCreateContainers: false
-  storageContainer: statements
-  storageFolder: inbound
   settlementProcessingInterval: 60000
   constructionActive: true
   scheduleConstructionActive: true

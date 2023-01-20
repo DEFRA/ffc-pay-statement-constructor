@@ -2,7 +2,6 @@ const Joi = require('joi')
 const mqConfig = require('./message')
 const dbConfig = require('./database')
 const processingConfig = require('./processing')
-const storageConfig = require('./storage')
 
 const schema = Joi.object({
   env: Joi.string().valid('development', 'test', 'production').default('development')
@@ -34,6 +33,5 @@ value.statementDataSubscription = mqConfig.statementDataSubscription
 
 value.dbConfig = dbConfig
 value.processingConfig = processingConfig
-value.storageConfig = storageConfig
 
 module.exports = value
