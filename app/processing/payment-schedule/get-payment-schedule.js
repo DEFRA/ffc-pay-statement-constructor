@@ -1,5 +1,5 @@
 const db = require('../../data')
-const { getInProgressPaymentRequestFromCompleted, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId } = require('../payment-request')
+const { getInProgressPaymentRequest, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId } = require('../payment-request')
 const getCalculation = require('../calculation')
 const { getDetails, getAddress, getScheme } = require('../components')
 const { calculatePaymentSchedule } = require('../payment')
@@ -9,7 +9,7 @@ const getPaymentSchedule = async (paymentRequestId) => {
   const transaction = await db.sequelize.transaction()
   try {
     const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
-    const paymentRequest = await getInProgressPaymentRequestFromCompleted(paymentRequestId, transaction)
+    const paymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.correlationId, transaction)
     const previousPaymentRequests = await getPreviousPaymentRequests(paymentRequest.agreementNumber, paymentRequest.year, paymentRequest.paymentRequestNumber, transaction)
     const lastPaymentRequest = previousPaymentRequests[0]
     const supportingSettlements = await getScheduleSupportingSettlements(previousPaymentRequests, transaction)
