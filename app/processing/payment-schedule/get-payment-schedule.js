@@ -10,7 +10,7 @@ const getPaymentSchedule = async (paymentRequestId) => {
   try {
     const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
     const paymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.correlationId, transaction)
-    const previousPaymentRequests = await getPreviousPaymentRequests(paymentRequest.agreementNumber, paymentRequest.year, paymentRequest.paymentRequestNumber, transaction)
+    const previousPaymentRequests = await getPreviousPaymentRequests(paymentRequest.agreementNumber, paymentRequest.marketingYear, paymentRequest.paymentRequestNumber, transaction)
     const lastPaymentRequest = previousPaymentRequests[0]
     const supportingSettlements = await getScheduleSupportingSettlements(previousPaymentRequests, transaction)
     const previousPaymentSchedule = calculatePaymentSchedule(lastPaymentRequest, supportingSettlements, lastPaymentRequest.value)
