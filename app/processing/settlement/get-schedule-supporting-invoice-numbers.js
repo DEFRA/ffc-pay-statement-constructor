@@ -16,6 +16,7 @@ const getScheduleSupportingInvoiceNumbers = async (paymentRequestNumber, agreeme
       }
     }],
     where: {
+      paymentRequestNumber,
       agreementNumber,
       marketingYear,
       ledger: AP,

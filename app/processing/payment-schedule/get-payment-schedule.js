@@ -10,17 +10,18 @@ const getPaymentSchedule = async (paymentRequestId) => {
   try {
     const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
     const paymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.correlationId, transaction)
-    const previousPaymentRequests = await getPreviousPaymentRequests(paymentRequest.agreementNumber, paymentRequest.marketingYear, paymentRequest.paymentRequestNumber, transaction)
+    const mappedPaymentRequest = mapPaymentRequest(paymentRequest)
+    const previousPaymentRequests = await getPreviousPaymentRequests(mappedPaymentRequest.agreementNumber, mappedPaymentRequest.year, mappedPaymentRequest.paymentRequestNumber, transaction)
     const lastPaymentRequest = previousPaymentRequests[0]
     const supportingSettlements = await getScheduleSupportingSettlements(previousPaymentRequests, transaction)
     const previousPaymentSchedule = calculatePaymentSchedule(lastPaymentRequest, supportingSettlements, lastPaymentRequest.value)
     const newPaymentSchedule = calculatePaymentSchedule(paymentRequest)
     const schedule = getSchedule(previousPaymentSchedule, newPaymentSchedule, completedPaymentRequest.value)
-    const adjustment = getAdjustment(lastPaymentRequest.value, paymentRequest.value, completedPaymentRequest.value)
-    const calculation = await getCalculation(paymentRequest.paymentRequestId, paymentRequest.invoiceNumber, transaction)
+    const adjustment = getAdjustment(lastPaymentRequest.value, mappedPaymentRequest.value, completedPaymentRequest.value)
+    const calculation = await getCalculation(mappedPaymentRequest.paymentRequestId, mappedPaymentRequest.invoiceNumber, transaction)
     const details = await getDetails(calculation.sbi, transaction)
     const address = await getAddress(calculation.sbi, transaction)
-    const scheme = getScheme(paymentRequest.year, paymentRequest.frequency, paymentRequest.agreementNumber)
+    const scheme = getScheme(mappedPaymentRequest.year, mappedPaymentRequest.frequency, mappedPaymentRequest.agreementNumber)
 
     await transaction.commit()
     return {
@@ -37,6 +38,7 @@ const getPaymentSchedule = async (paymentRequestId) => {
 }
 
 const { convertToPounds } = require('../../utility')
+const mapPaymentRequest = require('../payment-request/map-payment-request')
 
 const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
   if (previousPaymentSchedule.every(x => x.outstanding)) {
