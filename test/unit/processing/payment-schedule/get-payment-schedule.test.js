@@ -5,16 +5,10 @@ const mockTransaction = {
   rollback: mockRollback
 }
 
-jest.mock('../../../app/data', () => {
-  return {
-    ...jest.requireActual('../../../app/data'),
-    sequelize:
-       {
-         transaction: jest.fn().mockImplementation(() => {
-           return { ...mockTransaction }
-         })
-       }
-  }
+jest.mock('../../../../app/data')
+const mockData = require('../../../../app/data')
+mockData.sequelize.transaction.mockImplementation(() => {
+  return { ...mockTransaction }
 })
 
 jest.mock('../../../../app/processing/calculation/get-calculation')
@@ -27,6 +21,9 @@ const {
   getCompletedPaymentRequestByPaymentRequestId,
   mapPaymentRequest
 } = require('../../../../app/processing/payment-request')
+
+jest.mock('../../../../app/processing/settlement')
+const { getScheduleSupportingSettlements } = require('../../../../app/processing/settlement')
 
 jest.mock('../../../../app/processing/components')
 const {
@@ -44,12 +41,14 @@ let paymentRequest
 let calculation
 let organisation
 let mappedPaymentRequest
+let settlement
 
 describe('get various components and transform to payment schedule object', () => {
   beforeEach(() => {
     paymentRequest = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
     calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
+    settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
 
     mappedPaymentRequest = {
       paymentRequestId: 1,
@@ -111,6 +110,7 @@ describe('get various components and transform to payment schedule object', () =
     getInProgressPaymentRequest.mockResolvedValue(paymentRequest)
     getPreviousPaymentRequests.mockResolvedValue([paymentRequest])
     mapPaymentRequest.mockReturnValue(mappedPaymentRequest)
+    getScheduleSupportingSettlements.mockResolvedValue([settlement])
     getCalculation.mockResolvedValue(mappedCalculation)
     getDetails.mockResolvedValue(details)
     getAddress.mockResolvedValue(address)
