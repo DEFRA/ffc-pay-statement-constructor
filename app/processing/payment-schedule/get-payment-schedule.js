@@ -1,7 +1,7 @@
 const db = require('../../data')
-const { getInProgressPaymentRequest, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId } = require('../payment-request')
+const { getInProgressPaymentRequest, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId, mapPaymentRequest } = require('../payment-request')
 const getCalculation = require('../calculation')
-const { getDetails, getAddress, getScheme } = require('../components')
+const { getDetails, getAddress, getScheme, getSchedule, getAdjustment } = require('../components')
 const { calculatePaymentSchedule } = require('../payment')
 const { getScheduleSupportingSettlements } = require('../settlement')
 
@@ -34,42 +34,6 @@ const getPaymentSchedule = async (paymentRequestId) => {
   } catch (err) {
     await transaction.rollback()
     throw new Error(`Payment request with paymentRequestId: ${paymentRequestId} does not have the required data: ${err.message}`)
-  }
-}
-
-const { convertToPounds } = require('../../utility')
-const mapPaymentRequest = require('../payment-request/map-payment-request')
-
-const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
-  if (previousPaymentSchedule.every(x => x.outstanding)) {
-    return mapSchedule(newPaymentSchedule)
-  }
-
-  const paidSegments = previousPaymentSchedule.filter(x => !x.outstanding)
-  paidSegments.push({
-    period: 'Adjustment',
-    value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
-  })
-  newPaymentSchedule.splice(0, paidSegments.length - 1)
-  const schedule = paidSegments.concat(newPaymentSchedule)
-
-  return mapSchedule(schedule)
-}
-
-const mapSchedule = (schedule) => {
-  return schedule.map((segment, i) => ({
-    order: i + 1,
-    dueDate: segment.dueDate?.format('DD/MM/YYYY'),
-    period: segment.period,
-    value: convertToPounds(segment.value)
-  }))
-}
-
-const getAdjustment = (previousValue, newValue, adjustmentValue) => {
-  return {
-    currentValue: convertToPounds(previousValue),
-    newValue: convertToPounds(newValue),
-    adjustmentValue: convertToPounds(adjustmentValue)
   }
 }
 
