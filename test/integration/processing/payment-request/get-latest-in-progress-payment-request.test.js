@@ -87,7 +87,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -108,7 +109,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: null,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -129,7 +131,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: null,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -150,7 +153,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -171,7 +175,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -250,7 +255,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -274,7 +280,8 @@ describe('get latest in progress payment request', () => {
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
       schedule: topUpInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: topUpInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -309,7 +316,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -331,7 +339,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -356,7 +365,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -380,7 +390,8 @@ describe('get latest in progress payment request', () => {
       value: downwardAdjustmentInProgressPaymentRequest.value,
       year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
       schedule: downwardAdjustmentInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: downwardAdjustmentInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -414,7 +425,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -437,7 +449,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -463,7 +476,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -487,7 +501,8 @@ describe('get latest in progress payment request', () => {
       value: recoveryInProgressPaymentRequest.value,
       year: recoveryInProgressPaymentRequest.marketingYear,
       schedule: recoveryInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: recoveryInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -522,7 +537,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -551,7 +567,8 @@ describe('get latest in progress payment request', () => {
       value: splitInProgressPaymentRequest.value,
       year: splitInProgressPaymentRequest.marketingYear,
       schedule: splitInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: splitInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -593,7 +610,8 @@ describe('get latest in progress payment request', () => {
       value: paymentRequestInProgress.value,
       year: paymentRequestInProgress.marketingYear,
       schedule: paymentRequestInProgress.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: paymentRequestInProgress.paymentRequestNumber
     })
   })
 
@@ -635,7 +653,8 @@ describe('get latest in progress payment request', () => {
       value: secondTopUpInProgressPaymentRequest.value,
       year: secondTopUpInProgressPaymentRequest.marketingYear,
       schedule: secondTopUpInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: secondTopUpInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -669,7 +688,8 @@ describe('get latest in progress payment request', () => {
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
       schedule: topUpInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: topUpInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -710,7 +730,8 @@ describe('get latest in progress payment request', () => {
       value: downwardAdjustmentInProgressPaymentRequest.value,
       year: downwardAdjustmentInProgressPaymentRequest.marketingYear,
       schedule: downwardAdjustmentInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: downwardAdjustmentInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -751,7 +772,8 @@ describe('get latest in progress payment request', () => {
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
       schedule: topUpInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: topUpInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -803,7 +825,8 @@ describe('get latest in progress payment request', () => {
       value: splitInProgressPaymentRequest.value,
       year: splitInProgressPaymentRequest.marketingYear,
       schedule: splitInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: splitInProgressPaymentRequest.paymentRequestNumber
     })
   })
 
@@ -844,7 +867,8 @@ describe('get latest in progress payment request', () => {
       value: topUpInProgressPaymentRequest.value,
       year: topUpInProgressPaymentRequest.marketingYear,
       schedule: topUpInProgressPaymentRequest.schedule,
-      originalValue: paymentRequestInProgress.value
+      originalValue: paymentRequestInProgress.value,
+      paymentRequestNumber: topUpInProgressPaymentRequest.paymentRequestNumber
     })
   })
 })

@@ -1,3 +1,22 @@
+const mockCommit = jest.fn()
+const mockRollback = jest.fn()
+const mockTransaction = {
+  commit: mockCommit,
+  rollback: mockRollback
+}
+
+jest.mock('../../../app/data', () => {
+  return {
+    ...jest.requireActual('../../../app/data'),
+    sequelize:
+       {
+         transaction: jest.fn().mockImplementation(() => {
+           return { ...mockTransaction }
+         })
+       }
+  }
+})
+
 jest.mock('../../../../app/processing/calculation/get-calculation')
 const getCalculation = require('../../../../app/processing/calculation/get-calculation')
 
@@ -20,24 +39,6 @@ const {
 
 const { getPaymentSchedule } = require('../../../../app/processing/payment-schedule')
 const { NAMES } = require('../../../../app/constants/schedules')
-
-const mockCommit = jest.fn()
-const mockRollback = jest.fn()
-const mockTransaction = {
-  commit: mockCommit,
-  rollback: mockRollback
-}
-
-jest.mock('../../../../app/data', () => {
-  return {
-    sequelize:
-       {
-         transaction: jest.fn().mockImplementation(() => {
-           return { ...mockTransaction }
-         })
-       }
-  }
-})
 
 let paymentRequest
 let calculation
@@ -108,7 +109,7 @@ describe('get various components and transform to payment schedule object', () =
 
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(paymentRequest)
     getInProgressPaymentRequest.mockResolvedValue(paymentRequest)
-    getPreviousPaymentRequests.mockResolvedValue(paymentRequest)
+    getPreviousPaymentRequests.mockResolvedValue([paymentRequest])
     mapPaymentRequest.mockReturnValue(mappedPaymentRequest)
     getCalculation.mockResolvedValue(mappedCalculation)
     getDetails.mockResolvedValue(details)
@@ -130,7 +131,7 @@ describe('get various components and transform to payment schedule object', () =
 
   test('should call getCompletedPaymentRequestByPaymentRequestId with paymentRequestId and transaction', async () => {
     const paymentRequestId = 1
-    await getPaymentSchedule(paymentRequestId, mockTransaction)
+    await getPaymentSchedule(paymentRequestId)
     expect(getCompletedPaymentRequestByPaymentRequestId).toHaveBeenCalledWith(paymentRequestId, mockTransaction)
   })
 
@@ -142,7 +143,7 @@ describe('get various components and transform to payment schedule object', () =
 
   test('should call getInProgressPaymentRequest with correlationId and transaction', async () => {
     const paymentRequestId = 1
-    await getPaymentSchedule(paymentRequestId, mockTransaction)
+    await getPaymentSchedule(paymentRequestId)
     expect(getInProgressPaymentRequest).toHaveBeenCalledWith(paymentRequest.correlationId, mockTransaction)
   })
 

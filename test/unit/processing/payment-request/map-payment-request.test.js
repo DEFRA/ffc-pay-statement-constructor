@@ -17,7 +17,8 @@ describe('map required payment request information for building a statement obje
       marketingYear: paymentRequest.marketingYear,
       value: paymentRequest.value,
       schedule: paymentRequest.schedule,
-      originalValue: paymentRequest.value
+      originalValue: paymentRequest.value,
+      paymentRequestNumber: paymentRequest.paymentRequestNumber
     }
 
     mappedPaymentRequest = {
@@ -29,7 +30,8 @@ describe('map required payment request information for building a statement obje
       value: retrievedPaymentRequest.value,
       year: retrievedPaymentRequest.marketingYear,
       schedule: retrievedPaymentRequest.schedule,
-      originalValue: retrievedPaymentRequest.originalValue
+      originalValue: retrievedPaymentRequest.originalValue,
+      paymentRequestNumber: retrievedPaymentRequest.paymentRequestNumber
     }
   })
 
@@ -37,26 +39,26 @@ describe('map required payment request information for building a statement obje
     jest.clearAllMocks()
   })
 
-  test('should return mappedPaymentRequest when a valid paymentRequest is given', async () => {
-    const result = await mapPaymentRequest(retrievedPaymentRequest)
+  test('should return mappedPaymentRequest when a valid paymentRequest is given', () => {
+    const result = mapPaymentRequest(retrievedPaymentRequest)
     expect(result).toStrictEqual(mappedPaymentRequest)
   })
 
-  test('should return mappedPaymentRequest with default frequency when a paymentRequest with no schedule is given', async () => {
+  test('should return mappedPaymentRequest with default frequency when a paymentRequest with no schedule is given', () => {
     delete retrievedPaymentRequest.schedule
-    const result = await mapPaymentRequest(retrievedPaymentRequest)
+    const result = mapPaymentRequest(retrievedPaymentRequest)
     expect(result).toStrictEqual({ ...mappedPaymentRequest, schedule: undefined, frequency: SCHEDULE_NAMES.N0 })
   })
 
-  test('should return mappedPaymentRequest with default frequency when a paymentRequest with an unrecognised schedule is given', async () => {
+  test('should return mappedPaymentRequest with default frequency when a paymentRequest with an unrecognised schedule is given', () => {
     retrievedPaymentRequest.schedule = 'NR'
-    const result = await mapPaymentRequest(retrievedPaymentRequest)
+    const result = mapPaymentRequest(retrievedPaymentRequest)
     expect(result).toStrictEqual({ ...mappedPaymentRequest, schedule: 'NR', frequency: SCHEDULE_NAMES.N0 })
   })
 
-  test('should return undefined object with default frequency when an empty object is given', async () => {
+  test('should return undefined object with default frequency when an empty object is given', () => {
     const undefinedMappedPaymentRequest = Object.keys(mappedPaymentRequest).reduce((o, k) => ({ ...o, [k]: undefined }), {})
-    const result = await mapPaymentRequest({})
+    const result = mapPaymentRequest({})
     expect(result).toStrictEqual({ ...undefinedMappedPaymentRequest, frequency: SCHEDULE_NAMES.N0 })
   })
 })
