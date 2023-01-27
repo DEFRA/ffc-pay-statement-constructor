@@ -1,10 +1,10 @@
-jest.mock('../../../../../app/processing/funding')
-const mockFunding = require('../../../../../app/processing/funding')
+jest.mock('../../../../app/processing/funding')
+const mockFunding = require('../../../../app/processing/funding')
 
-jest.mock('../../../../../app/processing/invoice-line')
-const mockInvoiceLine = require('../../../../../app/processing/invoice-line')
+jest.mock('../../../../app/processing/invoice-line')
+const mockInvoiceLine = require('../../../../app/processing/invoice-line')
 
-const getDetailedFunding = require('../../../../../app/processing/components/get-detailed-funding')
+const getDetailedFunding = require('../../../../app/processing/components/get-detailed-funding')
 
 let fundings
 let mappedFundings
@@ -12,7 +12,7 @@ let invoiceLine
 
 describe('get detailed funding', () => {
   beforeEach(() => {
-    fundings = JSON.parse(JSON.stringify(require('../../../../mock-objects/mock-fundings')))
+    fundings = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings')))
 
     mappedFundings = [
       {
