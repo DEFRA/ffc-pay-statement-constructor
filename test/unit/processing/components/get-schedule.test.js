@@ -103,6 +103,16 @@ describe('get schedule', () => {
     expect(schedule[2].value).toEqual('250.00')
   })
 
+  test('should insert top up as last scheduled item no remaining payments', () => {
+    previousPaymentSchedule.forEach(x => { x.outstanding = false })
+    const schedule = getSchedule(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
+    expect(schedule[0].value).toEqual('250.00')
+    expect(schedule[1].value).toEqual('250.00')
+    expect(schedule[2].value).toEqual('250.00')
+    expect(schedule[3].value).toEqual('250.00')
+    expect(schedule[4].value).toEqual('500.00')
+  })
+
   test('should not insert adjustment into schedule if reduction', () => {
     deltaValue = -25000
     const schedule = getSchedule(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
