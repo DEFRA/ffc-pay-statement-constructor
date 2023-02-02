@@ -6,11 +6,18 @@ const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) =>
   }
 
   const paidSegments = previousPaymentSchedule.filter(x => !x.outstanding)
-  paidSegments.push({
-    period: 'Adjustment',
-    value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
-  })
-  newPaymentSchedule.splice(0, paidSegments.length - 1)
+  newPaymentSchedule.splice(0, paidSegments.length)
+  if (deltaValue < 0) {
+    const correctionValue = (Math.abs(deltaValue) / newPaymentSchedule.length) / paidSegments.length
+    newPaymentSchedule.forEach(x => { x.value = x.value - correctionValue })
+  }
+  if (deltaValue > 0) {
+    paidSegments.push({
+      period: 'Adjustment',
+      value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
+    })
+  }
+
   const schedule = paidSegments.concat(newPaymentSchedule)
 
   return mapSchedule(schedule)

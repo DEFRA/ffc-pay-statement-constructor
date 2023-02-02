@@ -46,7 +46,7 @@ let retrievedPaymentSchedule
 describe('start processing', () => {
   beforeEach(() => {
     processingConfig.settlementProcessingInterval = 10000
-    processingConfig.constructionActive = true
+    processingConfig.statementConstructionActive = true
     processingConfig.scheduleConstructionActive = true
     const schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule').STATEMENT))
     retrievedSchedule = {
@@ -88,7 +88,7 @@ describe('start processing', () => {
   })
 
   test('should not call schedulePendingSettlements if construction not active', async () => {
-    processingConfig.constructionActive = false
+    processingConfig.statementConstructionActive = false
     await processing.start()
     expect(schedulePendingSettlements).not.toHaveBeenCalled()
   })
@@ -110,13 +110,13 @@ describe('start processing', () => {
   })
 
   test('should call setTimeout if construction is active', async () => {
-    processingConfig.constructionActive = true
+    processingConfig.statementConstructionActive = true
     await processing.start()
     expect(setTimeout).toHaveBeenCalled()
   })
 
   test('should call setTimeout if construction is not active', async () => {
-    processingConfig.constructionActive = false
+    processingConfig.statementConstructionActive = false
     await processing.start()
     expect(setTimeout).toHaveBeenCalled()
   })
@@ -145,7 +145,7 @@ describe('start processing', () => {
   })
 
   test('should call waitForIdleMessaging once if construction not active and schedule construction active', async () => {
-    processingConfig.constructionActive = false
+    processingConfig.statementConstructionActive = false
     await processing.start()
     expect(waitForIdleMessaging).toHaveBeenCalledTimes(1)
   })
@@ -354,7 +354,7 @@ describe('start processing', () => {
   })
 
   test('should call updateScheduleByScheduleId once when schedulePendingSettlements and schedulePendingPaymentSchedules both return 1 record and construction not active', async () => {
-    processingConfig.constructionActive = false
+    processingConfig.statementConstructionActive = false
     await processing.start()
     expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(1)
   })
