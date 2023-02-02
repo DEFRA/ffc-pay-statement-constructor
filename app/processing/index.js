@@ -5,7 +5,7 @@ const processStatements = require('./process-statements')
 
 const start = async () => {
   try {
-    if (processingConfig.constructionActive) {
+    if (processingConfig.statementConstructionActive) {
       await waitForIdleMessaging()
       await processStatements()
     }
