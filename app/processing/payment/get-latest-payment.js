@@ -1,5 +1,5 @@
 const moment = require('moment')
-const getPaymentSchedule = require('./get-payment-schedule')
+const getScheduledPayments = require('./get-scheduled-payments')
 const validateLatestPayment = require('./validate-latest-payment')
 
 const getLatestPayment = (paymentRequest, settlement, supportingSettlements) => {
@@ -11,7 +11,7 @@ const getLatestPayment = (paymentRequest, settlement, supportingSettlements) => 
     dueDate: paymentRequest.dueDate,
     value: adjustedPaymentValue,
     period: paymentRequest.schedule
-      ? getPaymentSchedule(paymentRequest.schedule, paymentRequest.dueDate, settlement.paymentValue, settlement.value, settlement.lastSettlementValue, paymentRequest.originalValue, settlement.settlementDate)
+      ? getScheduledPayments(paymentRequest.schedule, paymentRequest.dueDate, settlement.paymentValue, settlement.value, settlement.lastSettlementValue, paymentRequest.originalValue, settlement.settlementDate)
       : `${moment(paymentRequest.dueDate).format('MMMM YYYY')}`
   }
 
