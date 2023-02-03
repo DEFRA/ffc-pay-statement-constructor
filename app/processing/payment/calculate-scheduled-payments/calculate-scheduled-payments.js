@@ -3,7 +3,7 @@ const { DAX_CODES } = require('../../../constants/schedules')
 const getSchedule = require('./get-schedule')
 const getSettledValue = require('./get-settlement-value')
 
-const calculatePaymentSchedule = (paymentRequest, previousSettlements = [], previousValue = 0, currentDate = new Date()) => {
+const calculateScheduledPayments = (paymentRequest, previousSettlements = [], previousValue = 0, currentDate = new Date()) => {
   const settledValue = getSettledValue(previousSettlements)
   const totalValue = previousValue === 0 ? paymentRequest.value : previousValue
 
@@ -21,4 +21,4 @@ const calculatePaymentSchedule = (paymentRequest, previousSettlements = [], prev
   }
 }
 
-module.exports = calculatePaymentSchedule
+module.exports = calculateScheduledPayments
