@@ -13,7 +13,8 @@ const mapPaymentRequest = (paymentRequest) => {
     value: paymentRequest.value,
     year,
     schedule: paymentRequest.schedule,
-    originalValue: paymentRequest.originalValue
+    originalValue: paymentRequest.originalValue,
+    paymentRequestNumber: paymentRequest.paymentRequestNumber
   }
 }
 

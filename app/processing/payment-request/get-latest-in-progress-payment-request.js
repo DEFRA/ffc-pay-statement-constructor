@@ -4,7 +4,7 @@ const getLatestCompletedPaymentRequest = require('./get-latest-completed-payment
 const validatePaymentRequest = require('./validate-payment-request')
 const mapPaymentRequest = require('./map-payment-request')
 
-const getPaymentRequest = async (paymentRequestId, settlementDate, transaction) => {
+const getLatestInProgressPaymentRequest = async (paymentRequestId, settlementDate, transaction) => {
   const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
   const inProgressPaymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.correlationId, transaction)
   const latestCompletedPaymentRequest = await getLatestCompletedPaymentRequest(settlementDate, completedPaymentRequest.agreementNumber, completedPaymentRequest.marketingYear, transaction)
@@ -13,4 +13,4 @@ const getPaymentRequest = async (paymentRequestId, settlementDate, transaction) 
   return mapPaymentRequest(validatePaymentRequest(latestInProgressPaymentRequest))
 }
 
-module.exports = getPaymentRequest
+module.exports = getLatestInProgressPaymentRequest

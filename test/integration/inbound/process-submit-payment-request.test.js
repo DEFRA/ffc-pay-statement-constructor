@@ -12,6 +12,7 @@ const { COMPLETED } = require('../../../app/constants/statuses')
 
 const { reverseEngineerInvoiceNumber } = require('../../../app/utility')
 const processSubmitPaymentRequest = require('../../../app/inbound/submit')
+const { SCHEDULE } = require('../../../app/constants/categories')
 
 let paymentRequest
 
@@ -531,5 +532,88 @@ describe('process submit payment request', () => {
 
     const result = await db.paymentRequest.findOne({ where: { referenceId: paymentRequest.referenceId } })
     expect(result.frn).toBe(paymentRequest.frn.toString())
+  })
+
+  test('should not save entry in schedule table when first payment', async () => {
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should not save entry in schedule table when payment request has no schedule', async () => {
+    delete paymentRequest.schedule
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should not save entry in schedule table when payment request has null schedule', async () => {
+    paymentRequest.schedule = null
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should not save entry in schedule table when payment request has undefined schedule', async () => {
+    paymentRequest.schedule = undefined
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should save entry in schedule table when paymentRequestNumber greater than 1', async () => {
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(1)
+  })
+
+  test('should save entry in schedule table when paymentRequestNumber greater than 1 with null start date', async () => {
+    paymentRequest.paymentRequestNumber = 2
+    paymentRequest.startDate = ''
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1, started: null } })
+    expect(result).toBe(1)
+  })
+
+  test('should save entry in schedule table when paymentRequestNumber greater than 1 with null completed date', async () => {
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1, completed: null } })
+    expect(result).toBe(1)
+  })
+
+  test('should save entry in schedule table when paymentRequestNumber greater than 1 with schedule category', async () => {
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1, category: SCHEDULE } })
+    expect(result).toBe(1)
+  })
+
+  test('should save entry in schedule table when paymentRequestNumber greater than 1 with null settlementId', async () => {
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1, settlementId: null } })
+    expect(result).toBe(1)
   })
 })
