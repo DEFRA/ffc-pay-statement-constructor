@@ -1,4 +1,4 @@
-const calculateScheduledPayments = require('./calculate-payment-schedule')
+const calculateScheduledPayments = require('./calculate-scheduled-payments')
 
 module.exports = {
   calculateScheduledPayments
