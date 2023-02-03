@@ -1,7 +1,7 @@
 const getLatestPayment = require('./get-latest-payment')
-const { calculatePaymentSchedule } = require('./calculate-payment-schedule')
+const { calculateScheduledPayments } = require('./calculate-scheduled-payments')
 
 module.exports = {
   getLatestPayment,
-  calculatePaymentSchedule
+  calculateScheduledPayments
 }

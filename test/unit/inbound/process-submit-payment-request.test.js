@@ -142,28 +142,28 @@ describe('process submit payment request', () => {
     expect(saveSchedule).not.toHaveBeenCalled()
   })
 
-  test('should call saveSchedule when a valid paymentRequest is valid post payment adjustment and value is greater less than 0', async () => {
+  test('should call saveSchedule when paymentRequest is valid post payment adjustment and value is greater less than 0', async () => {
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = -1
     await processSubmitPaymentRequest(paymentRequest)
     expect(saveSchedule).toHaveBeenCalled()
   })
 
-  test('should call saveSchedule when a valid paymentRequest is valid post payment adjustment and value is greater than 0', async () => {
+  test('should call saveSchedule when paymentRequest is valid post payment adjustment and value is greater than 0', async () => {
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = 1
     await processSubmitPaymentRequest(paymentRequest)
     expect(saveSchedule).toHaveBeenCalled()
   })
 
-  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and value is equal to 0', async () => {
+  test('should not call saveSchedule when paymentRequest is valid post payment adjustment and value is equal to 0', async () => {
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.value = 0
     await processSubmitPaymentRequest(paymentRequest)
     expect(saveSchedule).not.toHaveBeenCalled()
   })
 
-  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and no schedule', async () => {
+  test('should not call saveSchedule when paymentRequest is valid post payment adjustment and no schedule', async () => {
     paymentRequest.paymentRequestNumber = 2
     delete paymentRequest.schedule
 
@@ -171,7 +171,7 @@ describe('process submit payment request', () => {
     expect(saveSchedule).not.toHaveBeenCalled()
   })
 
-  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and schedule is empty', async () => {
+  test('should not call saveSchedule when paymentRequest is valid post payment adjustment and schedule is empty', async () => {
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.schedule = ''
 
@@ -179,7 +179,7 @@ describe('process submit payment request', () => {
     expect(saveSchedule).not.toHaveBeenCalled()
   })
 
-  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and schedule is null', async () => {
+  test('should not call saveSchedule when paymentRequest is valid post payment adjustment and schedule is null', async () => {
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.schedule = null
 
@@ -187,7 +187,7 @@ describe('process submit payment request', () => {
     expect(saveSchedule).not.toHaveBeenCalled()
   })
 
-  test('should not call saveSchedule when a valid paymentRequest is valid post payment adjustment and schedule is undefined', async () => {
+  test('should not call saveSchedule when paymentRequest is valid post payment adjustment and schedule is undefined', async () => {
     paymentRequest.paymentRequestNumber = 2
     paymentRequest.schedule = undefined
 

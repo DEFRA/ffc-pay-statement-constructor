@@ -41,7 +41,11 @@ container:
   dataSubscriptionAddress: ffc-pay-statement-constructor
   statementTopicAddress: ffc-pay-statements
   settlementProcessingInterval: 60000
+<<<<<<< HEAD
   constructionActive: true
+=======
+  statementConstructionActive: true
+>>>>>>> origin/main
   scheduleConstructionActive: true
   idleCheckBatchSize: 250
   idleCheckMaxDeliveryCount: 1 
