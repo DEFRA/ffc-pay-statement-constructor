@@ -13,6 +13,7 @@ const { COMPLETED } = require('../../../app/constants/statuses')
 const { reverseEngineerInvoiceNumber } = require('../../../app/utility')
 const processSubmitPaymentRequest = require('../../../app/inbound/submit')
 const { SCHEDULE } = require('../../../app/constants/categories')
+const {AR} = require('../../../app/constants/ledgers')
 
 let paymentRequest
 
@@ -553,6 +554,16 @@ describe('process submit payment request', () => {
 
   test('should not save entry in schedule table when payment request has null schedule', async () => {
     paymentRequest.schedule = null
+    paymentRequest.paymentRequestNumber = 2
+
+    await processSubmitPaymentRequest(paymentRequest)
+
+    const result = await db.schedule.count({ where: { paymentRequestId: 1 } })
+    expect(result).toBe(0)
+  })
+
+  test('should not save entry in schedule table when payment request is not AP', async () => {
+    paymentRequest.ledger = AR
     paymentRequest.paymentRequestNumber = 2
 
     await processSubmitPaymentRequest(paymentRequest)
