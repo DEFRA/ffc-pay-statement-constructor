@@ -13,7 +13,7 @@ const { COMPLETED } = require('../../../app/constants/statuses')
 const { reverseEngineerInvoiceNumber } = require('../../../app/utility')
 const processSubmitPaymentRequest = require('../../../app/inbound/submit')
 const { SCHEDULE } = require('../../../app/constants/categories')
-const {AR} = require('../../../app/constants/ledgers')
+const { AR } = require('../../../app/constants/ledgers')
 
 let paymentRequest
 
