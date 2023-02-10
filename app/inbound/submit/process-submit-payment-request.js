@@ -7,9 +7,7 @@ const saveInvoiceNumber = require('../save-invoice-number')
 const savePaymentRequest = require('../save-payment-request')
 const saveInvoiceLines = require('../save-invoice-lines')
 const saveSchedule = require('./save-schedule')
-const isFirstPayment = require('./is-first-payment')
-const hasValue = require('./has-value')
-const { AP } = require('../../constants/ledgers')
+const shouldTriggerPaymentSchedule = require('./should-trigger-payment-schedule')
 
 const processSubmitPaymentRequest = async (paymentRequest) => {
   const transaction = await db.sequelize.transaction()
@@ -23,7 +21,7 @@ const processSubmitPaymentRequest = async (paymentRequest) => {
       await saveInvoiceNumber(paymentRequest.invoiceNumber, transaction)
       const savedPaymentRequest = await savePaymentRequest({ ...paymentRequest, status: COMPLETED }, transaction)
       await saveInvoiceLines(paymentRequest.invoiceLines, savedPaymentRequest.paymentRequestId, transaction)
-      if (paymentRequest.schedule && !isFirstPayment(paymentRequest.paymentRequestNumber) && hasValue(paymentRequest.value) && paymentRequest.ledger === AP) {
+      if (shouldTriggerPaymentSchedule(paymentRequest)) {
         await saveSchedule(savedPaymentRequest.paymentRequestId, transaction)
       }
       await transaction.commit()
