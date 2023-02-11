@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     paymentRequestId: DataTypes.INTEGER,
     category: DataTypes.STRING,
     completed: DataTypes.DATE,
-    started: DataTypes.DATE
+    started: DataTypes.DATE,
+    voided: DataTypes.DATE
   },
   {
     tableName: 'schedules',
