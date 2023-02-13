@@ -26,7 +26,7 @@ data:
   POSTGRES_PORT: {{ quote .Values.postgresService.postgresPort }}
   POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
   SETTLEMENT_PROCESSING_INTERVAL: {{ quote .Values.container.settlementProcessingInterval }}
-  CONSTRUCTION_ACTIVE: {{ quote .Values.container.statementConstructionActive }}
+  STATEMENT_CONSTRUCTION_ACTIVE: {{ quote .Values.container.statementConstructionActive }}
   SCHEDULE_CONSTRUCTION_ACTIVE: {{ quote .Values.container.scheduleConstructionActive }}
   IDLE_CHECK_BATCH_SIZE: {{ quote .Values.container.idleCheckBatchSize }}
   IDLE_CHECK_MAX_DELIVERY_COUNT: {{ quote .Values.container.idleCheckMaxDeliveryCount }}
