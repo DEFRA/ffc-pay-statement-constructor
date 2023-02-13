@@ -1,6 +1,6 @@
 const { convertToPounds } = require('../../utility')
 
-const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
+const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
   if (previousPaymentSchedule.every(x => x.outstanding)) {
     return mapSchedule(newPaymentSchedule)
   }
@@ -33,4 +33,4 @@ const mapSchedule = (schedule) => {
   }))
 }
 
-module.exports = getSchedule
+module.exports = getScheduleDates
