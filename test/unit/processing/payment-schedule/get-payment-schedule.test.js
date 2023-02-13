@@ -18,6 +18,7 @@ jest.mock('../../../../app/processing/payment-request')
 const {
   getInProgressPaymentRequest,
   getPreviousPaymentRequests,
+  getPreviousPaymentRequestsWithSchedules,
   getCompletedPaymentRequestByPaymentRequestId,
   mapPaymentRequest
 } = require('../../../../app/processing/payment-request')
@@ -109,6 +110,7 @@ describe('get various components and transform to payment schedule object', () =
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(paymentRequest)
     getInProgressPaymentRequest.mockResolvedValue(paymentRequest)
     getPreviousPaymentRequests.mockResolvedValue([paymentRequest])
+    getPreviousPaymentRequestsWithSchedules.mockResolvedValue([paymentRequest])
     mapPaymentRequest.mockReturnValue(mappedPaymentRequest)
     getScheduleSupportingSettlements.mockResolvedValue([settlement])
     getCalculation.mockResolvedValue(mappedCalculation)
