@@ -3,7 +3,7 @@ const getDetails = require('./get-details')
 const getDetailedFunding = require('./get-detailed-funding')
 const getScheme = require('./get-scheme')
 const getDetailedPayments = require('./get-detailed-payments')
-const getSchedule = require('./get-schedule')
+const getScheduleDates = require('./get-schedule-dates')
 const getAdjustment = require('./get-adjustment')
 
 module.exports = {
@@ -12,6 +12,6 @@ module.exports = {
   getDetails,
   getDetailedPayments,
   getScheme,
-  getSchedule,
+  getScheduleDates,
   getAdjustment
 }

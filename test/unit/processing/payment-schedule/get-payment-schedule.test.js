@@ -31,7 +31,7 @@ const {
   getAddress,
   getDetails,
   getScheme,
-  getSchedule,
+  getScheduleDates,
   getAdjustment
 } = require('../../../../app/processing/components')
 
@@ -117,7 +117,7 @@ describe('get various components and transform to payment schedule object', () =
     getDetails.mockResolvedValue(details)
     getAddress.mockResolvedValue(address)
     getScheme.mockResolvedValue(scheme)
-    getSchedule.mockResolvedValue(schedule)
+    getScheduleDates.mockResolvedValue(schedule)
     getAdjustment.mockResolvedValue(adjustment)
   })
 
@@ -206,6 +206,6 @@ describe('get various components and transform to payment schedule object', () =
   test('should call getSchedule when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentSchedule(paymentRequestId)
-    expect(getSchedule).toHaveBeenCalled()
+    expect(getScheduleDates).toHaveBeenCalled()
   })
 })
