@@ -270,6 +270,24 @@ describe('batch schedule', () => {
     expect(result).toStrictEqual([])
   })
 
+  test('should call mockTransaction.rollback when getDefunctScheduledSettlements throws', async () => {
+    getRemovedDefunctPaymentSchedules.mockRejectedValue(new Error('Database retrieval issue'))
+    await schedulePendingPaymentSchedules()
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
+
+  test('should call mockTransaction.rollback once when getDefunctScheduledSettlements throws', async () => {
+    getRemovedDefunctPaymentSchedules.mockRejectedValue(new Error('Database retrieval issue'))
+    await schedulePendingPaymentSchedules()
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
+
+  test('should not call mockTransaction.commit when getDefunctScheduledSettlements throws', async () => {
+    getRemovedDefunctPaymentSchedules.mockRejectedValue(new Error('Database retrieval issue'))
+    await schedulePendingPaymentSchedules()
+    expect(mockTransaction.commit).not.toHaveBeenCalled()
+  })
+
   test('should not throw when mockTransaction.commit throws', async () => {
     mockTransaction.commit.mockRejectedValue(new Error('Sequelize transaction commit issue'))
 
