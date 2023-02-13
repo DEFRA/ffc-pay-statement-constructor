@@ -1,5 +1,5 @@
 const db = require('../../data')
-const { getInProgressPaymentRequest, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId, mapPaymentRequest, getPreviousPaymentRequestsWithSchedules } = require('../payment-request')
+const { getInProgressPaymentRequest, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId, mapPaymentRequest, getPreviousPaymentRequestsWithPaymentSchedules } = require('../payment-request')
 const getCalculation = require('../calculation')
 const { getDetails, getAddress, getScheme, getScheduleDates, getAdjustment } = require('../components')
 const { calculateScheduledPayments, calculateDelta } = require('../payment')
@@ -12,7 +12,7 @@ const getPaymentSchedule = async (paymentRequestId) => {
     const paymentRequest = await getInProgressPaymentRequest(completedPaymentRequest.correlationId, transaction)
     const mappedPaymentRequest = mapPaymentRequest(paymentRequest)
     const previousPaymentRequests = await getPreviousPaymentRequests(mappedPaymentRequest.agreementNumber, mappedPaymentRequest.year, mappedPaymentRequest.paymentRequestNumber, transaction)
-    const previousPaymentRequestsWithSchedules = await getPreviousPaymentRequestsWithSchedules(previousPaymentRequests, transaction)
+    const previousPaymentRequestsWithSchedules = await getPreviousPaymentRequestsWithPaymentSchedules(previousPaymentRequests, transaction)
     const lastPaymentRequest = previousPaymentRequestsWithSchedules[0]
     const supportingSettlements = await getScheduleSupportingSettlements(previousPaymentRequests, transaction)
     const previousPaymentSchedule = calculateScheduledPayments(lastPaymentRequest, supportingSettlements, lastPaymentRequest.value)
