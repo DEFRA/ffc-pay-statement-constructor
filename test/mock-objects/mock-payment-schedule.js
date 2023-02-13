@@ -34,5 +34,10 @@ module.exports = {
     name: SFI_LONG_SCHEME_NAME,
     shortName: SFI_SHORT_SCHEME_NAME,
     year: _2022
+  },
+  adjustment: {
+    adjustmentValue: '500.00',
+    currentValue: '1000.00',
+    newValue: '1500.00'
   }
 }

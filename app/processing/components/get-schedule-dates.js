@@ -1,6 +1,6 @@
 const { convertToPounds } = require('../../utility')
 
-const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
+const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
   if (previousPaymentSchedule.every(x => x.outstanding)) {
     return mapSchedule(newPaymentSchedule)
   }
@@ -8,8 +8,9 @@ const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) =>
   const paidSegments = previousPaymentSchedule.filter(x => !x.outstanding)
   newPaymentSchedule.splice(0, paidSegments.length)
   if (deltaValue < 0) {
-    const correctionValue = (Math.abs(deltaValue) / newPaymentSchedule.length) / paidSegments.length
-    newPaymentSchedule.forEach(x => { x.value = x.value - correctionValue })
+    // we need to avoid a balloon reduction, so we spread the reduction for any paid segments across remaining segments only
+    const correctionValue = ((Math.abs(deltaValue) / previousPaymentSchedule.length) * paidSegments.length) / newPaymentSchedule.length
+    newPaymentSchedule.forEach(x => { x.value = x.value - correctionValue < 0 ? 0 : x.value - correctionValue })
   }
   if (deltaValue > 0) {
     paidSegments.push({
@@ -32,4 +33,4 @@ const mapSchedule = (schedule) => {
   }))
 }
 
-module.exports = getSchedule
+module.exports = getScheduleDates

@@ -44,7 +44,7 @@ container:
   statementConstructionActive: true
   scheduleConstructionActive: true
   idleCheckBatchSize: 250
-  idleCheckMaxDeliveryCount: 1 
+  idleCheckMaxDeliveryCount: 1
   idleCheckInterval: 60000
   settlementWaitTime: 600000
 

@@ -31,7 +31,7 @@ jest.mock('../../../app/processing/statement')
 const { getStatement, sendStatement, validateStatement } = require('../../../app/processing/statement')
 
 jest.mock('../../../app/processing/payment-schedule')
-const { getPaymentSchedule, sendPaymentSchedule } = require('../../../app/processing/payment-schedule')
+const { getPaymentSchedule, sendPaymentSchedule, validatePaymentSchedule } = require('../../../app/processing/payment-schedule')
 
 jest.mock('../../../app/processing/update-schedule-by-schedule-id')
 const updateScheduleByScheduleId = require('../../../app/processing/update-schedule-by-schedule-id')
@@ -68,6 +68,7 @@ describe('start processing', () => {
 
     schedulePendingPaymentSchedules.mockResolvedValue([retrievedPaymentSchedule])
     getPaymentSchedule.mockResolvedValue(paymentSchedule)
+    validatePaymentSchedule.mockReturnValue(true)
     sendPaymentSchedule.mockResolvedValue(undefined)
 
     updateScheduleByScheduleId.mockResolvedValue(undefined)
