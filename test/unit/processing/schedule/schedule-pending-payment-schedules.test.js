@@ -27,6 +27,9 @@ const getValidScheduled = require('../../../../app/processing/schedule/get-valid
 jest.mock('../../../../app/processing/schedule/get-updated-scheduled')
 const getUpdatedScheduled = require('../../../../app/processing/schedule/get-updated-scheduled')
 
+jest.mock('../../../../app/processing/schedule/get-removed-defunct-payment-schedules')
+const getRemovedDefunctPaymentSchedules = require('../../../../app/processing/schedule/get-removed-defunct-payment-schedules')
+
 const schedulePendingPaymentSchedules = require('../../../../app/processing/schedule/schedule-pending-payment-schedules')
 
 let retrievedSchedules
@@ -51,6 +54,7 @@ describe('batch schedule', () => {
     getScheduledPaymentSchedules.mockResolvedValue(retrievedSchedules)
     getValidScheduled.mockReturnValue(retrievedSchedules)
     getUpdatedScheduled.mockResolvedValue(retrievedSchedules)
+    getRemovedDefunctPaymentSchedules.mockResolvedValue(retrievedSchedules)
   })
 
   afterEach(() => {
