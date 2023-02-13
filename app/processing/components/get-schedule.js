@@ -8,6 +8,7 @@ const getSchedule = (previousPaymentSchedule, newPaymentSchedule, deltaValue) =>
   const paidSegments = previousPaymentSchedule.filter(x => !x.outstanding)
   newPaymentSchedule.splice(0, paidSegments.length)
   if (deltaValue < 0) {
+    // we need to avoid a balloon reduction, so we spread the reduction for any paid segments across remaining segments only
     const correctionValue = ((Math.abs(deltaValue) / previousPaymentSchedule.length) * paidSegments.length) / newPaymentSchedule.length
     newPaymentSchedule.forEach(x => { x.value = x.value - correctionValue < 0 ? 0 : x.value - correctionValue })
   }
