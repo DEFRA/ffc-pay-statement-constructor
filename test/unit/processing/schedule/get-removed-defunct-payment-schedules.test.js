@@ -45,8 +45,8 @@ describe('get removed defunct payment schedules', () => {
 
   test('should call hasLaterPaymentRequest with each retrievedSchedule when 2 retrievedSchedules', async () => {
     await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
-    expect(hasLaterPaymentRequest).toHaveBeenNthCalledWith(1, retrievedSchedules[0].paymentRequestId)
-    expect(hasLaterPaymentRequest).toHaveBeenNthCalledWith(2, retrievedSchedules[1].paymentRequestId)
+    expect(hasLaterPaymentRequest).toHaveBeenNthCalledWith(1, retrievedSchedules[0].paymentRequestId, transaction)
+    expect(hasLaterPaymentRequest).toHaveBeenNthCalledWith(2, retrievedSchedules[1].paymentRequestId, transaction)
   })
 
   test('should call voidScheduledByScheduleId once when 1 retrievedSchedule is defunct', async () => {
@@ -58,7 +58,7 @@ describe('get removed defunct payment schedules', () => {
   test('should call voidScheduledByScheduleId with the scheduleId of the defunct schedule', async () => {
     hasLaterPaymentRequest.mockResolvedValueOnce(true)
     await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
-    expect(voidScheduledByScheduleId).toHaveBeenCalledWith(retrievedSchedules[0].scheduleId, started)
+    expect(voidScheduledByScheduleId).toHaveBeenCalledWith(retrievedSchedules[0].scheduleId, started, transaction)
   })
 
   test('should call voidScheduledByScheduleId twice when 2 retrievedSchedules are defunct', async () => {
@@ -70,8 +70,8 @@ describe('get removed defunct payment schedules', () => {
   test('should call voidScheduledByScheduleId with the scheduleId of the defunct schedules', async () => {
     hasLaterPaymentRequest.mockResolvedValue(true)
     await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
-    expect(voidScheduledByScheduleId).toHaveBeenNthCalledWith(1, retrievedSchedules[0].scheduleId, started)
-    expect(voidScheduledByScheduleId).toHaveBeenNthCalledWith(2, retrievedSchedules[1].scheduleId, started)
+    expect(voidScheduledByScheduleId).toHaveBeenNthCalledWith(1, retrievedSchedules[0].scheduleId, started, transaction)
+    expect(voidScheduledByScheduleId).toHaveBeenNthCalledWith(2, retrievedSchedules[1].scheduleId, started, transaction)
   })
 
   test('should return both retrievedSchedules when both are valid', async () => {
@@ -83,5 +83,28 @@ describe('get removed defunct payment schedules', () => {
     hasLaterPaymentRequest.mockRejectedValueOnce(new Error('test error'))
     hasLaterPaymentRequest.mockRejectedValueOnce(new Error('test error'))
     await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
+  })
+
+  test('should not throw when hasLaterPaymentRequest throws', async () => {
+    hasLaterPaymentRequest.mockRejectedValueOnce(new Error('test error'))
+    await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
+  })
+
+  test('should not throw when voidScheduledByScheduleId throws', async () => {
+    hasLaterPaymentRequest.mockResolvedValue(true)
+    voidScheduledByScheduleId.mockRejectedValueOnce(new Error('test error'))
+    await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
+  })
+
+  test('should return the valid retrievedSchedule when 1 retrievedSchedule is defunct', async () => {
+    hasLaterPaymentRequest.mockResolvedValueOnce(true)
+    const result = await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
+    expect(result).toStrictEqual([retrievedSchedules[1]])
+  })
+
+  test('should return the valid retrievedSchedules when 2 retrievedSchedules are defunct', async () => {
+    hasLaterPaymentRequest.mockResolvedValue(true)
+    const result = await getRemovedDefunctPaymentSchedules(retrievedSchedules, started, transaction)
+    expect(result).toStrictEqual([])
   })
 })
