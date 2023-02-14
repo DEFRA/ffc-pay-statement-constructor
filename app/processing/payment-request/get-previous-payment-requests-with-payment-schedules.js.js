@@ -1,5 +1,5 @@
-const { COMPLETED } = require('../../constants/statuses')
-const db = require('../../data')
+const { getCompletedSchedule } = require('../schedule')
+const getCompletedPaymentRequestByCorrelationId = require('./get-completed-payment-request-by-correlation-id')
 
 const getPreviousPaymentRequestsWithPaymentSchedules = async (previousPaymentRequests, transaction) => {
   const previousPaymentRequestsWithSchedules = []
@@ -9,24 +9,9 @@ const getPreviousPaymentRequestsWithPaymentSchedules = async (previousPaymentReq
     if (paymentRequest.paymentRequestNumber === 1) {
       previousPaymentRequestsWithSchedules.push(paymentRequest)
     } else {
-      const completedPaymentRequest = await db.paymentRequest.findOne({
-        transaction,
-        where: {
-          correlationId: paymentRequest.correlationId,
-          status: COMPLETED
-        }
-      })
+      const completedPaymentRequest = await getCompletedPaymentRequestByCorrelationId(paymentRequest.correlationId, transaction)
       if (completedPaymentRequest) {
-        const completedSchedule = await db.schedule.findOne({
-          transaction,
-          where: {
-            paymentRequestId: completedPaymentRequest.paymentRequestId,
-            completed: {
-              [db.Sequelize.Op.ne]: null
-            },
-            voided: null
-          }
-        })
+        const completedSchedule = await getCompletedSchedule(completedPaymentRequest.paymentRequestId, transaction)
         if (completedSchedule) {
           previousPaymentRequestsWithSchedules.push(paymentRequest)
         }
