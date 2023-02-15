@@ -1,5 +1,5 @@
 const voidScheduledByScheduleId = require('./void-scheduled-by-schedule-id')
-const hasLaterPaymentRequest = require('../payment-request/has-later-payment-request')
+const { hasLaterPaymentRequest } = require('../payment-request')
 
 const getRemovedDefunctPaymentSchedules = async (schedules, started, transaction) => {
   const updatedScheduled = []
