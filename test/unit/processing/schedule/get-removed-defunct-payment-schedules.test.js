@@ -1,5 +1,5 @@
 jest.mock('../../../../app/processing/payment-request')
-const { hasLaterPaymentRequest } = require('../../../../app/processing/payment-request')
+const hasLaterPaymentRequest = require('../../../../app/processing/payment-request/has-later-payment-request')
 
 jest.mock('../../../../app/processing/schedule/void-scheduled-by-schedule-id')
 const voidScheduledByScheduleId = require('../../../../app/processing/schedule/void-scheduled-by-schedule-id')
