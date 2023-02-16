@@ -27,6 +27,9 @@ const getValidScheduled = require('../../../../app/processing/schedule/get-valid
 jest.mock('../../../../app/processing/schedule/get-updated-scheduled')
 const getUpdatedScheduled = require('../../../../app/processing/schedule/get-updated-scheduled')
 
+jest.mock('../../../../app/processing/schedule/get-removed-defunct-payment-schedules')
+const getRemovedDefunctPaymentSchedules = require('../../../../app/processing/schedule/get-removed-defunct-payment-schedules')
+
 const schedulePendingPaymentSchedules = require('../../../../app/processing/schedule/schedule-pending-payment-schedules')
 
 let retrievedSchedules
@@ -51,6 +54,7 @@ describe('batch schedule', () => {
     getScheduledPaymentSchedules.mockResolvedValue(retrievedSchedules)
     getValidScheduled.mockReturnValue(retrievedSchedules)
     getUpdatedScheduled.mockResolvedValue(retrievedSchedules)
+    getRemovedDefunctPaymentSchedules.mockResolvedValue(retrievedSchedules)
   })
 
   afterEach(() => {
@@ -100,6 +104,21 @@ describe('batch schedule', () => {
   test('should call getUpdatedScheduledSettlements with retrievedSchedules, new Date() and mockTransaction when getValidScheduledSettlements returns 2 valid schedule records', async () => {
     await schedulePendingPaymentSchedules()
     expect(getUpdatedScheduled).toHaveBeenCalledWith(retrievedSchedules, new Date(), mockTransaction)
+  })
+
+  test('should call getRemovedDefunctPaymentSchedules', async () => {
+    await schedulePendingPaymentSchedules()
+    expect(getRemovedDefunctPaymentSchedules).toHaveBeenCalled()
+  })
+
+  test('should call getRemovedDefunctPaymentSchedules once when getUpdatedScheduledSettlements returns 2 schedules', async () => {
+    await schedulePendingPaymentSchedules()
+    expect(getRemovedDefunctPaymentSchedules).toHaveBeenCalledTimes(1)
+  })
+
+  test('should call getRemovedDefunctPaymentSchedules with retrievedSchedules, new Date() and mockTransaction when getUpdatedScheduledSettlements returns 2 valid schedule records', async () => {
+    await schedulePendingPaymentSchedules()
+    expect(getRemovedDefunctPaymentSchedules).toHaveBeenCalledWith(retrievedSchedules, new Date(), mockTransaction)
   })
 
   test('should call mockTransaction.commit', async () => {
@@ -233,6 +252,8 @@ describe('batch schedule', () => {
       .mockRejectedValueOnce(new Error('Database update issue'))
       .mockResolvedValueOnce([retrievedSchedules[1]])
 
+    getRemovedDefunctPaymentSchedules.mockResolvedValueOnce([retrievedSchedules[1]])
+
     await schedulePendingPaymentSchedules()
     const result = await schedulePendingPaymentSchedules()
 
@@ -247,6 +268,24 @@ describe('batch schedule', () => {
     const result = await schedulePendingPaymentSchedules()
 
     expect(result).toStrictEqual([])
+  })
+
+  test('should call mockTransaction.rollback when getDefunctScheduledSettlements throws', async () => {
+    getRemovedDefunctPaymentSchedules.mockRejectedValue(new Error('Database retrieval issue'))
+    await schedulePendingPaymentSchedules()
+    expect(mockTransaction.rollback).toHaveBeenCalled()
+  })
+
+  test('should call mockTransaction.rollback once when getDefunctScheduledSettlements throws', async () => {
+    getRemovedDefunctPaymentSchedules.mockRejectedValue(new Error('Database retrieval issue'))
+    await schedulePendingPaymentSchedules()
+    expect(mockTransaction.rollback).toHaveBeenCalledTimes(1)
+  })
+
+  test('should not call mockTransaction.commit when getDefunctScheduledSettlements throws', async () => {
+    getRemovedDefunctPaymentSchedules.mockRejectedValue(new Error('Database retrieval issue'))
+    await schedulePendingPaymentSchedules()
+    expect(mockTransaction.commit).not.toHaveBeenCalled()
   })
 
   test('should not throw when mockTransaction.commit throws', async () => {
