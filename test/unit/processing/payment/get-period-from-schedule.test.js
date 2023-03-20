@@ -22,7 +22,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('October to December 2021')
+    expect(result).toBe('Oct-Dec 2021')
   })
 
   test('returns first instalment when only second paid and quarterly', () => {
@@ -38,7 +38,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('January to March 2022')
+    expect(result).toBe('Jan-Mar 2022')
   })
 
   test('returns first instalment when only third paid and quarterly', () => {
@@ -54,7 +54,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('April to June 2022')
+    expect(result).toBe('Apr-Jun 2022')
   })
 
   test('returns first instalment when only fourth paid and quarterly', () => {
@@ -70,7 +70,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('July to September 2022')
+    expect(result).toBe('Jul-Sep 2022')
   })
 
   test('returns first two instalments when first two paid and quarterly', () => {
@@ -86,7 +86,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('October to March 2022')
+    expect(result).toBe('Oct-Mar 2022')
   })
 
   test('returns first three instalments when first three paid and quarterly', () => {
@@ -102,7 +102,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('October to June 2022')
+    expect(result).toBe('Oct-Jun 2022')
   })
 
   test('returns first four instalments when first four paid and quarterly', () => {
@@ -118,7 +118,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('October to September 2022')
+    expect(result).toBe('Oct-Sep 2022')
   })
 
   test('returns second and third instalments when second and third paid and quarterly', () => {
@@ -134,7 +134,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('January to June 2022')
+    expect(result).toBe('Jan-Jun 2022')
   })
 
   test('returns second, third and fourth instalments when second, third and fourth paid and quarterly', () => {
@@ -150,7 +150,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('January to September 2022')
+    expect(result).toBe('Jan-Sep 2022')
   })
 
   test('returns third and fourth instalments when third and fourth paid and quarterly', () => {
@@ -166,7 +166,7 @@ describe('get period from schedule', () => {
     increment = 3
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('April to September 2022')
+    expect(result).toBe('Apr-Sep 2022')
   })
 
   test('returns first instalment when only second paid and monthly', () => {
@@ -190,7 +190,7 @@ describe('get period from schedule', () => {
     increment = 1
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('January to January 2022')
+    expect(result).toBe('Jan-Jan 2022')
   })
 
   test('returns third instalments when only third paid and monthly', () => {
@@ -214,7 +214,7 @@ describe('get period from schedule', () => {
     increment = 1
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('February to February 2022')
+    expect(result).toBe('Feb-Feb 2022')
   })
 
   test('returns first and second instalments when only first and second paid and monthly', () => {
@@ -238,6 +238,6 @@ describe('get period from schedule', () => {
     increment = 1
     unit = 'month'
     const result = getPaymentFromSchedule(totalValue, totalPayments, paymentValue, schedule, increment, unit)
-    expect(result).toBe('December to January 2022')
+    expect(result).toBe('Dec-Jan 2022')
   })
 })

@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { convertToPounds } = require('../../utility')
 
 const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
@@ -14,7 +15,8 @@ const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValu
   }
   if (deltaValue > 0) {
     paidSegments.push({
-      period: 'Adjustment',
+      paymentType: 'Immediate payment',
+      period: moment().format('MMM YYYY'),
       value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
     })
   }
@@ -28,6 +30,7 @@ const mapSchedule = (schedule) => {
   return schedule.map((segment, i) => ({
     order: i + 1,
     dueDate: segment.dueDate?.format('DD/MM/YYYY'),
+    paymentType: segment.paymentType ? segment.paymentType : 'Quarterly payment',
     period: segment.period,
     value: convertToPounds(segment.value)
   }))

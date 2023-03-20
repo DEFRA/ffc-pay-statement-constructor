@@ -694,4 +694,4 @@ components:
     Period:
       type: string
       description: Period of payment request
-      example: December to February 2023
+      example: Dec-Feb 2023
