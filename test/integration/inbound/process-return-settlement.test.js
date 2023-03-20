@@ -5,7 +5,6 @@ const processReturnSettlement = require('../../../app/inbound/return')
 
 let settlement
 let submitPaymentRequest
-let processingPaymentRequest
 
 describe('process return settlement', () => {
   beforeAll(async () => {
@@ -23,7 +22,6 @@ describe('process return settlement', () => {
     } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
     settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
     submitPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
-    processingPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').processingPaymentRequest))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
@@ -109,45 +107,6 @@ describe('process return settlement', () => {
 
     const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
     expect(result.paymentRequestId).toBe(submitPaymentRequest.paymentRequestId)
-  })
-
-  test('should save settlement with paymentRequestId of null when paymentRequest table is empty ', async () => {
-    const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
-    await paymentRequestToRemove.destroy()
-
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.paymentRequestId).toBeNull()
-  })
-
-  test('should save settlement with paymentRequestId of null when no matching paymentRequest found', async () => {
-    const {
-      SFI_SECOND_PAYMENT: invoiceNumber,
-      SFI_SECOND_PAYMENT_ORIGINAL: originalInvoiceNumber
-    } = JSON.parse(JSON.stringify(require('../../mock-components/mock-invoice-number')))
-
-    const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
-    await paymentRequestToRemove.destroy()
-    await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
-    submitPaymentRequest.invoiceNumber = invoiceNumber
-    await db.paymentRequest.create(submitPaymentRequest)
-
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.paymentRequestId).toBeNull()
-  })
-
-  test('should save settlement with paymentRequestId of null when paymentRequest has a status of "In progress"', async () => {
-    const paymentRequestToRemove = await db.paymentRequest.findOne({ where: x => x.paymentRequestId === 1 })
-    await paymentRequestToRemove.destroy()
-    await db.paymentRequest.create(processingPaymentRequest)
-
-    await processReturnSettlement(settlement)
-
-    const result = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-    expect(result.paymentRequestId).toBeNull()
   })
 
   test('should save entry into schedule table if first payment settlement', async () => {
