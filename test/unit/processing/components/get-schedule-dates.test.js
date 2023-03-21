@@ -1,5 +1,7 @@
 const moment = require('moment')
 const getScheduleDates = require('../../../../app/processing/components/get-schedule-dates')
+const { IMMEDIATE, QUARTERLY } = require('../../../../app/constants/payment-type')
+
 let previousPaymentSchedule
 let newPaymentScheduleTopUp
 let newPaymentScheduleReduction
@@ -98,7 +100,7 @@ describe('get schedule dates', () => {
 
   test('Adjustment payment Type must be Immediate payment', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[2].paymentType).toEqual('Immediate payment')
+    expect(schedule[2].paymentType).toEqual(IMMEDIATE)
   })
 
   test('should retain previous payment value for paid segments if top up', () => {
@@ -115,8 +117,8 @@ describe('get schedule dates', () => {
 
   test('Non-Adjustment payment Type must be Quarterly Payment', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[3].paymentType).toEqual('Quarterly payment')
-    expect(schedule[4].paymentType).toEqual('Quarterly payment')
+    expect(schedule[3].paymentType).toEqual(QUARTERLY)
+    expect(schedule[4].paymentType).toEqual(QUARTERLY)
   })
 
   test('should calculate top up value for adjustment', () => {
