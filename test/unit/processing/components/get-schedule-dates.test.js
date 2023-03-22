@@ -12,66 +12,66 @@ describe('get schedule dates', () => {
     previousPaymentSchedule = [{
       dueDate: moment('2021-01-01'),
       outstanding: false,
-      period: 'September to December 2020',
+      period: 'Sep-Dec 2020',
       value: 25000
     }, {
       dueDate: moment('2021-04-01'),
       outstanding: false,
-      period: 'January to March 2021',
+      period: 'Jan-Mar 2021',
       value: 25000
     }, {
       dueDate: moment('2021-07-01'),
       outstanding: true,
-      period: 'April to June 2021',
+      period: 'Apr-Jun 2021',
       value: 25000
     }, {
       dueDate: moment('2021-10-01'),
       outstanding: true,
-      period: 'July to September 2021',
+      period: 'Jul-Sep 2021',
       value: 25000
     }]
 
     newPaymentScheduleTopUp = [{
       dueDate: moment('2021-01-01'),
       outstanding: false,
-      period: 'September to December 2020',
+      period: 'Sep-Dec 2020',
       value: 50000
     }, {
       dueDate: moment('2021-04-01'),
       outstanding: true,
-      period: 'January to March 2021',
+      period: 'Jan-Mar 2021',
       value: 50000
     }, {
       dueDate: moment('2021-07-01'),
       outstanding: true,
-      period: 'April to June 2021',
+      period: 'Apr-Jun 2021',
       value: 50000
     }, {
       dueDate: moment('2021-10-01'),
       outstanding: true,
-      period: 'July to September 2021',
+      period: 'Jul-Sep 2021',
       value: 50000
     }]
 
     newPaymentScheduleReduction = [{
       dueDate: moment('2021-01-01'),
       outstanding: false,
-      period: 'September to December 2020',
+      period: 'Sep-Dec 2020',
       value: 12500
     }, {
       dueDate: moment('2021-04-01'),
       outstanding: true,
-      period: 'January to March 2021',
+      period: 'Jan-Mar 2021',
       value: 12500
     }, {
       dueDate: moment('2021-07-01'),
       outstanding: true,
-      period: 'April to June 2021',
+      period: 'Apr-Jun 2021',
       value: 12500
     }, {
       dueDate: moment('2021-10-01'),
       outstanding: true,
-      period: 'July to September 2021',
+      period: 'Jul-Sep 2021',
       value: 12500
     }]
 
