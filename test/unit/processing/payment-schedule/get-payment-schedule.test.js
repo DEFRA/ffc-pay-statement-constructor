@@ -97,7 +97,7 @@ describe('get various components and transform to payment schedule object', () =
     const schedule = [{
       order: 1,
       dueDate: '01/01/2022',
-      period: 'September to December 2021',
+      period: 'Sep-Dec 2021',
       value: '100.00'
     }]
 

@@ -1,4 +1,6 @@
+const moment = require('moment')
 const { convertToPounds } = require('../../utility')
+const { IMMEDIATE, QUARTERLY } = require('../../../app/constants/payment-type')
 
 const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValue) => {
   if (previousPaymentSchedule.every(x => x.outstanding)) {
@@ -7,14 +9,17 @@ const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValu
 
   const paidSegments = previousPaymentSchedule.filter(x => !x.outstanding)
   newPaymentSchedule.splice(0, paidSegments.length)
-  if (deltaValue < 0) {
+  const nonAdjustmentValue = 0
+
+  if (deltaValue < nonAdjustmentValue) {
     // we need to avoid a balloon reduction, so we spread the reduction for any paid segments across remaining segments only
     const correctionValue = ((Math.abs(deltaValue) / previousPaymentSchedule.length) * paidSegments.length) / newPaymentSchedule.length
     newPaymentSchedule.forEach(x => { x.value = x.value - correctionValue < 0 ? 0 : x.value - correctionValue })
   }
-  if (deltaValue > 0) {
+  if (deltaValue > nonAdjustmentValue) {
     paidSegments.push({
-      period: 'Adjustment',
+      paymentType: IMMEDIATE,
+      period: moment().format('MMM YYYY'),
       value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
     })
   }
@@ -28,6 +33,7 @@ const mapSchedule = (schedule) => {
   return schedule.map((segment, i) => ({
     order: i + 1,
     dueDate: segment.dueDate?.format('DD/MM/YYYY'),
+    paymentType: segment.paymentType ?? QUARTERLY,
     period: segment.period,
     value: convertToPounds(segment.value)
   }))

@@ -1,5 +1,7 @@
 const moment = require('moment')
 const getScheduleDates = require('../../../../app/processing/components/get-schedule-dates')
+const { IMMEDIATE, QUARTERLY } = require('../../../../app/constants/payment-type')
+
 let previousPaymentSchedule
 let newPaymentScheduleTopUp
 let newPaymentScheduleReduction
@@ -10,66 +12,66 @@ describe('get schedule dates', () => {
     previousPaymentSchedule = [{
       dueDate: moment('2021-01-01'),
       outstanding: false,
-      period: 'September to December 2020',
+      period: 'Sep-Dec 2020',
       value: 25000
     }, {
       dueDate: moment('2021-04-01'),
       outstanding: false,
-      period: 'January to March 2021',
+      period: 'Jan-Mar 2021',
       value: 25000
     }, {
       dueDate: moment('2021-07-01'),
       outstanding: true,
-      period: 'April to June 2021',
+      period: 'Apr-Jun 2021',
       value: 25000
     }, {
       dueDate: moment('2021-10-01'),
       outstanding: true,
-      period: 'July to September 2021',
+      period: 'Jul-Sep 2021',
       value: 25000
     }]
 
     newPaymentScheduleTopUp = [{
       dueDate: moment('2021-01-01'),
       outstanding: false,
-      period: 'September to December 2020',
+      period: 'Sep-Dec 2020',
       value: 50000
     }, {
       dueDate: moment('2021-04-01'),
       outstanding: true,
-      period: 'January to March 2021',
+      period: 'Jan-Mar 2021',
       value: 50000
     }, {
       dueDate: moment('2021-07-01'),
       outstanding: true,
-      period: 'April to June 2021',
+      period: 'Apr-Jun 2021',
       value: 50000
     }, {
       dueDate: moment('2021-10-01'),
       outstanding: true,
-      period: 'July to September 2021',
+      period: 'Jul-Sep 2021',
       value: 50000
     }]
 
     newPaymentScheduleReduction = [{
       dueDate: moment('2021-01-01'),
       outstanding: false,
-      period: 'September to December 2020',
+      period: 'Sep-Dec 2020',
       value: 12500
     }, {
       dueDate: moment('2021-04-01'),
       outstanding: true,
-      period: 'January to March 2021',
+      period: 'Jan-Mar 2021',
       value: 12500
     }, {
       dueDate: moment('2021-07-01'),
       outstanding: true,
-      period: 'April to June 2021',
+      period: 'Apr-Jun 2021',
       value: 12500
     }, {
       dueDate: moment('2021-10-01'),
       outstanding: true,
-      period: 'July to September 2021',
+      period: 'Jul-Sep 2021',
       value: 12500
     }]
 
@@ -93,7 +95,12 @@ describe('get schedule dates', () => {
 
   test('should insert top up adjustment after last outstanding payment in original schedule', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[2].period).toEqual('Adjustment')
+    expect(schedule[2].period).toEqual(moment().format('MMM YYYY'))
+  })
+
+  test('Adjustment payment Type must be Immediate payment', () => {
+    const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
+    expect(schedule[2].paymentType).toEqual(IMMEDIATE)
   })
 
   test('should retain previous payment value for paid segments if top up', () => {
@@ -106,6 +113,12 @@ describe('get schedule dates', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
     expect(schedule[3].value).toEqual('500.00')
     expect(schedule[4].value).toEqual('500.00')
+  })
+
+  test('Non-Adjustment payment Type must be Quarterly Payment', () => {
+    const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
+    expect(schedule[3].paymentType).toEqual(QUARTERLY)
+    expect(schedule[4].paymentType).toEqual(QUARTERLY)
   })
 
   test('should calculate top up value for adjustment', () => {
@@ -126,7 +139,7 @@ describe('get schedule dates', () => {
   test('should not insert adjustment into schedule if reduction', () => {
     deltaValue = -25000
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[2].period).not.toEqual('Adjustment')
+    expect(schedule[2].period).not.toEqual(moment().format('MMM YYYY'))
     expect(schedule.length).toEqual(previousPaymentSchedule.length)
   })
 

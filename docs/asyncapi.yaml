@@ -421,6 +421,37 @@ components:
           type: string
           description: The reduction level
           example: 75
+    schedule:
+      type: array
+      items: ScheduleDates
+        type: object
+        required:
+        - order
+        - dueDate
+        - period
+        - value
+        - paymentType
+        properties:
+          order:
+            type: numeric
+            description: Order sequence of item in the list
+            example: 1
+          dueDate:
+            type: string
+            description: Payment due date
+            example: '10/12/2022'
+          period:
+            type: string
+            description: Period of payment
+            example: Oct-Dec 2022
+          value:
+            type: string
+            description: Payment amount
+            example: '375.00'
+          paymentType:
+            type: string
+            description: Type of payment
+            example: Quarterly payment 
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -694,4 +725,4 @@ components:
     Period:
       type: string
       description: Period of payment request
-      example: December to February 2023
+      example: Dec-Feb 2023
