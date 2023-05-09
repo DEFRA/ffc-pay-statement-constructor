@@ -1,6 +1,5 @@
 require('log-timestamp')
 require('./insights').setup()
-
 const messaging = require('./messaging')
 const processing = require('./processing')
 
