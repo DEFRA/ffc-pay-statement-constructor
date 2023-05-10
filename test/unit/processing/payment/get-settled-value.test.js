@@ -1,4 +1,4 @@
-const getSettledValue = require('../../../../app/processing/payment/calculate-scheduled-payments/get-settlement-value')
+const getSettledValue = require('../../../../app/processing/payment/calculate-scheduled-payments/get-settled-value')
 const previousSettlements = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlements')))
 
 describe('get settled value', () => {
