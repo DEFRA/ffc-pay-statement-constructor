@@ -2,10 +2,6 @@ const getSettledValue = require('../../../../app/processing/payment/calculate-sc
 const previousSettlements = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlements')))
 
 describe('get settled value', () => {
-  beforeEach(() => {
-
-  })
-
   test('returns maximum value', () => {
     const result = getSettledValue(previousSettlements)
     expect(result).toBe(100000)
