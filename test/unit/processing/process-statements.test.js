@@ -1,20 +1,3 @@
-const mockCommit = jest.fn()
-const mockRollback = jest.fn()
-const mockTransaction = {
-  commit: mockCommit,
-  rollback: mockRollback
-}
-jest.mock('../../../app/data', () => {
-  return {
-    sequelize:
-       {
-         transaction: jest.fn().mockImplementation(() => {
-           return { ...mockTransaction }
-         })
-       }
-  }
-})
-
 jest.mock('../../../app/processing/schedule')
 const { schedulePendingSettlements } = require('../../../app/processing/schedule')
 
@@ -124,7 +107,7 @@ describe('process statements', () => {
       expect(validateStatement).toHaveBeenCalledWith(await getStatement())
     })
 
-    describe('when validateStatment returns true', () => {
+    describe('when validateStatement returns true', () => {
       beforeEach(() => {
         validateStatement.mockReturnValue(true)
       })
@@ -155,7 +138,7 @@ describe('process statements', () => {
       })
     })
 
-    describe('when validateStatment returns false', () => {
+    describe('when validateStatement returns false', () => {
       beforeEach(() => {
         validateStatement.mockReturnValue(false)
       })
@@ -188,6 +171,16 @@ describe('process statements', () => {
 
     test('should not throw when getStatement throws', async () => {
       getStatement.mockRejectedValue(new Error('Processing issue'))
+
+      const wrapper = async () => {
+        await processStatements()
+      }
+
+      expect(wrapper).not.toThrow()
+    })
+
+    test('should not throw when validateStatement throws', async () => {
+      validateStatement.mockReturnValue(new Error('Processing issue'))
 
       const wrapper = async () => {
         await processStatements()
@@ -230,7 +223,7 @@ describe('process statements', () => {
       expect(getStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].settlementId, (await schedulePendingSettlements())[1].scheduleId)
     })
 
-    describe('when validateStatment returns true', () => {
+    describe('when validateStatement returns true', () => {
       beforeEach(() => {
         validateStatement.mockReturnValueOnce(true).mockReturnValueOnce(true)
       })
@@ -263,7 +256,7 @@ describe('process statements', () => {
     //   })
     })
 
-    describe('when validateStatment returns false', () => {
+    describe('when validateStatement returns false', () => {
       beforeEach(() => {
         validateStatement.mockReturnValueOnce(false).mockReturnValueOnce(false)
       })
