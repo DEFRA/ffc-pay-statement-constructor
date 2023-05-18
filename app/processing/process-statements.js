@@ -6,7 +6,7 @@ const processStatements = async () => {
   const pendingStatements = await schedulePendingSettlements()
   for (const pendingStatement of pendingStatements) {
     try {
-      const aggregatedStatement = await getStatement(pendingStatement.settlementId)
+      const aggregatedStatement = await getStatement(pendingStatement.settlementId, pendingStatement.scheduleId)
       if (validateStatement(aggregatedStatement)) {
         await sendStatement(aggregatedStatement)
       }
