@@ -223,6 +223,23 @@ describe('process statements', () => {
       expect(getStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].settlementId, (await schedulePendingSettlements())[1].scheduleId)
     })
 
+    test('should call validateStatement', async () => {
+      await processStatements()
+      expect(validateStatement).toHaveBeenCalled()
+    })
+
+    test('should call validateStatement twice', async () => {
+      await processStatements()
+      expect(validateStatement).toHaveBeenCalledTimes(2)
+    })
+
+    test('should call validateStatement with each getStatement()', async () => {
+      await processStatements()
+
+      expect(validateStatement).toHaveBeenNthCalledWith(1, await getStatement())
+      expect(validateStatement).toHaveBeenNthCalledWith(2, await getStatement())
+    })
+
     describe('when validateStatement returns true', () => {
       beforeEach(() => {
         validateStatement.mockReturnValueOnce(true).mockReturnValueOnce(true)
@@ -241,8 +258,8 @@ describe('process statements', () => {
       test('should call sendStatement with each getStatement()', async () => {
         await processStatements()
 
-        expect(sendStatement).toHaveBeenNthCalledWith(1, (await getStatement()))
-        expect(sendStatement).toHaveBeenNthCalledWith(2, (await getStatement()))
+        expect(sendStatement).toHaveBeenNthCalledWith(1, await getStatement())
+        expect(sendStatement).toHaveBeenNthCalledWith(2, await getStatement())
       })
 
       //   test('should not throw when sendStatement throws', async () => {
