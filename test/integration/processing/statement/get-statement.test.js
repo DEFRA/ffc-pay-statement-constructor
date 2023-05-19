@@ -1,10 +1,10 @@
-const { x } = require('joi')
 const db = require('../../../../app/data')
 
 const { getStatement } = require('../../../../app/processing/statement')
 
 let schedule
 let paymentRequestId
+let statement
 
 describe('get statement', () => {
   beforeAll(async () => {
@@ -15,6 +15,8 @@ describe('get statement', () => {
   })
 
   beforeEach(async () => {
+    statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
+
     schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule').STATEMENT))
     schedule = {
       ...schedule,
@@ -24,14 +26,13 @@ describe('get statement', () => {
     const calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
-    // statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
     const schemes = JSON.parse(JSON.stringify(require('../../../../app/constants/schemes')))
     const {
       SFI_FIRST_PAYMENT: invoiceNumber,
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
     } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
     const fundingOptions = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-funding-options')))
-    const fundings = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings')))
+    const fundings = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings')))[1]
 
     const settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
 
@@ -43,19 +44,17 @@ describe('get statement', () => {
     const paymentRequestIdCompleted = 2
     paymentRequestCompleted = { ...paymentRequestCompleted, paymentRequestId: paymentRequestIdCompleted }
 
-    const invoiceLinesInProgress = paymentRequestInProgress.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdInProgress } }) // need fundingCode
-    const invoiceLinesCompleted = paymentRequestCompleted.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdCompleted } }) // need fundingCode
+    const invoiceLineInProgress = paymentRequestInProgress.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdInProgress } })[0]
+    const invoiceLineCompleted = paymentRequestCompleted.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdCompleted } })[0]
 
     await db.scheme.bulkCreate(schemes)
     await db.fundingOption.bulkCreate(fundingOptions)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.bulkCreate([paymentRequestInProgress, paymentRequestCompleted])
-    try { await db.invoiceLine.bulkCreate([invoiceLinesInProgress, invoiceLinesCompleted]) } catch (e) {
-      console.log(e)
-    }
+    await db.invoiceLine.bulkCreate([invoiceLineInProgress, invoiceLineCompleted])
     await db.organisation.create(organisation)
     await db.calculation.create({ ...calculation, paymentRequestId: paymentRequestIdInProgress })
-    await db.funding.bulkCreate(fundings.map(x => { return { ...x, calculationId: 1 } }))
+    await db.funding.create({ ...fundings, calculationId: 1 })
     await db.settlement.create({ ...settlement, paymentRequestId: paymentRequestIdCompleted })
   })
 
@@ -71,7 +70,7 @@ describe('get statement', () => {
   describe('when all info', () => {
     test('return what I want', async () => {
       const res = await getStatement(schedule.settlementId, schedule.scheduleId)
-      expect(res).toBe({ a: 2 })
+      expect(res).toStrictEqual(statement)
     })
   })
 
