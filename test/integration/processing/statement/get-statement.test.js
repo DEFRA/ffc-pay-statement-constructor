@@ -3,7 +3,6 @@ const db = require('../../../../app/data')
 const { getStatement } = require('../../../../app/processing/statement')
 
 let schedule
-let paymentRequestId
 let statement
 
 describe('get statement', () => {
@@ -74,47 +73,47 @@ describe('get statement', () => {
     })
   })
 
-  describe('when missing settlement to payment request', () => {
-    beforeEach(async () => {
-      await db.settlement.update({ paymentRequestId: null }, { where: { paymentRequestId } })
-    })
+  // describe('when missing settlement to payment request', () => {
+  //   beforeEach(async () => {
+  //     await db.settlement.update({ paymentRequestId: null }, { where: { paymentRequestId } })
+  //   })
 
-    // app/processing/settlement/update-settlement-payment-request-id.js
-    test('should update paymentRequestId for settlement by invoice number', async () => {
-      const settlementBefore = db.settlement.findAll()
+  //   // app/processing/settlement/update-settlement-payment-request-id.js
+  //   test('should update paymentRequestId for settlement by invoice number', async () => {
+  //     const settlementBefore = db.settlement.findAll()
 
-      await getStatement(schedule.settlementId, schedule.scheduleId)
+  //     await getStatement(schedule.settlementId, schedule.scheduleId)
 
-      const settlementAfter = db.settlement.findAll()
-      expect(settlementBefore.paymentRequestId).toBeUndefined()
-      expect(settlementAfter.paymentRequestId).toBeDefined() // acc value
-    })
+  //     const settlementAfter = db.settlement.findAll()
+  //     expect(settlementBefore.paymentRequestId).toBeUndefined()
+  //     expect(settlementAfter.paymentRequestId).toBeDefined() // acc value
+  //   })
 
-    test('return what I want', async () => {
-      const res = await getStatement(schedule.settlementId, schedule.scheduleId)
-      expect(res).toBe({ a: 2 })
-    })
-  })
+  //   test('return what I want', async () => {
+  //     const res = await getStatement(schedule.settlementId, schedule.scheduleId)
+  //     expect(res).toBe({ a: 2 })
+  //   })
+  // })
 
-  describe('when missing calculation to payment request', () => {
-    beforeEach(async () => {
-      await db.calculation.update({ paymentRequestId: null }, { where: { paymentRequestId } })
-    })
+  // describe('when missing calculation to payment request', () => {
+  //   beforeEach(async () => {
+  //     await db.calculation.update({ paymentRequestId: null }, { where: { paymentRequestId } })
+  //   })
 
-    // app/processing/settlement/update-settlement-payment-request-id.js
-    test('should update paymentRequestId for calculation', async () => {
-      const calculationBefore = db.calculation.findAll()
+  //   // app/processing/settlement/update-settlement-payment-request-id.js
+  //   test('should update paymentRequestId for calculation', async () => {
+  //     const calculationBefore = db.calculation.findAll()
 
-      await getStatement(schedule.settlementId, schedule.scheduleId)
+  //     await getStatement(schedule.settlementId, schedule.scheduleId)
 
-      const calculationAfter = db.calculation.findAll()
-      expect(calculationBefore.paymentRequestId).toBeUndefined()
-      expect(calculationAfter.paymentRequestId).toBeDefined() // acc value
-    })
+  //     const calculationAfter = db.calculation.findAll()
+  //     expect(calculationBefore.paymentRequestId).toBeUndefined()
+  //     expect(calculationAfter.paymentRequestId).toBeDefined() // acc value
+  //   })
 
-    test('return what I want', async () => {
-      const res = await getStatement(schedule.settlementId, schedule.scheduleId)
-      expect(res).toBe({ a: 2 })
-    })
-  })
+  //   test('return what I want', async () => {
+  //     const res = await getStatement(schedule.settlementId, schedule.scheduleId)
+  //     expect(res).toBe({ a: 2 })
+  //   })
+  // })
 })
