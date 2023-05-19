@@ -76,7 +76,6 @@ describe('process payment schedules', () => {
     expect(wrapper).rejects.toThrow(/^Processing issue$/)
   })
 
-  // come back to
   describe('when schedulePendingPaymentSchedules returns 1 record', () => {
     beforeEach(async () => {
       schedulePendingPaymentSchedules.mockResolvedValue([retrievedPaymentSchedule])
@@ -93,9 +92,9 @@ describe('process payment schedules', () => {
       expect(getPaymentSchedule).toHaveBeenCalledTimes(1)
     })
 
-    test('should call getPaymentSchedule with schedulePendingSchedules().paymentRequestId', async () => {
+    test('should call getPaymentSchedule with schedulePendingSchedules().paymentRequestId and schedulePendingSchedules().scheduleId', async () => {
       await processPaymentSchedules()
-      expect(getPaymentSchedule).toHaveBeenCalledWith((await schedulePendingPaymentSchedules())[0].paymentRequestId)
+      expect(getPaymentSchedule).toHaveBeenCalledWith((await schedulePendingPaymentSchedules())[0].paymentRequestId, (await schedulePendingPaymentSchedules())[0].scheduleId)
     })
 
     test('should call validatePaymentSchedule', async () => {
@@ -222,11 +221,11 @@ describe('process payment schedules', () => {
       expect(getPaymentSchedule).toHaveBeenCalledTimes(2)
     })
 
-    test('should call getPaymentSchedule with each schedulePendingSchedules().paymentRequestId', async () => {
+    test('should call getPaymentSchedule with each schedulePendingSchedules().paymentRequestId and schedulePendingSchedules().scheduleId', async () => {
       await processPaymentSchedules()
 
-      expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentRequestId)
-      expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentRequestId)
+      expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentRequestId, (await schedulePendingPaymentSchedules())[0].scheduleId)
+      expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentRequestId, (await schedulePendingPaymentSchedules())[1].scheduleId)
     })
 
     test('should call validatePaymentSchedule', async () => {

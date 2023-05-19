@@ -5,6 +5,7 @@ const { reverseEngineerInvoiceNumber } = require('../../utility')
 const updateCalculationPaymentRequestId = async (invoiceNumber, paymentRequestId, transaction) => {
   const reversedInvoiceNumber = reverseEngineerInvoiceNumber(invoiceNumber)
   const calculation = await getCalculationByInvoiceNumber(reversedInvoiceNumber, transaction)
+
   if (calculation) {
     await db.calculation.update({ paymentRequestId }, {
       transaction,
