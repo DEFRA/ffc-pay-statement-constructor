@@ -1,3 +1,4 @@
+const { x } = require('joi')
 const db = require('../../../../app/data')
 
 const { getStatement } = require('../../../../app/processing/statement')
@@ -29,21 +30,33 @@ describe('get statement', () => {
       SFI_FIRST_PAYMENT: invoiceNumber,
       SFI_FIRST_PAYMENT_ORIGINAL: originalInvoiceNumber
     } = JSON.parse(JSON.stringify(require('../../../mock-components/mock-invoice-number')))
+    const fundingOptions = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-funding-options')))
+    const fundings = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings')))
+
     const settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
 
-    let paymentRequestProcessing = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
-    let paymentRequestSubmit = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
+    let paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
+    const paymentRequestIdInProgress = 1
+    paymentRequestInProgress = { ...paymentRequestInProgress, paymentRequestId: paymentRequestIdInProgress }
 
-    paymentRequestProcessing = { ...paymentRequestProcessing, paymentRequestId: 1 }
-    paymentRequestSubmit = { ...paymentRequestSubmit, paymentRequestId: 2 }
-    paymentRequestId = paymentRequestProcessing.paymentRequestId
+    let paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
+    const paymentRequestIdCompleted = 2
+    paymentRequestCompleted = { ...paymentRequestCompleted, paymentRequestId: paymentRequestIdCompleted }
+
+    const invoiceLinesInProgress = paymentRequestInProgress.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdInProgress } }) // need fundingCode
+    const invoiceLinesCompleted = paymentRequestCompleted.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdCompleted } }) // need fundingCode
 
     await db.scheme.bulkCreate(schemes)
+    await db.fundingOption.bulkCreate(fundingOptions)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
-    await db.paymentRequest.bulkCreate([paymentRequestProcessing, paymentRequestSubmit])
+    await db.paymentRequest.bulkCreate([paymentRequestInProgress, paymentRequestCompleted])
+    try { await db.invoiceLine.bulkCreate([invoiceLinesInProgress, invoiceLinesCompleted]) } catch (e) {
+      console.log(e)
+    }
     await db.organisation.create(organisation)
-    await db.calculation.create({ ...calculation, paymentRequestId })
-    await db.settlement.create({ ...settlement, paymentRequestId })
+    await db.calculation.create({ ...calculation, paymentRequestId: paymentRequestIdInProgress })
+    await db.funding.bulkCreate(fundings.map(x => { return { ...x, calculationId: 1 } }))
+    await db.settlement.create({ ...settlement, paymentRequestId: paymentRequestIdCompleted })
   })
 
   afterEach(async () => {
