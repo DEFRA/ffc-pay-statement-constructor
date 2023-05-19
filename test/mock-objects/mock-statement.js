@@ -1,15 +1,9 @@
 const convertToPounds = require('../../app/utility/convert-to-pounds')
-
-const { Q4: FREQUENCY_QUARTERLY } = require('../../app/constants/schedules').NAMES
-const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names').SHORT_NAMES
-const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names').LONG_NAMES
-
-const DOCUMENT_REFERENCE = require('../mock-components/mock-document-reference')
-const { SFI: AGREEMENT_NUMBER } = require('../mock-components/mock-agreement-number')
-const { FIVE_HUNDRED_POUNDS } = require('../mock-components/mock-value')
-const PERIOD = require('../mock-components/mock-period')
+const getFundingLevel = require('../../app/processing/funding/get-funding-level')
+const getFundingName = require('../../app/processing/funding/get-funding-name')
 
 const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
+const DOCUMENT_REFERENCE = require('../mock-components/mock-document-reference')
 const EMAIL_ADDRESS = require('../mock-components/mock-email-address')
 const FRN = require('../mock-components/mock-frn')
 const SBI = require('../mock-components/mock-sbi')
@@ -21,12 +15,18 @@ const {
   COUNTY,
   POSTCODE
 } = require('../mock-components/mock-address')
+const { FIVE_HUNDRED_POUNDS } = require('../mock-components/mock-value')
+const FUNDING = require('../mock-objects/mock-fundings')[1]
 const { DAY_FORMAT: CALCULATED_DATE } = require('../mock-components/mock-dates').CALCULATED
 const { DAY_FORMAT: DUE_DATE } = require('../mock-components/mock-dates').DUE
 const { SFI_FIRST_PAYMENT: INVOICE_NUMBER } = require('../mock-components/mock-invoice-number')
-// const CALCULATION_REFERENCE = require('../mock-components/mock-calculation-reference')
+const PERIOD = require('../mock-components/mock-period')
 const { SETTLEMENT_REFERENCE } = require('../mock-components/mock-settlement-reference')
 const { DAY_FORMAT: SETTLED_DATE } = require('../mock-components/mock-dates').SETTLEMENT
+const { SFI: AGREEMENT_NUMBER } = require('../mock-components/mock-agreement-number')
+const { Q4: FREQUENCY_QUARTERLY } = require('../../app/constants/schedules').NAMES
+const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names').LONG_NAMES
+const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names').SHORT_NAMES
 const _2022 = require('../mock-components/mock-marketing-year')
 
 module.exports = {
@@ -45,24 +45,24 @@ module.exports = {
   },
   funding: [
     {
-      annualValue: '110.00',
-      area: '5.00',
-      level: 'Introductory',
-      name: 'Arable and horticultural soils',
-      quarterlyPayment: '27.50',
-      quarterlyReduction: '0.00',
-      quarterlyValue: '27.50',
-      rate: '22.00',
+      annualValue: convertToPounds(Number(FIVE_HUNDRED_POUNDS)),
+      area: Number(FUNDING.areaClaimed).toFixed(4),
+      level: getFundingLevel(FUNDING.fundingOptions.name),
+      name: getFundingName(FUNDING.fundingOptions.name),
+      quarterlyPayment: convertToPounds(Number(FIVE_HUNDRED_POUNDS) / 4),
+      quarterlyReduction: convertToPounds(0),
+      quarterlyValue: convertToPounds(Number(FIVE_HUNDRED_POUNDS) / 4),
+      rate: String(FUNDING.rate),
       reductions: []
     },
     {
-      annualValue: '1318.60',
-      area: '42.00',
+      annualValue: convertToPounds(Number(FIVE_HUNDRED_POUNDS)),
+      area: Number(FUNDING.areaClaimed).toFixed(4),
       level: '',
       name: 'Total',
-      quarterlyPayment: '342.15',
-      quarterlyReduction: '125.00',
-      quarterlyValue: '329.65',
+      quarterlyPayment: convertToPounds(Number(FIVE_HUNDRED_POUNDS) / 4),
+      quarterlyReduction: convertToPounds(0),
+      quarterlyValue: convertToPounds(Number(FIVE_HUNDRED_POUNDS) / 4),
       rate: ''
     }
   ],
