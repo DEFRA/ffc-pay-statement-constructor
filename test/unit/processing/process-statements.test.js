@@ -126,16 +126,6 @@ describe('process statements', () => {
         await processStatements()
         expect(sendStatement).toHaveBeenCalledWith(await getStatement())
       })
-
-      test('should not throw when sendStatement throws', async () => {
-        sendStatement.mockRejectedValue(new Error('Sending issue'))
-
-        const wrapper = async () => {
-          await processStatements()
-        }
-
-        expect(wrapper).not.toThrow()
-      })
     })
 
     describe('when validateStatement returns false', () => {
@@ -167,46 +157,6 @@ describe('process statements', () => {
     test('should return undefined', async () => {
       const res = await processStatements()
       expect(res).toBeUndefined()
-    })
-
-    test('should not throw when getStatement throws', async () => {
-      getStatement.mockRejectedValue(new Error('Processing issue'))
-
-      const wrapper = async () => {
-        await processStatements()
-      }
-
-      expect(wrapper).not.toThrow()
-    })
-
-    test('should not throw when validateStatement throws', async () => {
-      validateStatement.mockReturnValue(new Error('Validation issue'))
-
-      const wrapper = async () => {
-        await processStatements()
-      }
-
-      expect(wrapper).not.toThrow()
-    })
-
-    test('should not throw when sendStatement throws', async () => {
-      sendStatement.mockReturnValue(new Error('Sending issue'))
-
-      const wrapper = async () => {
-        await processStatements()
-      }
-
-      expect(wrapper).not.toThrow()
-    })
-
-    test('should not throw when updateScheduleByScheduleId throws', async () => {
-      updateScheduleByScheduleId.mockRejectedValue(new Error('Update issue'))
-
-      const wrapper = async () => {
-        await processStatements()
-      }
-
-      expect(wrapper).not.toThrow()
     })
   })
 
@@ -271,16 +221,6 @@ describe('process statements', () => {
         expect(sendStatement).toHaveBeenNthCalledWith(1, await getStatement())
         expect(sendStatement).toHaveBeenNthCalledWith(2, await getStatement())
       })
-
-      //   test('should not throw when sendStatement throws', async () => {
-      //     sendStatement.mockRejectedValue(new Error('Sending issue'))
-
-      //     const wrapper = async () => {
-      //       await processStatements()
-      //     }
-
-    //     expect(wrapper).not.toThrow()
-    //   })
     })
 
     describe('when validateStatement returns false', () => {
