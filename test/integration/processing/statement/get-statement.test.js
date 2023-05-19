@@ -2,6 +2,11 @@ const db = require('../../../../app/data')
 
 const { getStatement } = require('../../../../app/processing/statement')
 
+let paymentRequestIdInProgress
+let paymentRequestIdCompleted
+
+let settlement
+
 let schedule
 let statement
 
@@ -33,14 +38,14 @@ describe('get statement', () => {
     const fundingOptions = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-funding-options')))
     const fundings = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-fundings')))[1]
 
-    const settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+    settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
 
     let paymentRequestInProgress = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').processingPaymentRequest))
-    const paymentRequestIdInProgress = 1
+    paymentRequestIdInProgress = 1
     paymentRequestInProgress = { ...paymentRequestInProgress, paymentRequestId: paymentRequestIdInProgress }
 
     let paymentRequestCompleted = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-request').submitPaymentRequest))
-    const paymentRequestIdCompleted = 2
+    paymentRequestIdCompleted = 2
     paymentRequestCompleted = { ...paymentRequestCompleted, paymentRequestId: paymentRequestIdCompleted }
 
     const invoiceLineInProgress = paymentRequestInProgress.invoiceLines.map(x => { return { ...x, fundingCode: x.schemeCode, paymentRequestId: paymentRequestIdInProgress } })[0]
@@ -66,7 +71,7 @@ describe('get statement', () => {
     })
   })
 
-  describe('when all info', () => {
+  describe('when all information is present', () => {
     test('returns frn key', async () => {
       const res = await getStatement(schedule.settlementId, schedule.scheduleId)
       expect(Object.keys(res)).toContain('frn')
@@ -253,27 +258,33 @@ describe('get statement', () => {
     })
   })
 
-  // describe('when missing settlement to payment request', () => {
-  //   beforeEach(async () => {
-  //     await db.settlement.update({ paymentRequestId: null }, { where: { paymentRequestId } })
-  //   })
+  describe('when settlement is not connected to a payment request', () => {
+    beforeEach(async () => {
+      await db.settlement.update({ paymentRequestId: null }, { where: { paymentRequestId: paymentRequestIdCompleted } })
+    })
 
-  //   // app/processing/settlement/update-settlement-payment-request-id.js
-  //   test('should update paymentRequestId for settlement by invoice number', async () => {
-  //     const settlementBefore = db.settlement.findAll()
+    test('should update paymentRequestId for settlement by invoice number', async () => {
+      const settlementBefore = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
 
-  //     await getStatement(schedule.settlementId, schedule.scheduleId)
+      await getStatement(schedule.settlementId, schedule.scheduleId)
 
-  //     const settlementAfter = db.settlement.findAll()
-  //     expect(settlementBefore.paymentRequestId).toBeUndefined()
-  //     expect(settlementAfter.paymentRequestId).toBeDefined() // acc value
-  //   })
+      const settlementAfter = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+      expect(settlementBefore.paymentRequestId).toBeNull()
+      expect(settlementAfter.paymentRequestId).not.toBeNull()
+    })
 
-  //   test('return what I want', async () => {
-  //     const res = await getStatement(schedule.settlementId, schedule.scheduleId)
-  //     expect(res).toBe({ a: 2 })
-  //   })
-  // })
+    test('should update paymentRequestId to paymentRequestIdCompleted for settlement by invoice number', async () => {
+      await getStatement(schedule.settlementId, schedule.scheduleId)
+
+      const settlementAfter = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+      expect(settlementAfter.paymentRequestId).toBe(paymentRequestIdCompleted)
+    })
+
+    test('returns statement', async () => {
+      const res = await getStatement(schedule.settlementId, schedule.scheduleId)
+      expect(res).toStrictEqual(statement)
+    })
+  })
 
   // describe('when missing calculation to payment request', () => {
   //   beforeEach(async () => {
