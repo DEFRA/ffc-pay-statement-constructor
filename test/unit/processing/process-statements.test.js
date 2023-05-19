@@ -305,42 +305,6 @@ describe('process statements', () => {
       const res = await processStatements()
       expect(res).toBeUndefined()
     })
-
-    // test('should not throw when getStatement throws', async () => {
-    //   getStatement.mockRejectedValue(new Error('Processing issue'))
-
-    //   const wrapper = async () => {
-    //     await processStatements()
-    //   }
-
-    //   expect(wrapper).not.toThrow()
-    // })
-
-    // test('should not throw when updateScheduleByScheduleId throws', async () => {
-    //   updateScheduleByScheduleId.mockRejectedValue(new Error('Update issue'))
-
-    //   const wrapper = async () => {
-    //     await processStatements()
-    //   }
-
-    //   expect(wrapper).not.toThrow()
-    // })
-  })
-
-  describe('sommit', () => {
-    test('should not block processing of subsequent statements when getStatement throws', async () => {
-      schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
-      getStatement.mockRejectedValue(new Error('Processing issue'))
-      await processStatements()
-      expect(getStatement).toHaveBeenCalledTimes(2)
-    })
-
-    test('should not block processing of subsequent statements when sendStatement throws', async () => {
-      schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule])
-      sendStatement.mockRejectedValue(new Error('Processing issue'))
-      await processStatements()
-      expect(getStatement).toHaveBeenCalledTimes(2)
-    })
   })
 
   describe('when schedulePendingSettlements returns 0 records', () => {
@@ -371,6 +335,92 @@ describe('process statements', () => {
     test('should return undefined', async () => {
       const res = await processStatements()
       expect(res).toBeUndefined()
+    })
+  })
+
+  describe('when 1 issue within multiple records', () => {
+    beforeEach(async () => {
+      schedulePendingSettlements.mockResolvedValue([retrievedSchedule, retrievedSchedule, retrievedSchedule])
+    })
+
+    describe('when getStatement throws', () => {
+      beforeEach(async () => {
+        getStatement.mockResolvedValueOnce(statement).mockRejectedValueOnce(new Error('Processing issue')).mockResolvedValueOnce(statement)
+      })
+
+      test('should call getStatement', async () => {
+        await processStatements()
+        expect(getStatement).toHaveBeenCalled()
+      })
+
+      test('should call getStatement 3 times', async () => {
+        await processStatements()
+        expect(getStatement).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call getStatement with each schedulePendingSettlements().settlementId and schedulePendingSettlements().scheduleId', async () => {
+        await processStatements()
+
+        expect(getStatement).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].settlementId, (await schedulePendingSettlements())[0].scheduleId)
+        expect(getStatement).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[1].settlementId, (await schedulePendingSettlements())[1].scheduleId)
+        expect(getStatement).toHaveBeenNthCalledWith(3, (await schedulePendingSettlements())[2].settlementId, (await schedulePendingSettlements())[2].scheduleId)
+      })
+
+      test('should call validateStatement', async () => {
+        await processStatements()
+        expect(validateStatement).toHaveBeenCalled()
+      })
+
+      test('should call validateStatement 2 times', async () => {
+        await processStatements()
+        expect(validateStatement).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call validateStatement with each sucessful getStatement()', async () => {
+        await processStatements()
+
+        expect(validateStatement).toHaveBeenNthCalledWith(1, await getStatement())
+        expect(validateStatement).toHaveBeenNthCalledWith(2, await getStatement())
+      })
+
+      test('should call sendStatement', async () => {
+        await processStatements()
+        expect(sendStatement).toHaveBeenCalled()
+      })
+
+      test('should call sendStatement 2 times', async () => {
+        await processStatements()
+        expect(sendStatement).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call sendStatement with each successful getStatement()', async () => {
+        await processStatements()
+
+        expect(sendStatement).toHaveBeenNthCalledWith(1, await getStatement())
+        expect(sendStatement).toHaveBeenNthCalledWith(2, await getStatement())
+      })
+
+      test('should call updateScheduleByScheduleId', async () => {
+        await processStatements()
+        expect(updateScheduleByScheduleId).toHaveBeenCalled()
+      })
+
+      test('should call updateScheduleByScheduleId 2 times', async () => {
+        await processStatements()
+        expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call updateScheduleByScheduleId with each successful schedulePendingSettlements.scheduleId', async () => {
+        await processStatements()
+
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(1, (await schedulePendingSettlements())[0].scheduleId)
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(2, (await schedulePendingSettlements())[0].scheduleId)
+      })
+
+      test('should return undefined', async () => {
+        const res = await processStatements()
+        expect(res).toBeUndefined()
+      })
     })
   })
 })
