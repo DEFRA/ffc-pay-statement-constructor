@@ -10,6 +10,8 @@ let settlement
 let schedule
 let statement
 
+const reverseEngineerInvoiceNumber = require('../../../../app/utility/reverse-engineer-invoice-number')
+
 describe('get statement', () => {
   beforeAll(async () => {
     await db.sequelize.truncate({
@@ -263,7 +265,7 @@ describe('get statement', () => {
       await db.settlement.update({ paymentRequestId: null }, { where: { paymentRequestId: paymentRequestIdCompleted } })
     })
 
-    test('should update paymentRequestId for settlement by invoice number', async () => {
+    test('should update paymentRequestId', async () => {
       const settlementBefore = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
 
       await getStatement(schedule.settlementId, schedule.scheduleId)
@@ -273,7 +275,7 @@ describe('get statement', () => {
       expect(settlementAfter.paymentRequestId).not.toBeNull()
     })
 
-    test('should update paymentRequestId to paymentRequestIdCompleted for settlement by invoice number', async () => {
+    test('should update paymentRequestId to paymentRequestIdCompleted', async () => {
       await getStatement(schedule.settlementId, schedule.scheduleId)
 
       const settlementAfter = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
@@ -286,25 +288,31 @@ describe('get statement', () => {
     })
   })
 
-  // describe('when missing calculation to payment request', () => {
-  //   beforeEach(async () => {
-  //     await db.calculation.update({ paymentRequestId: null }, { where: { paymentRequestId } })
-  //   })
+  describe('when calculation is not connected to a payment request', () => {
+    beforeEach(async () => {
+      await db.calculation.update({ paymentRequestId: null }, { where: { paymentRequestId: paymentRequestIdInProgress } })
+    })
 
-  //   // app/processing/settlement/update-settlement-payment-request-id.js
-  //   test('should update paymentRequestId for calculation', async () => {
-  //     const calculationBefore = db.calculation.findAll()
+    test('should update paymentRequestId', async () => {
+      const calculationBefore = await db.calculation.findOne({ where: { invoiceNumber: reverseEngineerInvoiceNumber(settlement.invoiceNumber) } })
 
-  //     await getStatement(schedule.settlementId, schedule.scheduleId)
+      await getStatement(schedule.settlementId, schedule.scheduleId)
 
-  //     const calculationAfter = db.calculation.findAll()
-  //     expect(calculationBefore.paymentRequestId).toBeUndefined()
-  //     expect(calculationAfter.paymentRequestId).toBeDefined() // acc value
-  //   })
+      const calculationAfter = await db.calculation.findOne({ where: { invoiceNumber: reverseEngineerInvoiceNumber(settlement.invoiceNumber) } })
+      expect(calculationBefore.paymentRequestId).toBeNull()
+      expect(calculationAfter.paymentRequestId).not.toBeNull()
+    })
 
-  //   test('return what I want', async () => {
-  //     const res = await getStatement(schedule.settlementId, schedule.scheduleId)
-  //     expect(res).toBe({ a: 2 })
-  //   })
-  // })
+    test('should update paymentRequestId to paymentRequestIdInProgress', async () => {
+      await getStatement(schedule.settlementId, schedule.scheduleId)
+
+      const calculationAfter = await db.calculation.findOne({ where: { invoiceNumber: reverseEngineerInvoiceNumber(settlement.invoiceNumber) } })
+      expect(calculationAfter.paymentRequestId).toBe(paymentRequestIdInProgress)
+    })
+
+    test('returns statement', async () => {
+      const res = await getStatement(schedule.settlementId, schedule.scheduleId)
+      expect(res).toStrictEqual(statement)
+    })
+  })
 })
