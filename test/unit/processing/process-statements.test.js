@@ -23,6 +23,7 @@ describe('process statements', () => {
     statement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
 
     schedulePendingSettlements.mockResolvedValue([retrievedSchedule])
+    validateStatement.mockReturnValue(true)
     sendStatement.mockResolvedValue(undefined)
     updateScheduleByScheduleId.mockResolvedValue(undefined)
   })

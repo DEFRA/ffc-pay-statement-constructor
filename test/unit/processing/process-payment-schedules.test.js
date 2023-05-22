@@ -266,16 +266,6 @@ describe('process payment schedules', () => {
         expect(sendPaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
         expect(sendPaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
       })
-
-      //   test('should not throw when sendPaymentSchedule throws', async () => {
-      //     sendPaymentSchedule.mockRejectedValue(new Error('Sending issue'))
-
-      //     const wrapper = async () => {
-      //       await processPaymentSchedules()
-      //     }
-
-    //     expect(wrapper).not.toThrow()
-    //   })
     })
 
     describe('when validatePaymentSchedule returns false', () => {

@@ -4,6 +4,7 @@ const updateScheduleByScheduleId = require('./update-schedule-by-schedule-id')
 
 const processStatements = async () => {
   const pendingStatements = await schedulePendingSettlements()
+
   for (const pendingStatement of pendingStatements) {
     try {
       const aggregatedStatement = await getStatement(pendingStatement.settlementId, pendingStatement.scheduleId)
