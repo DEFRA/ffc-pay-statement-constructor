@@ -1,5 +1,6 @@
-const { IMMEDIATE, QUARTERLY } = require('../../../../app/constants/payment-type')
 const db = require('../../../../app/data')
+
+const { IMMEDIATE, QUARTERLY } = require('../../../../app/constants/payment-type')
 
 const { getPaymentSchedule } = require('../../../../app/processing/payment-schedule')
 
@@ -10,8 +11,6 @@ let settlement
 
 let paymentSchedule
 let schedule
-
-// const reverseEngineerInvoiceNumber = require('../../../../app/utility/reverse-engineer-invoice-number')
 
 describe('get payment schedule', () => {
   beforeAll(async () => {
@@ -84,210 +83,152 @@ describe('get payment schedule', () => {
     })
   })
 
-  describe('when all information is present', () => {
-    test('returns frn key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res)).toContain('frn')
-    })
-
-    test('returns frn as number', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.frn).toEqual(expect.any(Number))
-    })
-
-    test('returns frn as paymentSchedule.frn', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.frn).toEqual(paymentSchedule.frn)
-    })
-
-    test('returns sbi key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res)).toContain('sbi')
-    })
-
-    test('returns sbi as number', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.sbi).toEqual(expect.any(Number))
-    })
-
-    test('returns sbi as paymentSchedule.sbi', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.sbi).toEqual(paymentSchedule.sbi)
-    })
-
-    test('returns schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res)).toContain('schedule')
-    })
-
-    test('returns schedule as array', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule).toEqual(expect.any(Array))
-    })
-
-    test('returns period key within schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.schedule[0])).toContain('period')
-    })
-
-    test('returns period as string', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].period).toEqual(expect.any(String))
-    })
-
-    test('returns value key within schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.schedule[0])).toContain('value')
-    })
-
-    test('returns value as string', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].value).toEqual(expect.any(String))
-    })
-
-    test('returns order key within schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.schedule[0])).toContain('order')
-    })
-
-    test('returns order as number', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].order).toEqual(expect.any(Number))
-    })
-
-    test('returns order as incremental values', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-
-      const numbers = [...Array(res.schedule.length).keys()]
-      res.schedule.map((x, i) => expect(x.order).toEqual(numbers[i] + 1))
-    })
-
-    test('returns dueDate key within schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.schedule[0])).toContain('dueDate')
-    })
-
-    test('returns dueDate as string', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].dueDate).toEqual(expect.any(String))
-    })
-
-    test('returns paymentType key within schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.schedule[0])).toContain('paymentType')
-    })
-
-    test('returns paymentType as string', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].paymentType).toEqual(expect.any(String))
-    })
-
-    test('returns paymentType as QUARTERLY, IMMEDIATE or undefined', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      res.schedule.map(x => expect(x.paymentType === QUARTERLY || x.paymentType === IMMEDIATE || x.paymentType === undefined).toBe(true))
-    })
-
-    test('returns period key within schedule key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.schedule[0])).toContain('period')
-    })
-
-    test('returns period as string', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].period).toEqual(expect.any(String))
-    })
-
-    test('returns period as paymentSchedule.schedule.period', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.schedule[0].period).toEqual(paymentSchedule.schedule[0].period)
-    })
-
-    test('returns scheme key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res)).toContain('scheme')
-    })
-
-    test('returns scheme as object', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.scheme).toEqual(expect.any(Object))
-    })
-
-    test('returns year key within scheme key', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(Object.keys(res.scheme)).toContain('year')
-    })
-
-    test('returns year as string', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.scheme.year).toEqual(expect.any(String))
-    })
-
-    test('returns year as paymentSchedule.scheme.year', async () => {
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      expect(res.scheme.year).toEqual(paymentSchedule.scheme.year)
-    })
-
-    test('returns paymentSchedule', async () => {
-      paymentSchedule.schedule.forEach(x => { if (x.paymentType === IMMEDIATE) { x.dueDate = undefined } })
-      const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-      console.log(res)
-      expect(res).toStrictEqual(paymentSchedule)
-    })
+  test('returns frn key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res)).toContain('frn')
   })
 
-  //   describe('when settlement is not connected to a payment request', () => {
-  //     beforeEach(async () => {
-  //       await db.settlement.update({ paymentRequestId: null }, { where: { paymentRequestId: paymentRequestIdCompleted } })
-  //     })
+  test('returns frn as number', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.frn).toEqual(expect.any(Number))
+  })
 
-  //     test('should update paymentRequestId', async () => {
-  //       const settlementBefore = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
+  test('returns frn as paymentSchedule.frn', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.frn).toEqual(paymentSchedule.frn)
+  })
 
-  //       await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+  test('returns sbi key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res)).toContain('sbi')
+  })
 
-  //       const settlementAfter = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-  //       expect(settlementBefore.paymentRequestId).toBeNull()
-  //       expect(settlementAfter.paymentRequestId).not.toBeNull()
-  //     })
+  test('returns sbi as number', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.sbi).toEqual(expect.any(Number))
+  })
 
-  //     test('should update paymentRequestId to paymentRequestIdCompleted', async () => {
-  //       await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+  test('returns sbi as paymentSchedule.sbi', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.sbi).toEqual(paymentSchedule.sbi)
+  })
 
-  //       const settlementAfter = await db.settlement.findOne({ where: { invoiceNumber: settlement.invoiceNumber } })
-  //       expect(settlementAfter.paymentRequestId).toBe(paymentRequestIdCompleted)
-  //     })
+  test('returns schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res)).toContain('schedule')
+  })
 
-  //     test('returns paymentSchedule', async () => {
-  //       const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-  //       expect(res).toStrictEqual(paymentSchedule)
-  //     })
-  //   })
+  test('returns schedule as array', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule).toEqual(expect.any(Array))
+  })
 
-  //   describe('when calculation is not connected to a payment request', () => {
-  //     beforeEach(async () => {
-  //       await db.calculation.update({ paymentRequestId: null }, { where: { paymentRequestId: paymentRequestIdInProgress } })
-  //     })
+  test('returns period key within schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.schedule[0])).toContain('period')
+  })
 
-  //     test('should update paymentRequestId', async () => {
-  //       const calculationBefore = await db.calculation.findOne({ where: { invoiceNumber: reverseEngineerInvoiceNumber(settlement.invoiceNumber) } })
+  test('returns period as string', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].period).toEqual(expect.any(String))
+  })
 
-  //       await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+  test('returns value key within schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.schedule[0])).toContain('value')
+  })
 
-  //       const calculationAfter = await db.calculation.findOne({ where: { invoiceNumber: reverseEngineerInvoiceNumber(settlement.invoiceNumber) } })
-  //       expect(calculationBefore.paymentRequestId).toBeNull()
-  //       expect(calculationAfter.paymentRequestId).not.toBeNull()
-  //     })
+  test('returns value as string', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].value).toEqual(expect.any(String))
+  })
 
-  //     test('should update paymentRequestId to paymentRequestIdInProgress', async () => {
-  //       await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+  test('returns order key within schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.schedule[0])).toContain('order')
+  })
 
-  //       const calculationAfter = await db.calculation.findOne({ where: { invoiceNumber: reverseEngineerInvoiceNumber(settlement.invoiceNumber) } })
-  //       expect(calculationAfter.paymentRequestId).toBe(paymentRequestIdInProgress)
-  //     })
+  test('returns order as number', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].order).toEqual(expect.any(Number))
+  })
 
-//     test('returns paymentSchedule', async () => {
-//       const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
-//       expect(res).toStrictEqual(paymentSchedule)
-//     })
-//   })
+  test('returns order as incremental values', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+
+    const numbers = [...Array(res.schedule.length).keys()]
+    res.schedule.map((x, i) => expect(x.order).toEqual(numbers[i] + 1))
+  })
+
+  test('returns dueDate key within schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.schedule[0])).toContain('dueDate')
+  })
+
+  test('returns dueDate as string', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].dueDate).toEqual(expect.any(String))
+  })
+
+  test('returns paymentType key within schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.schedule[0])).toContain('paymentType')
+  })
+
+  test('returns paymentType as string', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].paymentType).toEqual(expect.any(String))
+  })
+
+  test('returns paymentType as QUARTERLY, IMMEDIATE or undefined', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    res.schedule.map(x => expect(x.paymentType === QUARTERLY || x.paymentType === IMMEDIATE || x.paymentType === undefined).toBe(true))
+  })
+
+  test('returns period key within schedule key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.schedule[0])).toContain('period')
+  })
+
+  test('returns period as string', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].period).toEqual(expect.any(String))
+  })
+
+  test('returns period as paymentSchedule.schedule.period', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.schedule[0].period).toEqual(paymentSchedule.schedule[0].period)
+  })
+
+  test('returns scheme key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res)).toContain('scheme')
+  })
+
+  test('returns scheme as object', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.scheme).toEqual(expect.any(Object))
+  })
+
+  test('returns year key within scheme key', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(res.scheme)).toContain('year')
+  })
+
+  test('returns year as string', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.scheme.year).toEqual(expect.any(String))
+  })
+
+  test('returns year as paymentSchedule.scheme.year', async () => {
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(res.scheme.year).toEqual(paymentSchedule.scheme.year)
+  })
+
+  test('returns paymentSchedule', async () => {
+    paymentSchedule.schedule.forEach(x => { if (x.paymentType === IMMEDIATE) { x.dueDate = undefined } })
+    const res = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    console.log(res)
+    expect(res).toStrictEqual(paymentSchedule)
+  })
 })

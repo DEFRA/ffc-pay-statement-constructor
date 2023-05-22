@@ -21,14 +21,6 @@ describe('get statement', () => {
   })
 
   beforeEach(async () => {
-    statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
-
-    schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule').STATEMENT))
-    schedule = {
-      ...schedule,
-      scheduleId: 1
-    }
-
     const calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
@@ -62,6 +54,14 @@ describe('get statement', () => {
     await db.calculation.create({ ...calculation, paymentRequestId: paymentRequestIdInProgress })
     await db.funding.create({ ...fundings, calculationId: 1 })
     await db.settlement.create({ ...settlement, paymentRequestId: paymentRequestIdCompleted })
+
+    schedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-schedule').STATEMENT))
+    schedule = {
+      ...schedule,
+      scheduleId: 1
+    }
+
+    statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
   })
 
   afterEach(async () => {
