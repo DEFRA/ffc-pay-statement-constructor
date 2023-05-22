@@ -376,7 +376,7 @@ describe('process statements', () => {
 
     describe('when sendStatement throws', () => {
       beforeEach(async () => {
-        sendStatement.mockResolvedValueOnce(true).mockRejectedValueOnce(new Error('Sending issue')).mockResolvedValueOnce(statement)
+        sendStatement.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('Sending issue')).mockResolvedValueOnce(undefined)
       })
 
       test('should call getStatement', async () => {
@@ -458,7 +458,7 @@ describe('process statements', () => {
 
     describe('when updateScheduleByScheduleId throws', () => {
       beforeEach(async () => {
-        updateScheduleByScheduleId.mockResolvedValueOnce(true).mockRejectedValueOnce(new Error('Updating issue')).mockResolvedValueOnce(statement)
+        updateScheduleByScheduleId.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('Updating issue')).mockResolvedValueOnce(undefined)
       })
 
       test('should call getStatement', async () => {

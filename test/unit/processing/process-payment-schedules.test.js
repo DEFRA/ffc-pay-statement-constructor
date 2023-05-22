@@ -300,36 +300,6 @@ describe('process payment schedules', () => {
       const res = await processPaymentSchedules()
       expect(res).toBeUndefined()
     })
-
-    // test('should not throw when getPaymentSchedule throws', async () => {
-    //   getPaymentSchedule.mockRejectedValue(new Error('Processing issue'))
-
-    //   const wrapper = async () => {
-    //     await processPaymentSchedules()
-    //   }
-
-    //   expect(wrapper).not.toThrow()
-    // })
-
-    // test('should not throw when validatePaymentSchedule throws', async () => {
-    //   validatePaymentSchedule.mockReturnValue(new Error('Processing issue'))
-
-    //   const wrapper = async () => {
-    //     await processPaymentSchedules()
-    //   }
-
-    //   expect(wrapper).not.toThrow()
-    // })
-
-    // test('should not throw when updateScheduleByScheduleId throws', async () => {
-    //   updateScheduleByScheduleId.mockRejectedValue(new Error('Update issue'))
-
-    //   const wrapper = async () => {
-    //     await processPaymentSchedules()
-    //   }
-
-    //   expect(wrapper).not.toThrow()
-    // })
   })
 
   describe('when schedulePendingPaymentSchedules returns 0 records', () => {
@@ -360,6 +330,257 @@ describe('process payment schedules', () => {
     test('should return undefined', async () => {
       const res = await processPaymentSchedules()
       expect(res).toBeUndefined()
+    })
+  })
+
+  describe('when 1 issue within multiple records', () => {
+    beforeEach(async () => {
+      schedulePendingPaymentSchedules.mockResolvedValue([retrievedPaymentSchedule, retrievedPaymentSchedule, retrievedPaymentSchedule])
+    })
+
+    describe('when getPaymentSchedule throws', () => {
+      beforeEach(async () => {
+        getPaymentSchedule.mockResolvedValueOnce(schedule).mockRejectedValueOnce(new Error('Processing issue')).mockResolvedValueOnce(schedule)
+      })
+
+      test('should call getPaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(getPaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call getPaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(getPaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call getPaymentSchedule with each schedulePendingPaymentSchedules().paymentRequestId and schedulePendingPaymentSchedules().scheduleId', async () => {
+        await processPaymentSchedules()
+
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentRequestId, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentRequestId, (await schedulePendingPaymentSchedules())[1].scheduleId)
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(3, (await schedulePendingPaymentSchedules())[2].paymentRequestId, (await schedulePendingPaymentSchedules())[2].scheduleId)
+      })
+
+      test('should call validatePaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(validatePaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call validatePaymentSchedule 2 times', async () => {
+        await processPaymentSchedules()
+        expect(validatePaymentSchedule).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call validatePaymentSchedule with each sucessful getPaymentSchedule()', async () => {
+        await processPaymentSchedules()
+
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
+      })
+
+      test('should call sendPaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(sendPaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call sendPaymentSchedule 2 times', async () => {
+        await processPaymentSchedules()
+        expect(sendPaymentSchedule).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call sendPaymentSchedule with each successful getPaymentSchedule()', async () => {
+        await processPaymentSchedules()
+
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
+      })
+
+      test('should call updateScheduleByScheduleId', async () => {
+        await processPaymentSchedules()
+        expect(updateScheduleByScheduleId).toHaveBeenCalled()
+      })
+
+      test('should call updateScheduleByScheduleId 2 times', async () => {
+        await processPaymentSchedules()
+        expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call updateScheduleByScheduleId with each successful schedulePendingPaymentSchedules.scheduleId', async () => {
+        await processPaymentSchedules()
+
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[0].scheduleId)
+      })
+
+      test('should return undefined', async () => {
+        const res = await processPaymentSchedules()
+        expect(res).toBeUndefined()
+      })
+    })
+
+    describe('when sendPaymentSchedule throws', () => {
+      beforeEach(async () => {
+        sendPaymentSchedule.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('Sending issue')).mockResolvedValueOnce(undefined)
+      })
+
+      test('should call getPaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(getPaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call getPaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(getPaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call getPaymentSchedule with each schedulePendingPaymentSchedules().paymentRequestId and schedulePendingPaymentSchedules().scheduleId', async () => {
+        await processPaymentSchedules()
+
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentRequestId, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentRequestId, (await schedulePendingPaymentSchedules())[1].scheduleId)
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(3, (await schedulePendingPaymentSchedules())[2].paymentRequestId, (await schedulePendingPaymentSchedules())[2].scheduleId)
+      })
+
+      test('should call validatePaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(validatePaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call validatePaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(validatePaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call validatePaymentSchedule with each getPaymentSchedule()', async () => {
+        await processPaymentSchedules()
+
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(3, await getPaymentSchedule())
+      })
+
+      test('should call sendPaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(sendPaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call sendPaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(sendPaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call sendPaymentSchedule with each getPaymentSchedule()', async () => {
+        await processPaymentSchedules()
+
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(3, await getPaymentSchedule())
+      })
+
+      test('should call updateScheduleByScheduleId', async () => {
+        await processPaymentSchedules()
+        expect(updateScheduleByScheduleId).toHaveBeenCalled()
+      })
+
+      test('should call updateScheduleByScheduleId 2 times', async () => {
+        await processPaymentSchedules()
+        expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(2)
+      })
+
+      test('should call updateScheduleByScheduleId with each successful schedulePendingPaymentSchedules.scheduleId', async () => {
+        await processPaymentSchedules()
+
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[0].scheduleId)
+      })
+
+      test('should return undefined', async () => {
+        const res = await processPaymentSchedules()
+        expect(res).toBeUndefined()
+      })
+    })
+
+    describe('when updateScheduleByScheduleId throws', () => {
+      beforeEach(async () => {
+        updateScheduleByScheduleId.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('Updating issue')).mockResolvedValueOnce(undefined)
+      })
+
+      test('should call getPaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(getPaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call getPaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(getPaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call getPaymentSchedule with each schedulePendingPaymentSchedules().paymentRequestId and schedulePendingPaymentSchedules().scheduleId', async () => {
+        await processPaymentSchedules()
+
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].paymentRequestId, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[1].paymentRequestId, (await schedulePendingPaymentSchedules())[1].scheduleId)
+        expect(getPaymentSchedule).toHaveBeenNthCalledWith(3, (await schedulePendingPaymentSchedules())[2].paymentRequestId, (await schedulePendingPaymentSchedules())[2].scheduleId)
+      })
+
+      test('should call validatePaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(validatePaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call validatePaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(validatePaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call validatePaymentSchedule with each getPaymentSchedule()', async () => {
+        await processPaymentSchedules()
+
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
+        expect(validatePaymentSchedule).toHaveBeenNthCalledWith(3, await getPaymentSchedule())
+      })
+
+      test('should call sendPaymentSchedule', async () => {
+        await processPaymentSchedules()
+        expect(sendPaymentSchedule).toHaveBeenCalled()
+      })
+
+      test('should call sendPaymentSchedule 3 times', async () => {
+        await processPaymentSchedules()
+        expect(sendPaymentSchedule).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call sendPaymentSchedule with each getPaymentSchedule()', async () => {
+        await processPaymentSchedules()
+
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(1, await getPaymentSchedule())
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(2, await getPaymentSchedule())
+        expect(sendPaymentSchedule).toHaveBeenNthCalledWith(3, await getPaymentSchedule())
+      })
+
+      test('should call updateScheduleByScheduleId', async () => {
+        await processPaymentSchedules()
+        expect(updateScheduleByScheduleId).toHaveBeenCalled()
+      })
+
+      test('should call updateScheduleByScheduleId 3 times', async () => {
+        await processPaymentSchedules()
+        expect(updateScheduleByScheduleId).toHaveBeenCalledTimes(3)
+      })
+
+      test('should call updateScheduleByScheduleId with each schedulePendingPaymentSchedules.scheduleId', async () => {
+        await processPaymentSchedules()
+
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(1, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(2, (await schedulePendingPaymentSchedules())[0].scheduleId)
+        expect(updateScheduleByScheduleId).toHaveBeenNthCalledWith(3, (await schedulePendingPaymentSchedules())[0].scheduleId)
+      })
+
+      test('should return undefined', async () => {
+        const res = await processPaymentSchedules()
+        expect(res).toBeUndefined()
+      })
     })
   })
 })
