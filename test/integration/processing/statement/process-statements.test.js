@@ -1,61 +1,119 @@
-// jest.mock('../../../app/processing/schedule')
-// const { schedulePendingSettlements } = require('../../../app/processing/schedule')
+const db = require('../../../../app/data')
 
-// jest.mock('../../../app/processing/statement')
-// const { getStatement, sendStatement, validateStatement } = require('../../../app/processing/statement')
+// jest mock timers
+/// jest system time now
 
-// jest.mock('../../../app/processing/update-schedule-by-schedule-id')
-// const updateScheduleByScheduleId = require('../../../app/processing/update-schedule-by-schedule-id')
+jest.mock('../../../../app/processing/settlement/get-settlement')
+const getStatement = require('../../../../app/processing/statement/get-statement')
 
-// const processStatements = require('../../../app/processing/process-statements')
-// const db = require('../../../../app/data')
+const processStatements = require('../../../../app/processing/process-statements')
 
-// let retrievedSchedule
-// let statement
+let statement
 
-// // mock ffc-messaging
+describe('process statements', () => {
+  beforeAll(async () => {
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
 
-// describe('process statements', () => {
-//   beforeEach(async () => {
-//     const schedule = JSON.parse(JSON.stringify(require('../../mock-objects/mock-schedule').STATEMENT))
-//     retrievedSchedule = {
-//       scheduleId: 1,
-//       settlementId: schedule.settlementId
-//     }
+  beforeEach(async () => {
+    statement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-statement')))
 
-//     statement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-statement')))
+    getStatement.mockResolvedValue(statement)
+  })
 
-//     schedulePendingSettlements.mockResolvedValue([retrievedSchedule])
-//     sendStatement.mockResolvedValue(undefined)
-//     updateScheduleByScheduleId.mockResolvedValue(undefined)
-//   })
+  afterEach(async () => {
+    jest.clearAllMocks()
 
-//   afterEach(() => {
-//     jest.clearAllMocks()
-//   })
+    await db.sequelize.truncate({
+      cascade: true,
+      restartIdentity: true
+    })
+  })
 
-//   describe('for new record', () => {
-//     test('should update started for schedule', async () => {
-//     })
+  describe('when schedulePendingSettlements returns record', () => {
+    beforeEach(async () => {
+    })
 
-//     test('should add statement to message statement topic', async () => {
-//       await processStatements()
+    describe('when valid statement', () => {
+      test('should update started for schedule', async () => {
+        const scheduleBefore = await db.schedule.findAll({ raw: true })[0]
 
-//       // isn't really int test as mock
-//       // expect mocksend to be called with statement
-//       expect(1).toBe(1)
-//     })
+        await processStatements()
 
-//     test('should update completed for schedule', async () => {
-//       const scheduleBefore = db.schedule.findAll()
+        const scheduleAfter = await db.schedule.findAll({ raw: true })[0]
+        expect(scheduleBefore.started).toBeNull()
+        expect(scheduleAfter.started).toBeDefined()
+      })
 
-//       await processStatements()
+      test('should update started to date now', async () => {
+        await processStatements()
 
-//       const scheduleAfter = db.schedule.findAll()
-//       expect(scheduleBefore.completed).toBeUndefined()
-//       expect(scheduleAfter.completed).toBeDefined() // mock timers
-//     })
-//   })
+        const schedule = await db.schedule.findAll({ raw: true })[0]
+        expect(schedule.started).toBe(new Date())
+      })
+
+      test('should call ffc-messaging sendMessage', async () => {
+        await processStatements()
+        expect(1).toHaveBeenCalled()
+      })
+
+      test('should call ffc-messaging sendMessage once', async () => {
+        await processStatements()
+        expect(1).toHaveBeenCalledTimes(1)
+      })
+
+      test('should call ffc-messaging sendMessage with message', async () => {
+        await processStatements()
+        expect(1).toHaveBeenCalledWith({ body: { a: 1 } })
+      })
+
+      test('should update schedule completed field', async () => {
+        const scheduleBefore = await db.schedule.findAll({ raw: true })[0]
+
+        await processStatements()
+
+        const scheduleAfter = await db.schedule.findAll({ raw: true })[0]
+        expect(scheduleBefore.completed).toBeNull()
+        expect(scheduleAfter.completed).toBeDefined()
+      })
+
+      test('should update schedule completed field to date now', async () => {
+        await processStatements()
+
+        const schedule = await db.schedule.findAll({ raw: true })[0]
+        expect(schedule.completed).toBe(new Date())
+      })
+    })
+
+    describe('when invalid statement', () => {
+      // invalidate
+      test('should not call ffc-messaging sendMessage', async () => {
+        await processStatements()
+        expect(1).not.toHaveBeenCalled()
+      })
+
+      test('should update schedule completed field', async () => {
+        const scheduleBefore = await db.schedule.findAll({ raw: true })[0]
+
+        await processStatements()
+
+        const scheduleAfter = await db.schedule.findAll({ raw: true })[0]
+        expect(scheduleBefore.completed).toBeNull()
+        expect(scheduleAfter.completed).toBeDefined()
+      })
+
+      test('should update schedule completed field to date now', async () => {
+        await processStatements()
+
+        const schedule = await db.schedule.findAll({ raw: true })[0]
+        expect(schedule.completed).toBe(new Date())
+      })
+    })
+  })
+})
 
 //   describe('for batch max size', () => {
 
