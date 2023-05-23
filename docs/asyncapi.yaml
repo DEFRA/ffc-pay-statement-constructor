@@ -602,7 +602,7 @@ components:
       type: string
       pattern: ^SFI0[0-9]{7}$
       description: Unique identifier for payment request in Siti Agri format
-      example: SFI012345678
+      example: SFI01234567
     Ledger:
       type: string
       description: >-
