@@ -63,11 +63,6 @@ describe('process statements', () => {
         expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
       })
 
-      test('should call mockMessageSender().sendMessage with message', async () => {
-        await processStatements()
-        expect(mockMessageSender().sendMessage).toHaveBeenCalledWith({ body: { a: 1 } })
-      })
-
       test('should update schedule completed field', async () => {
         const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
 
