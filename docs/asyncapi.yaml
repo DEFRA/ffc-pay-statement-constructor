@@ -693,7 +693,13 @@ components:
     SourceSystem:
       type: string
       description: System identifier request originates from
-      example: AHWR
+      enum:
+        - SITI_SFI (SFI)
+        - SITISFI (SFI Pilot)
+        - SitiLUMP (Lump Sums)
+        - AHWR (Vet Visits)
+        - LNR (LNR)
+      example: SITI_SFI
     Type:
       type: string
       description: Type of dataset
