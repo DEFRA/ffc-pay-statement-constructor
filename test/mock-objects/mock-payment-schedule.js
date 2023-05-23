@@ -19,8 +19,8 @@ const { SFI: SFI_LONG_SCHEME_NAME } = require('../../app/constants/scheme-names'
 const { SFI: SFI_SHORT_SCHEME_NAME } = require('../../app/constants/scheme-names').SHORT_NAMES
 const _2022 = require('../mock-components/mock-marketing-year')
 const {
-  topUpProcessingPaymentRequest,
-  topUpSubmitPaymentRequest
+  processingPaymentRequest,
+  topUpProcessingPaymentRequest
 } = require('../mock-objects/mock-payment-request')
 const SCHEDULE = require('./mock-schedule-periods')
 
@@ -46,8 +46,8 @@ module.exports = {
     year: String(_2022)
   },
   adjustment: {
-    adjustmentValue: convertToPounds(Number(topUpSubmitPaymentRequest.value)),
-    currentValue: convertToPounds(Number(topUpSubmitPaymentRequest.value)),
+    adjustmentValue: convertToPounds(Number(topUpProcessingPaymentRequest.value) - Number(processingPaymentRequest.value)),
+    currentValue: convertToPounds(Number(processingPaymentRequest.value)),
     newValue: convertToPounds(Number(topUpProcessingPaymentRequest.value))
   },
   schedule: SCHEDULE
