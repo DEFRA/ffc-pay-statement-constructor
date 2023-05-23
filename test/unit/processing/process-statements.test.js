@@ -156,8 +156,8 @@ describe('process statements', () => {
     })
 
     test('should return undefined', async () => {
-      const res = await processStatements()
-      expect(res).toBeUndefined()
+      const result = await processStatements()
+      expect(result).toBeUndefined()
     })
   })
 
@@ -253,8 +253,8 @@ describe('process statements', () => {
     })
 
     test('should return undefined', async () => {
-      const res = await processStatements()
-      expect(res).toBeUndefined()
+      const result = await processStatements()
+      expect(result).toBeUndefined()
     })
   })
 
@@ -284,8 +284,8 @@ describe('process statements', () => {
     })
 
     test('should return undefined', async () => {
-      const res = await processStatements()
-      expect(res).toBeUndefined()
+      const result = await processStatements()
+      expect(result).toBeUndefined()
     })
   })
 
@@ -369,8 +369,8 @@ describe('process statements', () => {
       })
 
       test('should return undefined', async () => {
-        const res = await processStatements()
-        expect(res).toBeUndefined()
+        const result = await processStatements()
+        expect(result).toBeUndefined()
       })
     })
 
@@ -451,8 +451,8 @@ describe('process statements', () => {
       })
 
       test('should return undefined', async () => {
-        const res = await processStatements()
-        expect(res).toBeUndefined()
+        const result = await processStatements()
+        expect(result).toBeUndefined()
       })
     })
 
@@ -534,8 +534,8 @@ describe('process statements', () => {
       })
 
       test('should return undefined', async () => {
-        const res = await processStatements()
-        expect(res).toBeUndefined()
+        const result = await processStatements()
+        expect(result).toBeUndefined()
       })
     })
   })

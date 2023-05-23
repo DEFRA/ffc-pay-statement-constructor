@@ -170,8 +170,8 @@ describe('process payment schedules', () => {
     })
 
     test('should return undefined', async () => {
-      const res = await processPaymentSchedules()
-      expect(res).toBeUndefined()
+      const result = await processPaymentSchedules()
+      expect(result).toBeUndefined()
     })
 
     test('should not throw when getPaymentSchedule throws', async () => {
@@ -297,8 +297,8 @@ describe('process payment schedules', () => {
     })
 
     test('should return undefined', async () => {
-      const res = await processPaymentSchedules()
-      expect(res).toBeUndefined()
+      const result = await processPaymentSchedules()
+      expect(result).toBeUndefined()
     })
   })
 
@@ -328,8 +328,8 @@ describe('process payment schedules', () => {
     })
 
     test('should return undefined', async () => {
-      const res = await processPaymentSchedules()
-      expect(res).toBeUndefined()
+      const result = await processPaymentSchedules()
+      expect(result).toBeUndefined()
     })
   })
 
@@ -413,8 +413,8 @@ describe('process payment schedules', () => {
       })
 
       test('should return undefined', async () => {
-        const res = await processPaymentSchedules()
-        expect(res).toBeUndefined()
+        const result = await processPaymentSchedules()
+        expect(result).toBeUndefined()
       })
     })
 
@@ -495,8 +495,8 @@ describe('process payment schedules', () => {
       })
 
       test('should return undefined', async () => {
-        const res = await processPaymentSchedules()
-        expect(res).toBeUndefined()
+        const result = await processPaymentSchedules()
+        expect(result).toBeUndefined()
       })
     })
 
@@ -578,8 +578,8 @@ describe('process payment schedules', () => {
       })
 
       test('should return undefined', async () => {
-        const res = await processPaymentSchedules()
-        expect(res).toBeUndefined()
+        const result = await processPaymentSchedules()
+        expect(result).toBeUndefined()
       })
     })
   })

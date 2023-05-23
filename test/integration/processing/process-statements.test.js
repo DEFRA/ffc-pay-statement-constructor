@@ -34,79 +34,77 @@ describe('process statements', () => {
     })
   })
 
-  describe('when schedulePendingSettlements returns record', () => {
-    describe('when valid statement', () => {
-      test('should update started for schedule', async () => {
-        const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+  describe('when valid statement', () => {
+    test('should update started for schedule', async () => {
+      const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
 
-        await processStatements()
+      await processStatements()
 
-        const scheduleAfter = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-        expect(scheduleBefore.started).toBeNull()
-        expect(scheduleAfter.started).toBeDefined()
-      })
-
-      test('should update started to date now', async () => {
-        await processStatements()
-
-        const schedule = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-        expect(schedule.started).toStrictEqual(new Date())
-      })
-
-      test('should call mockMessageSender().sendMessage', async () => {
-        await processStatements()
-        expect(mockMessageSender().sendMessage).toHaveBeenCalled()
-      })
-
-      test('should call mockMessageSender().sendMessage once', async () => {
-        await processStatements()
-        expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
-      })
-
-      test('should update schedule completed field', async () => {
-        const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-
-        await processStatements()
-
-        const scheduleAfter = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-        expect(scheduleBefore.completed).toBeNull()
-        expect(scheduleAfter.completed).toBeDefined()
-      })
-
-      test('should update schedule completed field to date now', async () => {
-        await processStatements()
-
-        const schedule = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-        expect(schedule.completed).toStrictEqual(new Date())
-      })
+      const scheduleAfter = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+      expect(scheduleBefore.started).toBeNull()
+      expect(scheduleAfter.started).toBeDefined()
     })
 
-    describe('when invalid statement', () => {
-      beforeEach(async () => {
-        getStatement.mockResolvedValue({ ...statement, payments: [{ ...statement.payments[0], value: 0 }] })
-      })
+    test('should update started to date now', async () => {
+      await processStatements()
 
-      test('should not call mockMessageSender().sendMessage', async () => {
-        await processStatements()
-        expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
-      })
+      const schedule = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+      expect(schedule.started).toStrictEqual(new Date())
+    })
 
-      test('should update schedule completed field', async () => {
-        const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+    test('should call mockMessageSender().sendMessage', async () => {
+      await processStatements()
+      expect(mockMessageSender().sendMessage).toHaveBeenCalled()
+    })
 
-        await processStatements()
+    test('should call mockMessageSender().sendMessage once', async () => {
+      await processStatements()
+      expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
+    })
 
-        const scheduleAfter = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-        expect(scheduleBefore.completed).toBeNull()
-        expect(scheduleAfter.completed).toBeDefined()
-      })
+    test('should update completed for schedule', async () => {
+      const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
 
-      test('should update schedule completed field to date now', async () => {
-        await processStatements()
+      await processStatements()
 
-        const schedule = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
-        expect(schedule.completed).toStrictEqual(new Date())
-      })
+      const scheduleAfter = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+      expect(scheduleBefore.completed).toBeNull()
+      expect(scheduleAfter.completed).toBeDefined()
+    })
+
+    test('should update completed for schedule to date now', async () => {
+      await processStatements()
+
+      const schedule = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+      expect(schedule.completed).toStrictEqual(new Date())
+    })
+  })
+
+  describe('when invalid statement', () => {
+    beforeEach(async () => {
+      getStatement.mockResolvedValue({ ...statement, payments: [{ ...statement.payments[0], value: 0 }] })
+    })
+
+    test('should not call mockMessageSender().sendMessage', async () => {
+      await processStatements()
+      expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
+    })
+
+    test('should update completed for schedule', async () => {
+      const scheduleBefore = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+
+      await processStatements()
+
+      const scheduleAfter = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+      expect(scheduleBefore.completed).toBeNull()
+      expect(scheduleAfter.completed).toBeDefined()
+    })
+
+    test('should update completed for schedule to date now', async () => {
+      await processStatements()
+
+      const schedule = await db.schedule.findOne({ where: { scheduleId: 1 }, raw: true })
+      expect(schedule.completed).toStrictEqual(new Date())
     })
   })
 })
