@@ -1,6 +1,4 @@
 const convertToPounds = require('../../app/utility/convert-to-pounds')
-const getFundingLevel = require('../../app/processing/funding/get-funding-level')
-const getFundingName = require('../../app/processing/funding/get-funding-name')
 
 const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
 const DOCUMENT_REFERENCE = require('../mock-components/mock-document-reference')
@@ -47,8 +45,8 @@ module.exports = {
     {
       annualValue: convertToPounds(Number(FIVE_HUNDRED_POUNDS)),
       area: Number(FUNDING.areaClaimed).toFixed(4),
-      level: getFundingLevel(FUNDING.fundingOptions.name),
-      name: getFundingName(FUNDING.fundingOptions.name),
+      level: 'Introductory',
+      name: 'Arable and horticultural soils',
       quarterlyPayment: convertToPounds(Number(FIVE_HUNDRED_POUNDS) / 4),
       quarterlyReduction: convertToPounds(0),
       quarterlyValue: convertToPounds(Number(FIVE_HUNDRED_POUNDS) / 4),
