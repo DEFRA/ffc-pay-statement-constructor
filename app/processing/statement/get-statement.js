@@ -5,7 +5,7 @@ const { getLatestInProgressPaymentRequest } = require('../payment-request')
 const { getSettlement, getSupportingSettlements } = require('../settlement')
 const { getLatestPayment } = require('../payment')
 
-const getStatement = async (settlementId) => {
+const getStatement = async (settlementId, scheduleId) => {
   const transaction = await db.sequelize.transaction()
   try {
     const settlement = await getSettlement(settlementId, transaction)
@@ -26,7 +26,8 @@ const getStatement = async (settlementId) => {
       address,
       funding,
       payments,
-      scheme
+      scheme,
+      documentReference: scheduleId
     }
   } catch (err) {
     await transaction.rollback()

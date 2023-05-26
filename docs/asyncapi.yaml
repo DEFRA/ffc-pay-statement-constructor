@@ -524,6 +524,11 @@ components:
       type: string
       description: Additional settlement information from DAX
       example: BAC Rejection
+    DocumentReference:
+      type: number
+      description: Schedule ID of the docuemnt object used downstream for duplicate detection
+      minimum: 1
+      example: 1
     DueDate:
       type: string
       format: 'DD/MM/YYYY, YYYY/MM/DD, DD-MM-YYYY or YYYY-MM-DD'
@@ -602,7 +607,7 @@ components:
       type: string
       pattern: ^SFI0[0-9]{7}$
       description: Unique identifier for payment request in Siti Agri format
-      example: SFI012345678
+      example: SFI01234567
     Ledger:
       type: string
       description: >-
@@ -693,7 +698,13 @@ components:
     SourceSystem:
       type: string
       description: System identifier request originates from
-      example: AHWR
+      enum:
+        - SITI_SFI (SFI)
+        - SITISFI (SFI Pilot)
+        - SitiLUMP (Lump Sums)
+        - AHWR (Vet Visits)
+        - LNR (LNR)
+      example: SITI_SFI
     Type:
       type: string
       description: Type of dataset
@@ -725,4 +736,4 @@ components:
     Period:
       type: string
       description: Period of payment request
-      example: Dec-Feb 2023
+      example: Sep-Aug 2023

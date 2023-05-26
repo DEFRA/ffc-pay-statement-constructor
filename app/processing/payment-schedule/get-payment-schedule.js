@@ -5,7 +5,7 @@ const { getDetails, getAddress, getScheme, getScheduleDates, getAdjustment } = r
 const { calculateScheduledPayments, calculateDelta } = require('../payment')
 const { getScheduleSupportingSettlements } = require('../settlement')
 
-const getPaymentSchedule = async (paymentRequestId) => {
+const getPaymentSchedule = async (paymentRequestId, scheduleId) => {
   const transaction = await db.sequelize.transaction()
   try {
     const completedPaymentRequest = await getCompletedPaymentRequestByPaymentRequestId(paymentRequestId, transaction)
@@ -31,7 +31,8 @@ const getPaymentSchedule = async (paymentRequestId) => {
       address,
       scheme,
       adjustment,
-      schedule
+      schedule,
+      documentReference: scheduleId
     }
   } catch (err) {
     await transaction.rollback()
