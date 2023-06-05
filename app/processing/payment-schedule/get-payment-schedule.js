@@ -1,7 +1,7 @@
 const db = require('../../data')
 const { getInProgressPaymentRequest, getPreviousPaymentRequests, getCompletedPaymentRequestByPaymentRequestId, mapPaymentRequest, getPreviousPaymentRequestsWithPaymentSchedules } = require('../payment-request')
 const getCalculation = require('../calculation')
-const { getDetails, getAddress, getScheme, getScheduleDates, getAdjustment } = require('../components')
+const { getDetails, getAddress, getScheme, getScheduleDates, getAdjustment, getRemainingAmount } = require('../components')
 const { calculateScheduledPayments, calculateDelta } = require('../payment')
 const { getScheduleSupportingSettlements } = require('../settlement')
 
@@ -19,6 +19,7 @@ const getPaymentSchedule = async (paymentRequestId, scheduleId) => {
     const newPaymentSchedule = calculateScheduledPayments(paymentRequest)
     const deltaValue = calculateDelta(lastPaymentRequest.value, mappedPaymentRequest.value)
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentSchedule, deltaValue)
+    const remainingAmount = getRemainingAmount(schedule)
     const adjustment = getAdjustment(lastPaymentRequest.value, mappedPaymentRequest.value, deltaValue)
     const calculation = await getCalculation(mappedPaymentRequest.paymentRequestId, mappedPaymentRequest.invoiceNumber, transaction)
     const details = await getDetails(calculation.sbi, transaction)
@@ -31,6 +32,7 @@ const getPaymentSchedule = async (paymentRequestId, scheduleId) => {
       address,
       scheme,
       adjustment,
+      remainingAmount,
       schedule,
       documentReference: scheduleId
     }
