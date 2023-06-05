@@ -21,6 +21,9 @@ describe('get payment schedule', () => {
   })
 
   beforeEach(async () => {
+    const { DATE } = require('../../../mock-components/mock-dates').NOW
+    jest.useFakeTimers().setSystemTime(DATE)
+
     const calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     const organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
 
