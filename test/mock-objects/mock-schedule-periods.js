@@ -14,7 +14,7 @@ module.exports = [{
   dueDate: undefined,
   order: 1,
   paymentType: IMMEDIATE,
-  period: 'Jun 2023',
+  period: 'May 2023',
   value: convertToPounds(2 * (topUpProcessingPaymentRequest.value - processingPaymentRequest.value) / 4)
 },
 {

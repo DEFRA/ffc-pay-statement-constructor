@@ -240,9 +240,9 @@ describe('get payment schedule', () => {
     })
   })
 
-  /* test('returns paymentSchedule', async () => {
+  test('returns paymentSchedule', async () => {
     paymentSchedule.schedule.forEach(x => { if (x.paymentType === IMMEDIATE) { x.dueDate = undefined } })
     const result = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
     expect(result).toStrictEqual(paymentSchedule)
-  }) */
+  })
 })

@@ -1,4 +1,5 @@
 const convertToPounds = require('../../app/utility/convert-to-pounds')
+const getRemainingAmount = require('../../app/processing/components/get-remaining-amount')
 
 const BUSINESS_NAME = require('../mock-components/mock-organisation-name')
 const DOCUMENT_REFERENCE = require('../mock-components/mock-document-reference')
@@ -29,6 +30,7 @@ module.exports = {
   documentReference: DOCUMENT_REFERENCE,
   email: EMAIL_ADDRESS,
   frn: Number(FRN),
+  remainingAmount: getRemainingAmount(SCHEDULE),
   sbi: Number(SBI),
   address: {
     line1: LINE_1,
