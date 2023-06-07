@@ -103,6 +103,11 @@ describe('get schedule dates', () => {
     expect(schedule[0].paymentType).toEqual(IMMEDIATE)
   })
 
+  test('should not retain previous payment value for paid segments if top up', () => {
+    const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
+    expect(schedule[0].paymentType).toEqual(IMMEDIATE)
+  })
+
   test('should calculate new payment value for unpaid segments if top up', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
     expect(schedule[1].value).toEqual('500.00')
