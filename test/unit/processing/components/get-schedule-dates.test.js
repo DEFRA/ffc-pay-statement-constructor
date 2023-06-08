@@ -101,6 +101,7 @@ describe('get schedule dates', () => {
   test('Adjustment payment Type must be Immediate payment', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
     expect(schedule[0].paymentType).toEqual(IMMEDIATE)
+    expect(schedule[0].paymentType).not.toEqual(QUARTERLY)
   })
 
   test('should not retain previous payment value for paid segments if top up', () => {
@@ -125,7 +126,7 @@ describe('get schedule dates', () => {
     expect(schedule[0].value).toEqual('250.00')
   })
 
-  test('should insert top up as first only scheduled item no remaining payments', () => {
+  test('should insert top up as first and only scheduled item when no remaining payments are to be made', () => {
     previousPaymentSchedule.forEach(x => { x.outstanding = false })
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
     expect(schedule[0].value).toEqual('500.00')

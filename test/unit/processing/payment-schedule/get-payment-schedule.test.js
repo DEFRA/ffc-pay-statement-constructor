@@ -220,13 +220,8 @@ describe('get various components and transform to payment schedule object', () =
   })
 
   test('should call getRemainingAmount with scheduleDates when a paymentRequestId is given', async () => {
-    const newPaymentSchedule = {}
-    const previousPaymentSchedule = {}
-    const delta = 1
-    const schedule = getScheduleDates(previousPaymentSchedule, newPaymentSchedule, delta)
-
     const paymentRequestId = 1
     await getPaymentSchedule(paymentRequestId)
-    expect(getRemainingAmount).toHaveBeenCalledWith(schedule)
+    expect(getRemainingAmount).toHaveBeenCalledWith(getScheduleDates())
   })
 })
