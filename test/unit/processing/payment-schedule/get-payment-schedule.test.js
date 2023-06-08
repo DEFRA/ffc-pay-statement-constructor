@@ -32,7 +32,8 @@ const {
   getDetails,
   getScheme,
   getScheduleDates,
-  getAdjustment
+  getAdjustment,
+  getRemainingAmount
 } = require('../../../../app/processing/components')
 
 const { getPaymentSchedule } = require('../../../../app/processing/payment-schedule')
@@ -107,6 +108,8 @@ describe('get various components and transform to payment schedule object', () =
       adjustmentValue: '0.00'
     }
 
+    const remainingAmount = 500
+
     getCompletedPaymentRequestByPaymentRequestId.mockResolvedValue(paymentRequest)
     getInProgressPaymentRequest.mockResolvedValue(paymentRequest)
     getPreviousPaymentRequests.mockResolvedValue([paymentRequest])
@@ -119,6 +122,7 @@ describe('get various components and transform to payment schedule object', () =
     getScheme.mockResolvedValue(scheme)
     getScheduleDates.mockResolvedValue(schedule)
     getAdjustment.mockResolvedValue(adjustment)
+    getRemainingAmount.mockResolvedValue(remainingAmount)
   })
 
   afterEach(() => {
@@ -207,5 +211,17 @@ describe('get various components and transform to payment schedule object', () =
     const paymentRequestId = 1
     await getPaymentSchedule(paymentRequestId)
     expect(getScheduleDates).toHaveBeenCalled()
+  })
+
+  test('should call getRemainingAmount when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentSchedule(paymentRequestId)
+    expect(getRemainingAmount).toHaveBeenCalled()
+  })
+
+  test('should call getRemainingAmount with scheduleDates when a paymentRequestId is given', async () => {
+    const paymentRequestId = 1
+    await getPaymentSchedule(paymentRequestId)
+    expect(getRemainingAmount).toHaveBeenCalledWith(getScheduleDates())
   })
 })

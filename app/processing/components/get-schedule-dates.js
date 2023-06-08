@@ -17,16 +17,14 @@ const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValu
     newPaymentSchedule.forEach(x => { x.value = x.value - correctionValue < 0 ? 0 : x.value - correctionValue })
   }
   if (deltaValue > nonAdjustmentValue) {
-    paidSegments.push({
+    newPaymentSchedule.unshift({
       paymentType: IMMEDIATE,
       period: moment().format('MMM YYYY'),
       value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
     })
   }
 
-  const schedule = paidSegments.concat(newPaymentSchedule)
-
-  return mapSchedule(schedule)
+  return mapSchedule(newPaymentSchedule)
 }
 
 const mapSchedule = (schedule) => {

@@ -95,79 +95,69 @@ describe('get schedule dates', () => {
 
   test('should insert top up adjustment after last outstanding payment in original schedule', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[2].period).toEqual(moment().format('MMM YYYY'))
+    expect(schedule[0].period).toEqual(moment().format('MMM YYYY'))
   })
 
   test('Adjustment payment Type must be Immediate payment', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[2].paymentType).toEqual(IMMEDIATE)
+    expect(schedule[0].paymentType).toEqual(IMMEDIATE)
+    expect(schedule[0].paymentType).not.toEqual(QUARTERLY)
   })
 
-  test('should retain previous payment value for paid segments if top up', () => {
+  test('should not retain previous payment value for paid segments if top up', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[0].value).toEqual('250.00')
-    expect(schedule[1].value).toEqual('250.00')
+    expect(schedule[0].paymentType).toEqual(IMMEDIATE)
   })
 
   test('should calculate new payment value for unpaid segments if top up', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[3].value).toEqual('500.00')
-    expect(schedule[4].value).toEqual('500.00')
+    expect(schedule[1].value).toEqual('500.00')
+    expect(schedule[2].value).toEqual('500.00')
   })
 
   test('Non-Adjustment payment Type must be Quarterly Payment', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[3].paymentType).toEqual(QUARTERLY)
-    expect(schedule[4].paymentType).toEqual(QUARTERLY)
+    expect(schedule[1].paymentType).toEqual(QUARTERLY)
+    expect(schedule[2].paymentType).toEqual(QUARTERLY)
   })
 
   test('should calculate top up value for adjustment', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[2].value).toEqual('250.00')
+    expect(schedule[0].value).toEqual('250.00')
   })
 
-  test('should insert top up as last scheduled item no remaining payments', () => {
+  test('should insert top up as first and only scheduled item when no remaining payments are to be made', () => {
     previousPaymentSchedule.forEach(x => { x.outstanding = false })
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[0].value).toEqual('250.00')
-    expect(schedule[1].value).toEqual('250.00')
-    expect(schedule[2].value).toEqual('250.00')
-    expect(schedule[3].value).toEqual('250.00')
-    expect(schedule[4].value).toEqual('500.00')
+    expect(schedule[0].value).toEqual('500.00')
+    expect(schedule.length).toBe(1)
   })
 
   test('should not insert adjustment into schedule if reduction', () => {
     deltaValue = -25000
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[2].period).not.toEqual(moment().format('MMM YYYY'))
-    expect(schedule.length).toEqual(previousPaymentSchedule.length)
-  })
-
-  test('should retain previous payment value for paid segments if reduction', () => {
-    deltaValue = -25000
-    const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[0].value).toEqual('250.00')
-    expect(schedule[1].value).toEqual('250.00')
+    expect(schedule[0].period).not.toEqual(moment().format('MMM YYYY'))
+    expect(schedule.length).toEqual(newPaymentScheduleReduction.length)
   })
 
   test('should calculate new payment value for unpaid segments if reduction', () => {
     deltaValue = -25000
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[2].value).toEqual('62.50')
-    expect(schedule[3].value).toEqual('62.50')
+    expect(schedule[0].value).toEqual('62.50')
+    expect(schedule[1].value).toEqual('62.50')
   })
 
   test('should calculate new payment value for unpaid segments if reduction results in zero remaining payments', () => {
     deltaValue = -50000
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[2].value).toEqual('0.00')
-    expect(schedule[3].value).toEqual('0.00')
+    expect(schedule[0].value).toEqual('0.00')
+    expect(schedule[1].value).toEqual('0.00')
   })
 
   test('should not display negative schedule values if recovery', () => {
     deltaValue = -100000
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[2].value).toEqual('0.00')
-    expect(schedule[3].value).toEqual('0.00')
+    expect(schedule[0].value).toEqual('0.00')
+    expect(schedule[1].value).toEqual('0.00')
   })
 })
