@@ -9,4 +9,19 @@ ignore:
     - applicationinsights > @azure/core-http > node-fetch:
         reason: None given
         expires: '2022-08-31T12:46:12.897Z'
+  SNYK-JS-SEMVER-3247795:
+    - '*':
+        reason: None Given
+        expires: 2023-07-21T11:20:48.838Z
+        created: 2023-06-21T11:20:48.846Z
+  SNYK-JS-DOTTIE-3332763:
+    - '*':
+        reason: None Given
+        expires: 2023-07-21T11:21:01.800Z
+        created: 2023-06-21T11:21:01.810Z
+  SNYK-JS-TOUGHCOOKIE-5672873:
+    - '*':
+        reason: None Given
+        expires: 2023-08-03T08:52:08.023Z
+        created: 2023-07-04T08:52:08.029Z
 patch: {}
