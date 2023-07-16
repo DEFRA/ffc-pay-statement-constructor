@@ -116,12 +116,12 @@ describe('get payment schedule', () => {
     expect(result.sbi).toEqual(paymentSchedule.sbi)
   })
 
-  test('returns remainingAmount key', async () => {
+  test('returns frn key', async () => {
     const result = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
     expect(Object.keys(result)).toContain('frn')
   })
 
-  test('returns remainingAmount as number', async () => {
+  test('returns frn as number', async () => {
     const result = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
     expect(result.frn).toEqual(expect.any(Number))
   })

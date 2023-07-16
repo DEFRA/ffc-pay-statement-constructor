@@ -225,9 +225,9 @@ describe('get various components and transform to payment schedule object', () =
     expect(getRemainingAmount).toHaveBeenCalled()
   })
 
-  test('should call getRemainingAmount with scheduleDates when a paymentRequestId is given', async () => {
+  test('should call getRemainingAmount with calculateScheduledPayments and mappedPaymentRequest.value when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentSchedule(paymentRequestId)
-    expect(getRemainingAmount).toHaveBeenCalledWith(getPreviousPaymentRequests(), mappedPaymentRequest.value)
+    expect(getRemainingAmount).toHaveBeenCalledWith(calculateScheduledPayments(), mappedPaymentRequest.value)
   })
 })
