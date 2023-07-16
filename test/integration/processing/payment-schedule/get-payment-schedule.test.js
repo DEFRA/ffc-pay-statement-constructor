@@ -126,6 +126,16 @@ describe('get payment schedule', () => {
     expect(result.frn).toEqual(expect.any(Number))
   })
 
+  test('returns remainingAmount key', async () => {
+    const result = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(Object.keys(result)).toContain('remainingAmount')
+  })
+
+  test('returns remainingAmount as number', async () => {
+    const result = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
+    expect(result.remainingAmount).toEqual(expect.any(Number))
+  })
+
   test('returns schedule key', async () => {
     const result = await getPaymentSchedule(schedule.paymentRequestId, schedule.scheduleId)
     expect(Object.keys(result)).toContain('schedule')
