@@ -1,27 +1,25 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.22.1
+version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-JS-NODEFETCH-2964180:
-    - '@azure/storage-blob > @azure/core-http > node-fetch':
-        reason: None given
-        expires: '2022-08-31T12:46:12.897Z'
-    - applicationinsights > @azure/core-http > node-fetch:
-        reason: None given
-        expires: '2022-08-31T12:46:12.897Z'
-  SNYK-JS-SEMVER-3247795:
-    - '*':
-        reason: None Given
-        expires: 2023-07-21T11:20:48.838Z
-        created: 2023-06-21T11:20:48.846Z
   SNYK-JS-DOTTIE-3332763:
     - '*':
         reason: None Given
-        expires: 2023-07-21T11:21:01.800Z
-        created: 2023-06-21T11:21:01.810Z
+        expires: 2023-08-18T14:02:48.999Z
+        created: 2023-07-19T14:02:49.007Z
+  SNYK-JS-FASTXMLPARSER-5668858:
+    - '*':
+        reason: None Given
+        expires: 2023-08-18T14:02:57.934Z
+        created: 2023-07-19T14:02:57.944Z
+  SNYK-JS-SEMVER-3247795:
+    - '*':
+        reason: None Given
+        expires: 2023-08-18T14:03:07.361Z
+        created: 2023-07-19T14:03:07.370Z
   SNYK-JS-TOUGHCOOKIE-5672873:
     - '*':
         reason: None Given
-        expires: 2023-08-03T08:52:08.023Z
-        created: 2023-07-04T08:52:08.029Z
+        expires: 2023-08-18T14:03:17.013Z
+        created: 2023-07-19T14:03:17.021Z
 patch: {}
