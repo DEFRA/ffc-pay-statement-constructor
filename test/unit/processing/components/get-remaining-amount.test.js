@@ -4,67 +4,100 @@ const getRemainingAmount = require('../../../../app/processing/components/get-re
 
 const scheduleDates = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-timelines')))
 
-const paidSegments = scheduleDates.filter(x => !x.outstanding)
+let currentClaimValue
+let paidAmount
+let originalRemainingClaimValue
 
-const CURRENT_AGREEMENT_VALUE = scheduleDates.reduce((currentAmount, schedule) => currentAmount + Number(schedule.value), 0)
-const TOTAL_PAYMENT_MADE = paidSegments.reduce((paidAmount, schedule) => paidAmount + Number(schedule.value), 0)
-const CURRENT_REMAINING_AMOUNT = CURRENT_AGREEMENT_VALUE - TOTAL_PAYMENT_MADE
-const CURRENT_REMAINING_AMOUNT_POUND = Number(convertToPounds(CURRENT_REMAINING_AMOUNT))
+let paymentSchedule
+let newValue
 
 describe('get remaining amount', () => {
-  describe('top up', () => {
-    const topUpNewValue = CURRENT_AGREEMENT_VALUE + 100
+  beforeEach(() => {
+    currentClaimValue = scheduleDates.reduce((runningTotal, record) => runningTotal + record.value, 0)
+    paidAmount = scheduleDates.filter(record => !record.outstanding).reduce((runningTotal, record) => runningTotal + record.value, 0)
+    originalRemainingClaimValue = currentClaimValue - paidAmount
+  })
 
-    test('should return remaining amount as number', () => {
-      const result = getRemainingAmount(scheduleDates, topUpNewValue)
+  describe('top up', () => {
+    beforeEach(() => {
+      paymentSchedule = scheduleDates
+      newValue = currentClaimValue + 25000
+    })
+
+    test('should return a number', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
       expect(result).toEqual(expect.any(Number))
     })
 
-    test('should return value greater than current remaining amount', () => {
-      const result = getRemainingAmount(scheduleDates, topUpNewValue)
-      expect(result > CURRENT_REMAINING_AMOUNT_POUND).toBeTruthy()
+    test('should return a value greater than Number(convertToPounds(originalRemainingClaimValue))', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBeGreaterThan(Number(convertToPounds(originalRemainingClaimValue)))
+    })
+
+    test('should return Number(convertToPounds(newValue - paidAmount))', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBe(Number(convertToPounds(newValue - paidAmount)))
     })
   })
 
   describe('reduction', () => {
-    const reductionNewValue = CURRENT_AGREEMENT_VALUE - 100
+    beforeEach(() => {
+      paymentSchedule = scheduleDates
+      newValue = currentClaimValue - 25000
+    })
 
-    test('should return remaining amount as number', () => {
-      const result = getRemainingAmount(scheduleDates, reductionNewValue)
+    test('should return a number', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
       expect(result).toEqual(expect.any(Number))
     })
 
-    test('should return value less than current remaining amount', () => {
-      const result = getRemainingAmount(scheduleDates, reductionNewValue)
-      expect(result < CURRENT_REMAINING_AMOUNT_POUND).toBeTruthy()
+    test('should return value less than Number(convertToPounds(originalRemainingClaimValue))', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBeLessThan(Number(convertToPounds(originalRemainingClaimValue)))
+    })
+
+    test('should return Number(convertToPounds(newValue - paidAmount))', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBe(Number(convertToPounds(newValue - paidAmount)))
     })
   })
 
   describe('reduction to zero', () => {
-    const reductionToZeroNewValue = TOTAL_PAYMENT_MADE
+    beforeEach(() => {
+      paymentSchedule = scheduleDates
+      newValue = paidAmount
+    })
 
-    test('should return remaining amount as number', () => {
-      const result = getRemainingAmount(scheduleDates, reductionToZeroNewValue)
+    test('should return a number', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
       expect(result).toEqual(expect.any(Number))
     })
 
-    test('should return value equal to zero', () => {
-      const result = getRemainingAmount(scheduleDates, reductionToZeroNewValue)
-      expect(result === 0).toBeTruthy()
+    test('should return 0', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBe(0)
     })
   })
 
   describe('recovery', () => {
-    const recoveryNewValue = CURRENT_REMAINING_AMOUNT - (CURRENT_REMAINING_AMOUNT + 100)
+    beforeEach(() => {
+      paymentSchedule = scheduleDates
+      newValue = originalRemainingClaimValue - (originalRemainingClaimValue + 25000)
+    })
 
-    test('should return remaining amount as number', () => {
-      const result = getRemainingAmount(scheduleDates, recoveryNewValue)
+    test('should return a number', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
       expect(result).toEqual(expect.any(Number))
     })
 
-    test('should return value less than 0', () => {
-      const result = getRemainingAmount(scheduleDates, recoveryNewValue)
-      expect(result < 0).toBeTruthy()
+    test('should return a value less than 0', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBeLessThan(0)
+    })
+
+    test('should return Number(convertToPounds(newValue - paidAmount))', () => {
+      const result = getRemainingAmount(paymentSchedule, newValue)
+      expect(result).toBe(Number(convertToPounds(newValue - paidAmount)))
     })
   })
 })
