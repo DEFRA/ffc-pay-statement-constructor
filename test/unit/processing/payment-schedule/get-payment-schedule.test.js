@@ -39,11 +39,15 @@ const {
 const { getPaymentSchedule } = require('../../../../app/processing/payment-schedule')
 const { NAMES } = require('../../../../app/constants/schedules')
 
+jest.mock('../../../../app/processing/payment')
+const { calculateScheduledPayments } = require('../../../../app/processing/payment')
+
 let paymentRequest
 let calculation
 let organisation
 let mappedPaymentRequest
 let settlement
+let previousPaymentSchedule
 
 describe('get various components and transform to payment schedule object', () => {
   beforeEach(() => {
@@ -51,6 +55,7 @@ describe('get various components and transform to payment schedule object', () =
     calculation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-calculation')))
     organisation = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-organisation')))
     settlement = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-settlement')))
+    previousPaymentSchedule = JSON.parse(JSON.stringify(require('../../../mock-objects/mock-payment-timelines')))
 
     mappedPaymentRequest = {
       paymentRequestId: 1,
@@ -123,6 +128,7 @@ describe('get various components and transform to payment schedule object', () =
     getScheduleDates.mockResolvedValue(schedule)
     getAdjustment.mockResolvedValue(adjustment)
     getRemainingAmount.mockResolvedValue(remainingAmount)
+    calculateScheduledPayments.mockResolvedValue(previousPaymentSchedule)
   })
 
   afterEach(() => {
@@ -219,9 +225,9 @@ describe('get various components and transform to payment schedule object', () =
     expect(getRemainingAmount).toHaveBeenCalled()
   })
 
-  test('should call getRemainingAmount with scheduleDates when a paymentRequestId is given', async () => {
+  test('should call getRemainingAmount with calculateScheduledPayments and mappedPaymentRequest.value when a paymentRequestId is given', async () => {
     const paymentRequestId = 1
     await getPaymentSchedule(paymentRequestId)
-    expect(getRemainingAmount).toHaveBeenCalledWith(getScheduleDates())
+    expect(getRemainingAmount).toHaveBeenCalledWith(calculateScheduledPayments(), mappedPaymentRequest.value)
   })
 })

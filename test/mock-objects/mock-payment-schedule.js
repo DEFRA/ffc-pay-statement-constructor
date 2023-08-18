@@ -24,13 +24,14 @@ const {
   topUpProcessingPaymentRequest
 } = require('../mock-objects/mock-payment-request')
 const SCHEDULE = require('./mock-schedule-periods')
+const PAYMENT_TIMELINE = require('./mock-payment-timelines')
 
 module.exports = {
   businessName: BUSINESS_NAME,
   documentReference: DOCUMENT_REFERENCE,
   email: EMAIL_ADDRESS,
   frn: Number(FRN),
-  remainingAmount: getRemainingAmount(SCHEDULE),
+  remainingAmount: getRemainingAmount(PAYMENT_TIMELINE, topUpProcessingPaymentRequest.value),
   sbi: Number(SBI),
   address: {
     line1: LINE_1,
