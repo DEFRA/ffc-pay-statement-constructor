@@ -95,7 +95,7 @@ describe('get schedule dates', () => {
 
   test('should insert top up adjustment after last outstanding payment in original schedule', () => {
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleTopUp, deltaValue)
-    expect(schedule[0].period).toEqual(moment().format('MMM YYYY'))
+    expect(schedule[0].period).toEqual(moment().format('MMMM YYYY'))
   })
 
   test('Adjustment payment Type must be Immediate payment', () => {
@@ -136,7 +136,7 @@ describe('get schedule dates', () => {
   test('should not insert adjustment into schedule if reduction', () => {
     deltaValue = -25000
     const schedule = getScheduleDates(previousPaymentSchedule, newPaymentScheduleReduction, deltaValue)
-    expect(schedule[0].period).not.toEqual(moment().format('MMM YYYY'))
+    expect(schedule[0].period).not.toEqual(moment().format('MMMM YYYY'))
     expect(schedule.length).toEqual(newPaymentScheduleReduction.length)
   })
 

@@ -12,7 +12,7 @@ const getLatestPayment = (paymentRequest, settlement, supportingSettlements) => 
     value: adjustedPaymentValue,
     period: paymentRequest.schedule
       ? getScheduledPayments(paymentRequest.schedule, paymentRequest.dueDate, settlement.paymentValue, settlement.value, settlement.lastSettlementValue, paymentRequest.originalValue, settlement.settlementDate)
-      : `${moment(paymentRequest.dueDate).format('MMM YYYY')}`
+      : `${moment(paymentRequest.dueDate).format('MMMM YYYY')}`
   }
 
   return validateLatestPayment(latestPayment)
