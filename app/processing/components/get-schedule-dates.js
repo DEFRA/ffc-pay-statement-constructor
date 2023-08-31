@@ -19,7 +19,7 @@ const getScheduleDates = (previousPaymentSchedule, newPaymentSchedule, deltaValu
   if (deltaValue > nonAdjustmentValue) {
     newPaymentSchedule.unshift({
       paymentType: IMMEDIATE,
-      period: moment().format('MMM YYYY'),
+      period: moment().format('MMMM YYYY'),
       value: Math.trunc((deltaValue / previousPaymentSchedule.length) * paidSegments.length)
     })
   }

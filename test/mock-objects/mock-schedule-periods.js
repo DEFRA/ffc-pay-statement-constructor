@@ -21,13 +21,13 @@ module.exports = [{
   dueDate: '01/06/2023',
   order: 2,
   paymentType: QUARTERLY,
-  period: 'Mar-May 2023',
+  period: 'March 2023 - May 2023',
   value: convertToPounds(topUpProcessingPaymentRequest.value / 4)
 },
 {
   dueDate: '01/09/2023',
   order: 3,
   paymentType: QUARTERLY,
-  period: 'Jun-Aug 2023',
+  period: 'June 2023 - August 2023',
   value: convertToPounds(topUpProcessingPaymentRequest.value / 4)
 }]
