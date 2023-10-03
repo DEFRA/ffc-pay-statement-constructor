@@ -2,10 +2,16 @@ const { AP } = require('../../../app/constants/ledgers')
 const db = require('../../../app/data')
 
 const processReturnSettlement = require('../../../app/inbound/return')
+const getDocumentActiveByPaymentRequestId = require('../../../app/inbound/get-document-active-by-payment-request')
+// const getDocumentStatus = require('../../../app/inbound/get-document-status')
+// const getDocumentTypeByCode = require('../../../app/inbound/get-document-type-by-code')
+const getPaymentRequestByPaymentRequestId = require('../../../app/inbound/get-payment-request-by-payment-request-id')
 
 let settlement
 let submitPaymentRequest
 let processingPaymentRequest
+let documentTypes
+let documentStauses
 
 describe('process return settlement', () => {
   beforeAll(async () => {
@@ -24,10 +30,14 @@ describe('process return settlement', () => {
     settlement = JSON.parse(JSON.stringify(require('../../mock-objects/mock-settlement')))
     submitPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').submitPaymentRequest))
     processingPaymentRequest = JSON.parse(JSON.stringify(require('../../mock-objects/mock-payment-request').processingPaymentRequest))
+    documentTypes = JSON.parse(JSON.stringify(require('../../mock-objects/mock-document-types')))
+    documentStauses = JSON.parse(JSON.stringify(require('../../mock-objects/mock-document-statuses')))
 
     await db.scheme.bulkCreate(schemes)
     await db.invoiceNumber.create({ invoiceNumber, originalInvoiceNumber })
     await db.paymentRequest.create(submitPaymentRequest)
+    await db.documentType.bulkCreate(documentTypes)
+    await db.documentStatus.bulkCreate(documentStauses)
   })
 
   afterEach(async () => {
@@ -39,6 +49,26 @@ describe('process return settlement', () => {
 
   afterAll(async () => {
     await db.sequelize.close()
+  })
+
+  test('getPayment returns when present', async () => {
+    const result = await getPaymentRequestByPaymentRequestId(1)
+    expect(result).not.toBeNull()
+  })
+
+  test('getPayment does not return when not present', async () => {
+    const result = await getPaymentRequestByPaymentRequestId(50)
+    expect(result).toBeNull()
+  })
+
+  test('getDocumentActiveByPaymentRequestId returns when present', async () => {
+    const result = await getDocumentActiveByPaymentRequestId(1, 'STATEMENT')
+    expect(result).not.toBeNull()
+  })
+
+  test('getDocumentActiveByPaymentRequestId does not return when not present', async () => {
+    const result = await getDocumentActiveByPaymentRequestId(50, 'STATEMENT')
+    expect(result).toBe(false)
   })
 
   test('should save entry into settlement table with invoiceNumber of settlement.invoiceNumber', async () => {
