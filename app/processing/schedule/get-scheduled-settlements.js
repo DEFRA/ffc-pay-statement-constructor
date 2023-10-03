@@ -10,18 +10,19 @@ const getScheduledSettlements = async (started, transaction) => {
     skipLocked: true,
     limit: config.scheduleProcessingMaxBatchSize,
     transaction,
-    attributes: [
-      'scheduleId',
-      'settlementId'
-    ],
     include: [{
       model: db.settlement,
       as: 'settlements',
       attributes: []
     }],
+    attributes: [
+      'scheduleId',
+      'settlementId'
+    ],
     where: {
       category: STATEMENT,
       completed: null,
+      isActiveDocument: true,
       '$settlements.sourceSystem$': SOURCE_SYSTEM.SFI,
       '$settlements.received$': {
         [db.Sequelize.Op.lte]: moment(started).subtract(config.settlementWaitTime).toDate()
