@@ -3,8 +3,6 @@ const db = require('../../../app/data')
 
 const processReturnSettlement = require('../../../app/inbound/return')
 const getDocumentActiveByPaymentRequestId = require('../../../app/inbound/get-document-active-by-payment-request')
-// const getDocumentStatus = require('../../../app/inbound/get-document-status')
-// const getDocumentTypeByCode = require('../../../app/inbound/get-document-type-by-code')
 const getPaymentRequestByPaymentRequestId = require('../../../app/inbound/get-payment-request-by-payment-request-id')
 
 let settlement
