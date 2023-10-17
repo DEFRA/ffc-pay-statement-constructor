@@ -1,7 +1,6 @@
 const moment = require('moment')
 const db = require('../../data')
 const config = require('../../config').processingConfig
-const { DAX: SOURCE_SYSTEM } = require('../../constants/source-systems')
 const { STATEMENT } = require('../../constants/categories')
 
 const getScheduledSettlements = async (started, transaction) => {
@@ -23,7 +22,6 @@ const getScheduledSettlements = async (started, transaction) => {
       category: STATEMENT,
       completed: null,
       isActiveDocument: true,
-      '$settlements.sourceSystem$': SOURCE_SYSTEM.SFI,
       '$settlements.received$': {
         [db.Sequelize.Op.lte]: moment(started).subtract(config.settlementWaitTime).toDate()
       },
