@@ -8,11 +8,11 @@
       DO $$
         BEGIN
           INSERT INTO schemes("schemeId", name) 
-          VALUES (6, 'SFIA');        
+          VALUES (12, 'SFIA');        
 
           INSERT INTO "documentStatuses"("documentTypeId", "schemeId", "marketingYear", "isCurrent", "isActive") 
-          VALUES   (1, 6, 2023, true, true),
-                   (2, 6, 2023, true, false);
+          VALUES   (1, 12, 2023, true, true),
+                   (2, 12, 2023, true, false);
       END $$;
     </sql>
   </changeSet>
