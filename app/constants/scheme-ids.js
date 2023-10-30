@@ -4,5 +4,5 @@ module.exports = {
   LUMP_SUMS: 3,
   LNR: 4,
   VET_VISITS: 5,
-  SFIA: 6
+  SFIA: 12
 }
