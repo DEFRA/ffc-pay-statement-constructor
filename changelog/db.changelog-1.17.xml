@@ -5,7 +5,7 @@
   </changeSet>
   <changeSet author="Abidemi Adio" id="2">
     <createTable tableName="claimAgreements">
-      <column name="claimAgreementNumberId" type="INTEGER" autoIncrement="true">
+      <column name="claimAgreementId" type="INTEGER" autoIncrement="true">
         <constraints nullable="false" primaryKey="true" primaryKeyName="claimAgreementsId_pkey" />
       </column>
       <column name="frn" type="BIGINT" >
