@@ -24,7 +24,7 @@ const getPaymentSchedule = async (paymentRequestId, scheduleId) => {
     const calculation = await getCalculation(mappedPaymentRequest.paymentRequestId, mappedPaymentRequest.invoiceNumber, transaction)
     const details = await getDetails(calculation.sbi, transaction)
     const address = await getAddress(calculation.sbi, transaction)
-    const scheme = getScheme(mappedPaymentRequest.year, mappedPaymentRequest.frequency, mappedPaymentRequest.agreementNumber, mappedPaymentRequest.sourceSystem)
+    const scheme = await getScheme(mappedPaymentRequest.year, mappedPaymentRequest.frequency, mappedPaymentRequest.agreementNumber, mappedPaymentRequest.sourceSystem)
 
     await transaction.commit()
     return {
