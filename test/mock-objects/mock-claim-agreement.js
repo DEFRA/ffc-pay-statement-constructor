@@ -12,5 +12,10 @@ module.exports = [{
   frn: 1234567893,
   claimId: '100003',
   agreementNumber: '200003'
+},
+{
+  frn: 1234567894,
+  claimId: '0000001',
+  agreementNumber: '200009'
 }
 ]
