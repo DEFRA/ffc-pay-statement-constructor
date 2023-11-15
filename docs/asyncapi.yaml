@@ -257,7 +257,6 @@ components:
         - scheme
         - payments
         - funding
-        - scheduleDates
       properties:
         businessName:
           $ref: '#/components/schemas/BusinessName'
