@@ -423,27 +423,27 @@ components:
           example: 75
     schedule:
       type: array
-      items: ScheduleDates
+      items:
         type: object
         required:
-        - order
-        - dueDate
-        - period
-        - value
-        - paymentType
-        properties:
-          order:
-            type: numeric
-            description: Order sequence of item in the list
-            example: 1
-          dueDate:
-            type: string
-            description: Payment due date
-            example: '10/12/2022'
-          period:
-            type: string
-            description: Period of payment
-            example: Oct-Dec 2022
+          - order
+          - dueDate
+          - period
+          - value
+          - paymentType
+      properties:
+        order:
+          type: integer
+          description: Order sequence of item in the list
+          example: 1
+        dueDate:
+          type: string
+          description: Payment due date
+          example: '10/12/2022'
+        period:
+          type: string
+          description: Period of payment
+          example: Oct-Dec 2022
           value:
             type: string
             description: Payment amount
