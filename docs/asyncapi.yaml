@@ -1,7 +1,7 @@
 asyncapi: 2.5.0
 info:
   title: FFC Payment Statement Constructor
-  version: 1.0.0
+  version: 1.0.1
   description: Construct payment statements
 channels:
   dwh/calculation:
@@ -257,6 +257,7 @@ components:
         - scheme
         - payments
         - funding
+        - scheduleDates
       properties:
         businessName:
           $ref: '#/components/schemas/BusinessName'
@@ -421,16 +422,14 @@ components:
           type: string
           description: The reduction level
           example: 75
-    schedule:
-      type: array
-      items:
-        type: object
-        required:
-          - order
-          - dueDate
-          - period
-          - value
-          - paymentType
+    ScheduleDates:
+      type: object
+      required:
+        - order
+        - dueDate
+        - period
+        - value
+        - paymentType
       properties:
         order:
           type: integer
@@ -444,14 +443,14 @@ components:
           type: string
           description: Period of payment
           example: Oct-Dec 2022
-          value:
-            type: string
-            description: Payment amount
-            example: '375.00'
-          paymentType:
-            type: string
-            description: Type of payment
-            example: Quarterly payment 
+        value:
+          type: string
+          description: Payment amount
+          example: '375.00'
+        paymentType:
+          type: string
+          description: Type of payment
+          example: Quarterly payment 
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -526,7 +525,7 @@ components:
       example: BAC Rejection
     DocumentReference:
       type: number
-      description: Schedule ID of the docuemnt object used downstream for duplicate detection
+      description: Schedule ID of the document object used downstream for duplicate detection
       minimum: 1
       example: 1
     DueDate:
