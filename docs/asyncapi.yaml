@@ -445,7 +445,7 @@ components:
         value:
           type: string
           description: Payment amount
-          example: '375.00'
+          example: '375.50'
         paymentType:
           type: string
           description: Type of payment
