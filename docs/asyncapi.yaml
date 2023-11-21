@@ -12,19 +12,19 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/DWHOrganisation'
-  payment/processing:
+  ffc-pay-statement/processing:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestProcessing'
-  payment/submit:
+  ffc-pay-statement-submit:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestSubmit'
-  payment/return:
+  ffc-pay-statement-return:
     subscribe:
       message:
         $ref: '#/components/messages/ReturnMessage'
-  payment/statement:
+  ffc-pay-statement-payment:
     publish:
       message:
         $ref: '#/components/messages/PaymentStatement'
