@@ -85,8 +85,6 @@ components:
     DWHOrganisation:
       type: object
       properties:
-        name:
-          $ref: '#/components/schemas/BusinessName'
         businessName:
           $ref: '#/components/schemas/BusinessName'
         addressLine1:
@@ -682,7 +680,7 @@ components:
       enum:
         - 80001 (Arable and horticultural soils Introductory)
     SchemeId:
-      type: number
+      type: string
       format: integer
       description: Unique ID for scheme used internal to payment services
       example: 1
@@ -692,6 +690,7 @@ components:
         - 3 (Lump Sums)
         - 4 (LNR)
         - 5 (Vet Visits)
+        - 6 (SFIA)
     Settled:
       type: boolean
       description: Whether the return file has been settled or not
@@ -708,6 +707,7 @@ components:
         - SitiLUMP (Lump Sums)
         - AHWR (Vet Visits)
         - LNR (LNR)
+        - SFIA (SFIA)
       example: SITI_SFI
     Type:
       type: string
