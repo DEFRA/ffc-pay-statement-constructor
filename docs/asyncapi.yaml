@@ -12,7 +12,7 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/DWHOrganisation'
-  ffc-pay-statement/processing:
+  ffc-pay-statement-processing:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestProcessing'
@@ -85,6 +85,8 @@ components:
     DWHOrganisation:
       type: object
       properties:
+        name:
+          $ref: '#/components/schemas/BusinessName'
         businessName:
           $ref: '#/components/schemas/BusinessName'
         addressLine1:
