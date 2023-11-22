@@ -1,7 +1,7 @@
 asyncapi: 2.5.0
 info:
   title: FFC Payment Statement Constructor
-  version: 1.0.0
+  version: 1.0.1
   description: Construct payment statements
 channels:
   dwh/calculation:
@@ -12,19 +12,19 @@ channels:
     subscribe:
       message:
         $ref: '#/components/messages/DWHOrganisation'
-  payment/processing:
+  ffc-pay-statement-processing:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestProcessing'
-  payment/submit:
+  ffc-pay-statement-submit:
     subscribe:
       message:
         $ref: '#/components/messages/PaymentRequestSubmit'
-  payment/return:
+  ffc-pay-statement-return:
     subscribe:
       message:
         $ref: '#/components/messages/ReturnMessage'
-  payment/statement:
+  ffc-pay-statement-payment:
     publish:
       message:
         $ref: '#/components/messages/PaymentStatement'
@@ -421,37 +421,35 @@ components:
           type: string
           description: The reduction level
           example: 75
-    schedule:
-      type: array
-      items: ScheduleDates
-        type: object
-        required:
+    ScheduleDates:
+      type: object
+      required:
         - order
         - dueDate
         - period
         - value
         - paymentType
-        properties:
-          order:
-            type: numeric
-            description: Order sequence of item in the list
-            example: 1
-          dueDate:
-            type: string
-            description: Payment due date
-            example: '10/12/2022'
-          period:
-            type: string
-            description: Period of payment
-            example: Oct-Dec 2022
-          value:
-            type: string
-            description: Payment amount
-            example: '375.00'
-          paymentType:
-            type: string
-            description: Type of payment
-            example: Quarterly payment 
+      properties:
+        order:
+          type: integer
+          description: Order sequence of item in the list
+          example: 1
+        dueDate:
+          type: string
+          description: Payment due date
+          example: '10/12/2022'
+        period:
+          type: string
+          description: Period of payment
+          example: Oct-Dec 2022
+        value:
+          type: string
+          description: Payment amount
+          example: '375.50'
+        paymentType:
+          type: string
+          description: Type of payment
+          example: Quarterly payment 
     AccountCode:
       type: string
       description: Unique account code for budgeting
@@ -526,7 +524,7 @@ components:
       example: BAC Rejection
     DocumentReference:
       type: number
-      description: Schedule ID of the docuemnt object used downstream for duplicate detection
+      description: Schedule ID of the document object used downstream for duplicate detection
       minimum: 1
       example: 1
     DueDate:
@@ -682,7 +680,7 @@ components:
       enum:
         - 80001 (Arable and horticultural soils Introductory)
     SchemeId:
-      type: number
+      type: string
       format: integer
       description: Unique ID for scheme used internal to payment services
       example: 1
@@ -692,6 +690,7 @@ components:
         - 3 (Lump Sums)
         - 4 (LNR)
         - 5 (Vet Visits)
+        - 6 (SFIA)
     Settled:
       type: boolean
       description: Whether the return file has been settled or not
@@ -708,6 +707,7 @@ components:
         - SitiLUMP (Lump Sums)
         - AHWR (Vet Visits)
         - LNR (LNR)
+        - SFIA (SFIA)
       example: SITI_SFI
     Type:
       type: string
