@@ -3,13 +3,15 @@
   <changeSet author="Leigh Godson" id="1">
     <tagDatabase tag="v1.26.0" />
   </changeSet>
-  <changeSet author="Leigh Godson" id="3">
-    <insert tableName="fundingOptions">
+  <changeSet author="Leigh Godson" id="2">
+      <insert tableName="fundingOptions">
       <column name="fundingCode" value="80226" />
       <column name="name" value="SFI Common Actions for moorland (MOR1)" />
+    </insert>
     <insert tableName="fundingOptions">
       <column name="fundingCode" value="80227" />
       <column name="name" value="SFI Common Actions for moorland (MOR1A)" />
+    </insert>
     <insert tableName="fundingOptions">
       <column name="fundingCode" value="80285" />
       <column name="name" value="SFI Group Entity Payment" />
