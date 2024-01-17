@@ -1,4 +1,3 @@
-
 jest.mock('../../../app/inbound/calculation/process-calculation')
 const processCalculation = require('../../../app/inbound/calculation/process-calculation')
 
