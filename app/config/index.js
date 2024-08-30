@@ -11,8 +11,8 @@ const schema = Joi.object({
 
 const config = {
   env: process.env.NODE_ENV,
-  statementConstructionActive: process.env.STATEMENT_CONSTRUCTION_ACTIVE === 'true',
-  scheduleConstructionActive: process.env.SCHEDULE_CONSTRUCTION_ACTIVE === 'true'
+  statementConstructionActive: process.env.STATEMENT_CONSTRUCTION_ACTIVE,
+  scheduleConstructionActive: process.env.SCHEDULE_CONSTRUCTION_ACTIVE
 }
 
 const result = schema.validate(config, {
