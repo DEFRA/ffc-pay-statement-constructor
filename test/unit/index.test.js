@@ -6,8 +6,8 @@ const mockProcessing = require('../../app/processing')
 jest.mock('../../app/messaging/wait-for-idle-messaging')
 
 describe('app', () => {
-  beforeEach(() => {
-    require('../../app')
+  beforeEach(async () => {
+    await require('../../app')
   })
 
   test('should call mockMessaging.start when app is imported', async () => {

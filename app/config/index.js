@@ -4,11 +4,15 @@ const dbConfig = require('./database')
 const processingConfig = require('./processing')
 
 const schema = Joi.object({
-  env: Joi.string().valid('development', 'test', 'production').default('development')
+  env: Joi.string().valid('development', 'test', 'production').default('development'),
+  statementConstructionActive: Joi.boolean().default(false),
+  scheduleConstructionActive: Joi.boolean().default(false)
 })
 
 const config = {
-  env: process.env.NODE_ENV
+  env: process.env.NODE_ENV,
+  statementConstructionActive: process.env.STATEMENT_CONSTRUCTION_ACTIVE === 'true',
+  scheduleConstructionActive: process.env.SCHEDULE_CONSTRUCTION_ACTIVE === 'true'
 }
 
 const result = schema.validate(config, {
